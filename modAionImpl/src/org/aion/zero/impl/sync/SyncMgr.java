@@ -154,6 +154,7 @@ public class SyncMgr {
             final Set<StatsType> showStatistics,
             final int _slowImportTime,
             final int _compactFrequency, 
+            final boolean requestReceipts,
             final ReceiptsRetrievalVerifier rrv) {
         p2pMgr = _p2pMgr;
         chain = _chain;
@@ -191,6 +192,8 @@ public class SyncMgr {
                                 _slowImportTime,
                                 _compactFrequency,
                                 rrv,
+                                requestReceipts,
+                                rrv),
                         "sync-ib");
         syncIb.start();
         syncGs = new Thread(new TaskGetStatus(start, p2pMgr, stats, log), "sync-gs");
