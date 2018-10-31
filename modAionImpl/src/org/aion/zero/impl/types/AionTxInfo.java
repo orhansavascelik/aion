@@ -94,4 +94,14 @@ public class AionTxInfo extends AbstractTxInfo<AionTxReceipt, AionTransaction> {
     public int hashCode() {
         return Objects.hashCode(super.hashCode());
     }
+
+    @Override
+    public String toString() {
+        return "AionTxInfo{" +
+                ", blockHash=" + blockHash +
+//                ", parentBlockHash=" + parentBlockHash +
+                ", index=" + index +
+                "receipt=" + receipt +
+                '}';
+    }
 }
