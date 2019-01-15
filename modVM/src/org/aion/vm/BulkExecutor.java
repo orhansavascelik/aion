@@ -14,6 +14,7 @@ import org.aion.kernel.AvmTransactionResult;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.KernelInterfaceForFastVM;
+import org.aion.mcf.vm.types.Log;
 import org.aion.vm.VirtualMachineFactory.VM;
 import org.aion.vm.api.interfaces.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
@@ -183,10 +184,16 @@ public class BulkExecutor {
             sideEffects.addInternalTransactions(context.getSideEffects().getInternalTransactions());
         }
 
+        List<IExecutionLog> logs;
+        if (transactionIsForAionVirtualMachine(transaction) || transaction.getTargetVM() == VirtualMachineSpecs.AVM_VM_CODE) {
+            logs = transferAvmLogsToKernel(sideEffects.getExecutionLogs());
+        } else {
+            logs = sideEffects.getExecutionLogs();
+        }
+
         AionTxExecSummary.Builder builder =
-                AionTxExecSummary.builderFor(
-                                makeReceipt(transaction, sideEffects.getExecutionLogs(), result))
-                        .logs(sideEffects.getExecutionLogs())
+                AionTxExecSummary.builderFor(makeReceipt(transaction, logs, result))
+                        .logs(logs)
                         .deletedAccounts(sideEffects.getAddressesToBeDeleted())
                         .internalTransactions(sideEffects.getInternalTransactions())
                         .result(result.getReturnData());
@@ -216,6 +223,14 @@ public class BulkExecutor {
                 result);
 
         return summary;
+    }
+
+    private List<IExecutionLog> transferAvmLogsToKernel(List<IExecutionLog> avmLogs) {
+        List<IExecutionLog> logs = new ArrayList<>();
+        for (IExecutionLog avmLog : avmLogs) {
+            logs.add(new Log(avmLog.getSourceAddress(), avmLog.getTopics(), avmLog.getData()));
+        }
+        return logs;
     }
 
     private AionTxReceipt makeReceipt(
