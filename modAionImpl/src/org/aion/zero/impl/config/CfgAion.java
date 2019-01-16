@@ -1,26 +1,3 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- * Contributors:
- *     Aion foundation.
- */
-
 package org.aion.zero.impl.config;
 
 import com.google.common.base.Objects;
@@ -345,7 +322,9 @@ public final class CfgAion extends Cfg {
                     if (subArgsArr.length > 0) {
                         List<String> _nodes = new ArrayList<>();
                         for (String subArg : subArgsArr) {
-                            if (!subArg.equals("")) _nodes.add(subArg);
+                            if (!subArg.equals("")) {
+                                _nodes.add(subArg);
+                            }
                         }
                         this.getNet().setNodes(_nodes.toArray(new String[0]));
                     }
@@ -354,7 +333,9 @@ public final class CfgAion extends Cfg {
                     override = true;
                     String[] subArgsArr = arg.replace("--p2p=", "").split(",");
                     if (subArgsArr.length == 2) {
-                        this.getNet().getP2p().setIp(subArgsArr[0]);
+                        if (!subArgsArr[0].equals("")) {
+                            this.getNet().getP2p().setIp(subArgsArr[0]);
+                        }
                         this.getNet().getP2p().setPort(Integer.parseInt(subArgsArr[1]));
                     }
                 }

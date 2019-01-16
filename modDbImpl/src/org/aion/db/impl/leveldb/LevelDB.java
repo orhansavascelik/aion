@@ -1,45 +1,11 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- *     The aion network project leverages useful source code from other
- *     open source projects. We greatly appreciate the effort that was
- *     invested in these projects and we thank the individual contributors
- *     for their work. For provenance information and contributors
- *     please see <https://github.com/aionnetwork/aion/wiki/Contributors>.
- *
- * Contributors to the aion source files in decreasing order of code volume:
- *     Aion foundation.
- *     <ether.camp> team through the ethereumJ library.
- *     Ether.Camp Inc. (US) team through Ethereum Harmony.
- *     John Tromp through the Equihash solver.
- *     Samuel Neves through the BLAKE2 implementation.
- *     Zcash project team.
- *     Bitcoinj team.
- */
 package org.aion.db.impl.leveldb;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 import org.aion.base.util.ByteArrayWrapper;
 import org.aion.db.impl.AbstractDB;
 import org.fusesource.leveldbjni.JniDBFactory;
@@ -48,6 +14,7 @@ import org.iq80.leveldb.DB;
 import org.iq80.leveldb.DBException;
 import org.iq80.leveldb.DBIterator;
 import org.iq80.leveldb.Options;
+import org.iq80.leveldb.ReadOptions;
 import org.iq80.leveldb.WriteBatch;
 
 /**
@@ -178,7 +145,11 @@ public class LevelDB extends AbstractDB {
             try {
                 db = JniDBFactory.factory.open(f, options);
             } catch (Exception e2) {
-                LOG.error("Failed second attempt to open the database " + this.toString() + " due to: ", e2);
+                LOG.error(
+                        "Failed second attempt to open the database "
+                                + this.toString()
+                                + " due to: ",
+                        e2);
                 // close the connection and cleanup if needed
                 close();
             }
@@ -285,22 +256,70 @@ public class LevelDB extends AbstractDB {
     }
 
     @Override
-    public Set<byte[]> keys() {
-        Set<byte[]> set = new HashSet<>();
-
+    public Iterator<byte[]> keys() {
         check();
 
-        try (DBIterator itr = db.iterator()) {
-            // extract keys
-            for (itr.seekToFirst(); itr.hasNext(); itr.next()) {
-                set.add(itr.peekNext().getKey());
-            }
+        try {
+            ReadOptions readOptions = new ReadOptions();
+            readOptions.snapshot(db.getSnapshot());
+            return new LevelDBIteratorWrapper(readOptions, db.iterator(readOptions));
         } catch (Exception e) {
             LOG.error("Unable to extract keys from database " + this.toString() + ".", e);
         }
 
         // empty when retrieval failed
-        return set;
+        return Collections.emptyIterator();
+    }
+
+    /**
+     * A wrapper for the {@link DBIterator} conforming to the {@link Iterator} interface.
+     *
+     * @author Alexandra Roatis
+     */
+    private static class LevelDBIteratorWrapper implements Iterator<byte[]> {
+        private final DBIterator iterator;
+        private final ReadOptions readOptions;
+        private boolean closed;
+
+        /**
+         * @implNote Building two wrappers for the same {@link DBIterator} will lead to inconsistent
+         *     behavior.
+         */
+        LevelDBIteratorWrapper(final ReadOptions readOptions, final DBIterator iterator) {
+            this.readOptions = readOptions;
+            this.iterator = iterator;
+            iterator.seekToFirst();
+            closed = false;
+        }
+
+        @Override
+        public boolean hasNext() {
+            if (!closed) {
+                boolean hasNext = iterator.hasNext();
+
+                // close iterator after last entry
+                if (!hasNext) {
+                    try {
+                        iterator.close();
+                        readOptions.snapshot().close();
+                    } catch (IOException e) {
+                        LOG.error("Unable to close iterator object.", e);
+                    }
+                    closed = true;
+                }
+
+                return hasNext;
+            } else {
+                return false;
+            }
+        }
+
+        @Override
+        public byte[] next() {
+            byte[] key = iterator.peekNext().getKey();
+            iterator.next();
+            return key;
+        }
     }
 
     @Override
@@ -365,7 +384,7 @@ public class LevelDB extends AbstractDB {
         }
     }
 
-    WriteBatch batch = null;
+    private WriteBatch batch = null;
 
     @Override
     public void putToBatch(byte[] key, byte[] value) {

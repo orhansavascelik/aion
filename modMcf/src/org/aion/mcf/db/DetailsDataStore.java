@@ -1,45 +1,9 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- *     The aion network project leverages useful source code from other
- *     open source projects. We greatly appreciate the effort that was
- *     invested in these projects and we thank the individual contributors
- *     for their work. For provenance information and contributors
- *     please see <https://github.com/aionnetwork/aion/wiki/Contributors>.
- *
- * Contributors to the aion source files in decreasing order of code volume:
- *     Aion foundation.
- *     <ether.camp> team through the ethereumJ library.
- *     Ether.Camp Inc. (US) team through Ethereum Harmony.
- *     John Tromp through the Equihash solver.
- *     Samuel Neves through the BLAKE2 implementation.
- *     Zcash project team.
- *     Bitcoinj team.
- */
 package org.aion.mcf.db;
 
 import static org.aion.base.util.ByteArrayWrapper.wrap;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
 import org.aion.base.db.IByteArrayKeyValueDatabase;
@@ -146,8 +110,9 @@ public class DetailsDataStore<
         syncLargeStorage();
 
         // Get everything from the cache and calculate the size.
-        Set<byte[]> keysFromSource = detailsSrc.keys();
-        for (byte[] keyInSource : keysFromSource) {
+        Iterator<byte[]> keysFromSource = detailsSrc.keys();
+        while (keysFromSource.hasNext()) {
+            byte[] keyInSource = keysFromSource.next();
             // Fetch the value given the keys.
             Optional<byte[]> valFromKey = detailsSrc.get(keyInSource);
 
@@ -164,8 +129,9 @@ public class DetailsDataStore<
 
     public void syncLargeStorage() {
 
-        Set<byte[]> keysFromSource = detailsSrc.keys();
-        for (byte[] keyInSource : keysFromSource) {
+        Iterator<byte[]> keysFromSource = detailsSrc.keys();
+        while (keysFromSource.hasNext()) {
+            byte[] keyInSource = keysFromSource.next();
 
             // Fetch the value given the keys.
             Optional<byte[]> rawDetails = detailsSrc.get(keyInSource);
@@ -190,13 +156,36 @@ public class DetailsDataStore<
         return storageDSPrune;
     }
 
-    public synchronized Set<ByteArrayWrapper> keys() {
-        // TODO - @yao do we wanted a sorted set?
-        Set<ByteArrayWrapper> keys = new HashSet<>();
-        for (byte[] key : detailsSrc.keys()) {
-            keys.add(wrap(key));
+    public synchronized Iterator<ByteArrayWrapper> keys() {
+        return new DetailsIteratorWrapper(detailsSrc.keys());
+    }
+
+    /**
+     * A wrapper for the iterator needed by {@link DetailsDataStore} conforming to the {@link
+     * Iterator} interface.
+     *
+     * @author Alexandra Roatis
+     */
+    private class DetailsIteratorWrapper implements Iterator<ByteArrayWrapper> {
+        private Iterator<byte[]> sourceIterator;
+
+        /**
+         * @implNote Building two wrappers for the same {@link Iterator} will lead to inconsistent
+         *     behavior.
+         */
+        DetailsIteratorWrapper(final Iterator<byte[]> sourceIterator) {
+            this.sourceIterator = sourceIterator;
         }
-        return keys;
+
+        @Override
+        public boolean hasNext() {
+            return sourceIterator.hasNext();
+        }
+
+        @Override
+        public ByteArrayWrapper next() {
+            return wrap(sourceIterator.next());
+        }
     }
 
     public synchronized void close() {
@@ -206,16 +195,5 @@ public class DetailsDataStore<
         } catch (Exception e) {
             throw new RuntimeException("error closing db");
         }
-    }
-
-    public static List<ByteArrayWrapper> dumpKeys(IByteArrayKeyValueDatabase ds) {
-        ArrayList<ByteArrayWrapper> keys = new ArrayList<>();
-
-        for (byte[] key : ds.keys()) {
-            keys.add(wrap(key));
-        }
-
-        Collections.sort(keys);
-        return keys;
     }
 }

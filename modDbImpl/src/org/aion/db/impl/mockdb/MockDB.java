@@ -1,33 +1,12 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- * Contributors:
- *     Aion foundation.
- */
-
 package org.aion.db.impl.mockdb;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import org.aion.base.db.PersistenceMethod;
 import org.aion.base.util.ByteArrayWrapper;
 import org.aion.db.impl.AbstractDB;
 
@@ -80,8 +59,9 @@ public class MockDB extends AbstractDB {
     }
 
     @Override
-    public boolean isPersistent() {
-        return false;
+    public PersistenceMethod getPersistenceMethod() {
+        // MockDB doesn't persist anything to disk, so it's type is IN_MEMORY
+        return PersistenceMethod.IN_MEMORY;
     }
 
     @Override
@@ -105,7 +85,7 @@ public class MockDB extends AbstractDB {
     }
 
     @Override
-    public Set<byte[]> keys() {
+    public Iterator<byte[]> keys() {
         Set<byte[]> set = new HashSet<>();
 
         check();
@@ -113,7 +93,7 @@ public class MockDB extends AbstractDB {
         kv.keySet().forEach(k -> set.add(k.getData()));
 
         // empty when retrieval failed
-        return set;
+        return set.iterator();
     }
 
     @Override

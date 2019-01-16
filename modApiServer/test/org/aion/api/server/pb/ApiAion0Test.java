@@ -1,26 +1,3 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- * Contributors:
- *     Aion foundation.
- */
-
 package org.aion.api.server.pb;
 
 import static org.junit.Assert.assertEquals;
@@ -71,6 +48,7 @@ public class ApiAion0Test {
 
     private static final String KEYSTORE_PATH;
     private static final String DATABASE_PATH = "ApiServerTestPath";
+    private static final String MAINNET_PATH;
 
     static {
         String storageDir = System.getProperty("local.storage.dir");
@@ -78,6 +56,7 @@ public class ApiAion0Test {
             storageDir = System.getProperty("user.dir");
         }
         KEYSTORE_PATH = storageDir + "/keystore";
+        MAINNET_PATH = storageDir + "/mainnet";
     }
 
     public ApiAion0Test() {
@@ -142,21 +121,20 @@ public class ApiAion0Test {
 
         // get a list of all the files in keystore directory
         File folder = new File(KEYSTORE_PATH);
-
-        if (folder == null) return;
-
-        File[] AllFilesInDirectory = folder.listFiles();
-
-        // check for invalid or wrong path - should not happen
-        if (AllFilesInDirectory == null) return;
-
-        for (File file : AllFilesInDirectory) {
-            if (file.lastModified() >= testStartTime) file.delete();
+        try {
+            FileUtils.deleteRecursive(folder.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
         folder = new File(DATABASE_PATH);
+        try {
+            FileUtils.deleteRecursive(folder.toPath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        if (folder == null) return;
-
+        folder = new File(MAINNET_PATH);
         try {
             FileUtils.deleteRecursive(folder.toPath());
         } catch (IOException e) {

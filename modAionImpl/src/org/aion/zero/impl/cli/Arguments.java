@@ -1,26 +1,3 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- * Contributors:
- *     Aion foundation.
- */
-
 package org.aion.zero.impl.cli;
 
 import java.util.ArrayList;
@@ -125,6 +102,20 @@ public class Arguments {
             names = {"-d", "--datadir"},
             description = "execute kernel with selected database directory")
     private String directory = null;
+
+    @Option(
+            names = {"-p", "--port"},
+            description = "execute kernel with selected port")
+    private String port = null;
+
+    @Option(
+            names = {"--force-compact"},
+            arity = "1..2",
+            paramLabel = "<enabled> <slow_import> <frequency>",
+            description =
+                    "enable/disable compact during sync when one boolean parameter is given, or "
+                            + "enable when two values are provided for slow_import and frequency in milliseconds")
+    private String[] forceCompact = null;
 
     // offline database query and update
     @Option(
@@ -238,6 +229,14 @@ public class Arguments {
 
     public String getDirectory() {
         return directory;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public String[] getForceCompact() {
+        return forceCompact;
     }
 
     public String getPruneStateOption() {

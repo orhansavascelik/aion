@@ -1,25 +1,3 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- * Contributors:
- *     Aion foundation.
- */
 package org.aion.zero.impl.sync;
 
 import static org.aion.p2p.P2pConstant.COEFFICIENT_NORMAL_PEERS;
@@ -63,9 +41,6 @@ import org.slf4j.Logger;
  */
 final class TaskImportBlocks implements Runnable {
 
-    private static final int COMPACT_FREQUENCY = 600_000; // 10 min
-    private static final int SLOW_IMPORT_TIME = 1_000; // 1 sec
-
     private final AionBlockchainImpl chain;
 
     private final AtomicBoolean start;
@@ -83,6 +58,9 @@ final class TaskImportBlocks implements Runnable {
     private SortedSet<Long> baseList;
     private PeerState state;
 
+    private final int slowImportTime;
+    private final int compactFrequency;
+
     private long lastCompactTime;
 
     TaskImportBlocks(
@@ -92,7 +70,9 @@ final class TaskImportBlocks implements Runnable {
             final BlockingQueue<BlocksWrapper> _downloadedBlocks,
             final Map<ByteArrayWrapper, Object> _importedBlockHashes,
             final Map<Integer, PeerState> _peerStates,
-            final Logger _log) {
+            final Logger _log,
+            final int _slowImportTime,
+            final int _compactFrequency) {
         this.chain = _chain;
         this.start = _start;
         this.stats = _stats;
@@ -102,6 +82,8 @@ final class TaskImportBlocks implements Runnable {
         this.log = _log;
         this.baseList = new TreeSet<>();
         this.state = new PeerState(NORMAL, 0L);
+        this.slowImportTime = _slowImportTime;
+        this.compactFrequency = _compactFrequency;
         this.lastCompactTime = System.currentTimeMillis();
     }
 
@@ -589,12 +571,12 @@ final class TaskImportBlocks implements Runnable {
             }
         }
         // trigger compact when IO is slow
-        // 1 sec import time and more than 10 min since last compact
-        if (t2 - t1 > SLOW_IMPORT_TIME && t2 - lastCompactTime > COMPACT_FREQUENCY) {
+        if (t2 - t1 > this.slowImportTime && t2 - lastCompactTime > this.compactFrequency) {
+            log.info("Compacting state database due to slow IO time.");
             t1 = System.currentTimeMillis();
             this.chain.compactState();
             t2 = System.currentTimeMillis();
-            log.info("Compacting state database due to slow IO time. Completed in {} ms.", t2 - t1);
+            log.info("Compacting state completed in {} ms.", t2 - t1);
             lastCompactTime = t2;
         }
         return importResult;

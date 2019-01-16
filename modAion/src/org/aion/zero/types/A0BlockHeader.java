@@ -1,30 +1,8 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- * Contributors:
- *     Aion foundation.
- */
-
 package org.aion.zero.types;
 
 import static org.aion.base.util.ByteUtil.longToBytes;
 import static org.aion.base.util.ByteUtil.merge;
+import static org.aion.base.util.ByteUtil.oneByteToHexString;
 import static org.aion.base.util.ByteUtil.toHexString;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 
@@ -83,7 +61,7 @@ public class A0BlockHeader extends AbstractBlockHeader implements IPowBlockHeade
     //TODO: Update this
     public JSONObject toJSON() {
         JSONObject obj = new JSONObject();
-        obj.putOpt("version", toHexString(this.parentHash));
+        obj.putOpt("version", oneByteToHexString(this.version));
         obj.putOpt("number", toHexString(longToBytes(this.number)));
         obj.putOpt("parentHash", toHexString(this.parentHash));
         obj.putOpt("coinBase", toHexString(this.coinbase.toBytes()));

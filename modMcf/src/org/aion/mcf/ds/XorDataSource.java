@@ -1,52 +1,17 @@
-/*
- * Copyright (c) 2017-2018 Aion foundation.
- *
- *     This file is part of the aion network project.
- *
- *     The aion network project is free software: you can redistribute it
- *     and/or modify it under the terms of the GNU General Public License
- *     as published by the Free Software Foundation, either version 3 of
- *     the License, or any later version.
- *
- *     The aion network project is distributed in the hope that it will
- *     be useful, but WITHOUT ANY WARRANTY; without even the implied
- *     warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *     See the GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with the aion network project source files.
- *     If not, see <https://www.gnu.org/licenses/>.
- *
- *     The aion network project leverages useful source code from other
- *     open source projects. We greatly appreciate the effort that was
- *     invested in these projects and we thank the individual contributors
- *     for their work. For provenance information and contributors
- *     please see <https://github.com/aionnetwork/aion/wiki/Contributors>.
- *
- * Contributors to the aion source files in decreasing order of code volume:
- *     Aion foundation.
- *     <ether.camp> team through the ethereumJ library.
- *     Ether.Camp Inc. (US) team through Ethereum Harmony.
- *     John Tromp through the Equihash solver.
- *     Samuel Neves through the BLAKE2 implementation.
- *     Zcash project team.
- *     Bitcoinj team.
- */
 package org.aion.mcf.ds;
 
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import org.aion.base.db.IByteArrayKeyValueStore;
 import org.aion.base.util.ByteArrayWrapper;
 import org.aion.base.util.ByteUtil;
 
 public class XorDataSource implements IByteArrayKeyValueStore {
-    IByteArrayKeyValueStore source;
-    byte[] subKey;
+    private final IByteArrayKeyValueStore source;
+    private final byte[] subKey;
 
     public XorDataSource(IByteArrayKeyValueStore source, byte[] subKey) {
         this.source = source;
@@ -73,13 +38,36 @@ public class XorDataSource implements IByteArrayKeyValueStore {
     }
 
     @Override
-    public Set<byte[]> keys() {
-        Set<byte[]> keys = source.keys();
-        Set<byte[]> ret = new HashSet<>(keys.size());
-        for (byte[] key : keys) {
-            ret.add(convertKey(key));
+    public Iterator<byte[]> keys() {
+        return new XorDSIteratorWrapper(source.keys());
+    }
+
+    /**
+     * A wrapper for the iterator needed by {@link XorDataSource} conforming to the {@link Iterator}
+     * interface.
+     *
+     * @author Alexandra Roatis
+     */
+    private class XorDSIteratorWrapper implements Iterator<byte[]> {
+        final Iterator<byte[]> sourceIterator;
+
+        /**
+         * @implNote Building two wrappers for the same {@link Iterator} will lead to inconsistent
+         *     behavior.
+         */
+        XorDSIteratorWrapper(final Iterator<byte[]> sourceIterator) {
+            this.sourceIterator = sourceIterator;
         }
-        return ret;
+
+        @Override
+        public boolean hasNext() {
+            return sourceIterator.hasNext();
+        }
+
+        @Override
+        public byte[] next() {
+            return convertKey(sourceIterator.next());
+        }
     }
 
     @Override
