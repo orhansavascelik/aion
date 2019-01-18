@@ -169,7 +169,7 @@ public class KernelInterfaceForFastVM implements KernelInterface {
         return (this.isLocalCall) ? true : TxNrgRule.isValidNrgTx(energyLimit);
     }
 
-    @Override
+//    @Override
     public boolean destinationAddressIsSafeForThisVM(Address address) {
         return address.toBytes()[0] != VirtualMachineSpecs.AVM_VM_CODE;
     }
