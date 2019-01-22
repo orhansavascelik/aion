@@ -97,27 +97,29 @@ public class NodeMgr implements INodeMgr {
         sb.append(appendColumnFormat());
         List<INode> sorted = new ArrayList<>(activeNodes.values());
         if (sorted.size() > 0) {
-            sorted.sort(
-                    (n1, n2) -> {
-                        int tdCompare = n2.getTotalDifficulty().compareTo(n1.getTotalDifficulty());
-                        if (tdCompare == 0) {
-                            Long n2Bn = n2.getBestBlockNumber();
-                            Long n1Bn = n1.getBestBlockNumber();
-                            return n2Bn.compareTo(n1Bn);
-                        } else {
-                            return tdCompare;
-                        }
-                    });
+            try {
+                sorted.sort(
+                        (n1, n2) -> {
+                            int tdCompare =
+                                    n2.getTotalDifficulty().compareTo(n1.getTotalDifficulty());
+                            if (tdCompare == 0) {
+                                Long n2Bn = n2.getBestBlockNumber();
+                                Long n1Bn = n1.getBestBlockNumber();
+                                return n2Bn.compareTo(n1Bn);
+                            } else {
+                                return tdCompare;
+                            }
+                        });
 
-            for (INode n : sorted) {
-                try {
+                for (INode n : sorted) {
+
                     if (!completeInfo && !n.getIfFromBootList()) {
                         continue;
                     }
                     sb.append(appendNodeInfo(n));
-                } catch (Exception ex) {
-                    p2pLOG.error("<NodeMgr dumpNodeInfo exception>", ex);
                 }
+            } catch (Exception ex) {
+                p2pLOG.error("<NodeMgr dumpNodeInfo exception>", ex);
             }
         }
         return sb.toString();
