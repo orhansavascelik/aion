@@ -8,8 +8,8 @@ pack_dir="avm_pack"
 echo "Building avm testnet release on $date..." \
 && aion_repo="$(pwd)" \
 && echo "Checking out latest version of kernel vm-api-build branch..." \
-&& git checkout vm-api-build \
-&& git pull origin vm-api-build \
+&& git checkout avmtestnet-buildbranch \
+&& git pull origin avmtestnet-buildbranch \
 && git submodule update --init --recursive \
 && cd $avm_repo \
 && echo "$(pwd)" \
