@@ -8,9 +8,9 @@ aion_repo=""
 
 echo "Building avm testnet release on $date..." \
 && aion_repo="$(pwd)" \
-&& echo "Checking out latest version of kernel vm-api-build branch..." \
-&& git checkout vm-api-build \
-&& git pull origin vm-api-build \
+&& echo "Checking out latest version of kernel avmtestnet-build branch..." \
+&& git checkout avmtestnet-build \
+&& git pull origin avmtestnet-build \
 && git submodule update --init --recursive \
 && cd $avm_repo \
 && echo "$(pwd)" \
