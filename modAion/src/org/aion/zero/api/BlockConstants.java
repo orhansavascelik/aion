@@ -92,7 +92,7 @@ public class BlockConstants implements IBlockConstants {
      * relative to local timestamp before rejecting the block as invalid. This accounts for clock
      * drift between different clocks on the network.
      */
-    private static final long CLOCK_DRIFT_BUFFER_TIME = 1;
+    private static final long CLOCK_DRIFT_BUFFER_TIME = 2;
 
     @Override
     public int getMaximumExtraDataSize() {

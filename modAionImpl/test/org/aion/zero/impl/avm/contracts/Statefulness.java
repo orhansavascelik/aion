@@ -12,10 +12,11 @@ public class Statefulness {
         return ABIDecoder.decodeAndRunWithClass(Statefulness.class, BlockchainRuntime.getData());
     }
 
-    public static void transferValue(Address beneficiary, long amount) {
-        if (BlockchainRuntime.call(beneficiary, BigInteger.valueOf(amount), new byte[0], BlockchainRuntime.getRemainingEnergy()).isSuccess()) {
+    public static void transferValue(byte[] beneficiary, long amount) {
+        Address recipient = new Address(beneficiary);
+        if (BlockchainRuntime.call(recipient, BigInteger.valueOf(amount), new byte[0], BlockchainRuntime.getRemainingEnergy()).isSuccess()) {
             BlockchainRuntime.println("Transfer was a success. "
-                + "Beneficiary balance = " + BlockchainRuntime.getBalance(beneficiary)
+                + "Beneficiary balance = " + BlockchainRuntime.getBalance(recipient)
                 + ", Contract balance = " + BlockchainRuntime.getBalance(BlockchainRuntime.getAddress()));
         } else {
             BlockchainRuntime.println("Transfer was unsuccessful.");
