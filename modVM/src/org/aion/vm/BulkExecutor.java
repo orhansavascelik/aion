@@ -142,8 +142,13 @@ public class BulkExecutor {
             long energyUsed = computeEnergyUsed(transaction.getEnergyLimit(), result);
             if (energyUsed > this.blockRemainingEnergy) {
                 result.setResultCode(FastVmResultCode.INVALID_NRG_LIMIT);
-                result.setEnergyRemaining(0);
                 result.setReturnData(new byte[0]);
+
+                if (transactionIsForAionVirtualMachine(transaction)) {
+                    ((AvmTransactionResult) result).setEnergyUsed(transaction.getEnergyLimit());
+                } else {
+                    result.setEnergyRemaining(0);
+                }
             }
 
             // 2. build the transaction summary and update the repository (the one backing
