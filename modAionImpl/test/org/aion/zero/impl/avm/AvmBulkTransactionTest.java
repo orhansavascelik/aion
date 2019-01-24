@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class BulkTransactionProcessingTest {
+public class AvmBulkTransactionTest {
     private StandaloneBlockchain blockchain;
     private ECKey deployerKey;
     private long energyPrice = 1;
@@ -64,7 +64,7 @@ public class BulkTransactionProcessingTest {
     }
 
     @Test
-    public void sendValueTransferTransactionsInBulk() {
+    public void sendValueTransferTransactionsInBulkTest() {
         int numTransactions = 50;
 
         // Create the accounts.
@@ -76,6 +76,7 @@ public class BulkTransactionProcessingTest {
 
         // Declare the various transfer amounts.
         List<BigInteger> transferAmounts = getRandomValues(numTransactions, 500, 5_000_000);
+        printValuesUsed(transferAmounts);
 
         // Make the transactions, then bundle them up together.
         List<AionTransaction> transactions = new ArrayList<>();
@@ -109,7 +110,7 @@ public class BulkTransactionProcessingTest {
     }
 
     @Test
-    public void sendContractCreationAndCallTransactionsInBulk() {
+    public void sendContractCreationAndCallTransactionsInBulkTest() {
         BigInteger expectedDeployerNonce = getNonce(this.deployerKey);
 
         // First, deploy a contract that we can call into.
