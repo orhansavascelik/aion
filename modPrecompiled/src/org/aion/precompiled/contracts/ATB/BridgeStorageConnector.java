@@ -238,14 +238,14 @@ public class BridgeStorageConnector {
         ByteArrayWrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
         // C1
         if (word == null || Arrays.equals(word.getData(), ByteUtil.EMPTY_HALFWORD)) return null;
-        return word.getData();
+        return new DataWord(word.getData()).getData();
     }
 
     private void setWORD(@Nonnull final DataWord key, @Nonnull final DataWord word) {
         if (word.isZero()) {
             this.track.removeStorageRow(contractAddress, key.toWrapper());
         } else {
-            this.track.addStorageRow(contractAddress, key.toWrapper(), word.toWrapper());
+            this.track.addStorageRow(contractAddress, key.toWrapper(), new ByteArrayWrapper(word.getNoLeadZeroesData()));
         }
     }
 
@@ -264,6 +264,6 @@ public class BridgeStorageConnector {
         if (word == null) return null;
 
         if (word.isZero()) return null;
-        return word.getData();
+        return new DoubleDataWord(word.getData()).getData();
     }
 }
