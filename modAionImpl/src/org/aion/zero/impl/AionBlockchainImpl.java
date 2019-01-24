@@ -812,10 +812,10 @@ public class AionBlockchainImpl implements IAionBlockchain {
 
     public synchronized AionBlockSummary add(AionBlock block, boolean rebuild) {
 
-        if (!isValid(block)) {
-            LOG.error("Attempting to add {} block.", (block == null ? "NULL" : "INVALID"));
-            return null;
-        }
+//        if (!isValid(block)) {
+//            LOG.error("Attempting to add {} block.", (block == null ? "NULL" : "INVALID"));
+//            return null;
+//        }
 
         track = repository.startTracking();
         byte[] origRoot = repository.getRoot();

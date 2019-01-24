@@ -5,6 +5,7 @@ import java.util.List;
 import org.aion.avm.core.NodeEnvironment;
 import org.aion.base.db.IRepository;
 import org.aion.base.db.IRepositoryCache;
+import org.aion.base.type.AionAddress;
 import org.aion.base.type.ITxExecSummary;
 import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.fastvm.FastVirtualMachine;
@@ -15,6 +16,7 @@ import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.KernelInterfaceForFastVM;
 import org.aion.mcf.vm.types.Log;
+import org.aion.util.conversions.Hex;
 import org.aion.vm.VirtualMachineFactory.VM;
 import org.aion.vm.api.interfaces.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
@@ -155,6 +157,8 @@ public class BulkExecutor {
             // this.kernel) with the contents of kernelFromVM accordingly.
             AionTxExecSummary summary =
                     buildSummaryAndUpdateRepository(transaction, context, kernelFromVM, result);
+
+            AccountState contract = (AccountState) this.repository.getAccountState(AionAddress.wrap(Hex.decode("0000000000000000000000000000000000000000000000000000000000000200")));
 
             // 3. Do any post execution work and update the remaining block energy.
             this.blockRemainingEnergy -=
