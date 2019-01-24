@@ -137,10 +137,10 @@ public final class AionAddress implements Address, Comparable<AionAddress>, Byte
     }
 
     public boolean equals(Object other) {
-        if (!(other instanceof AionAddress)) {
+        if (!(other instanceof Address)) {
             return false;
         } else {
-            byte[] otherAddress = ((AionAddress) other).toBytes();
+            byte[] otherAddress = ((Address) other).toBytes();
             return FastByteComparisons.compareTo(
                             this.address,
                             0,

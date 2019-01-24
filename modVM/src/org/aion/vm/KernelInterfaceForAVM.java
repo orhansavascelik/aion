@@ -111,6 +111,7 @@ public class KernelInterfaceForAVM implements KernelInterface {
 
     @Override
     public void adjustBalance(Address address, BigInteger delta) {
+        System.out.println("Adjusting " + address + " balance by " + delta);
         this.repositoryCache.addBalance(address, delta);
     }
 

@@ -152,10 +152,6 @@ public class BulkExecutor {
                     buildSummaryAndUpdateRepository(transaction, context, kernelFromVM, result);
 
             // 3. Do any post execution work and update the remaining block energy.
-
-            System.out.println("Deployer balance before doWork - child: " + this.repositoryChild.getBalance(transaction.getSenderAddress()));
-            System.out.println("Deployer balance before doWork - repo: " + this.repository.getBalance(transaction.getSenderAddress()));
-
             this.blockRemainingEnergy -=
                     this.postExecutionWork.doPostExecutionWork(
                             this.repository,
@@ -163,9 +159,6 @@ public class BulkExecutor {
                             summary,
                             transaction,
                             this.blockRemainingEnergy);
-
-            System.out.println("Deployer balance before doWork - child: " + this.repositoryChild.getBalance(transaction.getSenderAddress()));
-            System.out.println("Deployer balance before doWork - repo: " + this.repository.getBalance(transaction.getSenderAddress()));
 
             summaries.add(summary);
         }
@@ -209,9 +202,8 @@ public class BulkExecutor {
 
         // FastVirtualMachine guarantees us that we are always safe to flush its state changes.
         if (transactionIsForAionVirtualMachine(transaction)) {
-            System.out.println("Deployer balance before commitTo: " + this.repositoryChild.getBalance(transaction.getSenderAddress()));
             kernelFromVM.commitTo(new KernelInterfaceForAVM(this.repositoryChild, this.allowNonceIncrement, this.isLocalCall));
-            System.out.println("Deployer balance after commitTo: " + this.repositoryChild.getBalance(transaction.getSenderAddress()));
+
         } else {
             kernelFromVM.commitTo(new KernelInterfaceForFastVM(this.repositoryChild, this.allowNonceIncrement, this.isLocalCall));
         }

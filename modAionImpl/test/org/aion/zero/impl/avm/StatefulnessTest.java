@@ -106,6 +106,8 @@ public class StatefulnessTest {
         assertTrue(receipt.isSuccessful());
         Address contract = AionAddress.wrap(receipt.getTransactionOutput());
 
+        BigInteger deployerInitialNonce = getNonce(this.deployer);
+        BigInteger contractInitialNonce = getNonce(contract);
         BigInteger deployerInitialBalance = getBalance(this.deployer);
         BigInteger contractInitialBalance = getBalance(contract);
         BigInteger fundsToSendToContract = BigInteger.valueOf(1000);
@@ -118,16 +120,22 @@ public class StatefulnessTest {
         BigInteger transferEnergyCost = BigInteger.valueOf(receipt.getEnergyUsed()).multiply(BigInteger.valueOf(this.energyPrice));
         BigInteger deployerBalanceAfterTransfer = deployerInitialBalance.subtract(fundsToSendToContract).subtract(transferEnergyCost);
         BigInteger contractBalanceAfterTransfer = contractInitialBalance.add(fundsToSendToContract);
+        BigInteger deployerNonceAfterTransfer = deployerInitialNonce.add(BigInteger.ONE);
 
         assertEquals(deployerBalanceAfterTransfer, getBalance(this.deployer));
         assertEquals(contractBalanceAfterTransfer, getBalance(contract));
+        assertEquals(deployerNonceAfterTransfer, getNonce(this.deployer));
+        assertEquals(contractInitialNonce, getNonce(contract));
 
+        // Generate a random beneficiary to transfer funds to via the contract.
         Address beneficiary = randomAionAddress();
         long valueForContractToSend = fundsToSendToContract.longValue() / 2;
 
+        // Call the contract to send value using an internal call.
         receipt = callContract(contract, "transferValue", beneficiary.toBytes(), valueForContractToSend);
         assertTrue(receipt.isSuccessful());
 
+        // Verify the accounts have the expected state.
         BigInteger deployerBalanceAfterCall = getBalance(this.deployer);
         BigInteger contractBalanceAfterCall = getBalance(contract);
         BigInteger beneficiaryBalanceAfterCall = getBalance(beneficiary);
@@ -135,11 +143,14 @@ public class StatefulnessTest {
         BigInteger callEnergyCost = BigInteger.valueOf(receipt.getEnergyUsed()).multiply(BigInteger.valueOf(this.energyPrice));
 
         assertEquals(deployerBalanceAfterTransfer.subtract(callEnergyCost), deployerBalanceAfterCall);
-//        assertEquals(contractBalanceAfterTransfer.subtract(BigInteger.valueOf(valueForContractToSend)), contractBalanceAfterCall);
+        assertEquals(contractBalanceAfterTransfer.subtract(BigInteger.valueOf(valueForContractToSend)), contractBalanceAfterCall);
         assertEquals(BigInteger.valueOf(valueForContractToSend), beneficiaryBalanceAfterCall);
+        assertEquals(deployerNonceAfterTransfer.add(BigInteger.ONE), getNonce(this.deployer));
+
+        // The contract nonce increases because it fires off an internal transaction.
+        assertEquals(contractInitialNonce.add(BigInteger.ONE), getNonce(contract));
     }
 
-    // Returns the contract address and verifies it was imported into the new best block.
     private AionTxReceipt deployContract() {
         byte[] jar = getJarBytes();
         AionTransaction transaction = newTransaction(
