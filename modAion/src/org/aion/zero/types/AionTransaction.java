@@ -182,6 +182,10 @@ public class AionTransaction extends AbstractTransaction {
         return parsed;
     }
 
+    public void setTransactionHash(byte[] hash) {
+        this.hash = hash;
+    }
+
     @Override
     public byte[] getTransactionHash() {
         if (hash != null) {
