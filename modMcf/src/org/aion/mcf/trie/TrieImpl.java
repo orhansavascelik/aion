@@ -139,6 +139,10 @@ public class TrieImpl implements Trie {
         return prevRoot;
     }
 
+    public void setPrevRoot(Object prevRoot) {
+        prevRoot = prevRoot;
+    }
+
     public Object getRoot() {
         return root;
     }
@@ -151,6 +155,10 @@ public class TrieImpl implements Trie {
     @Override
     public void setRoot(byte[] root) {
         this.root = root;
+    }
+
+    public void setPruningEnabled(boolean enabled) {
+        pruningEnabled = enabled;
     }
 
     public void deserializeRoot(byte[] data) {

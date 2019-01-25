@@ -242,7 +242,7 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
             throw new IllegalStateException("Cannot make a copy of a ContractDetailsCacheImpl whose original contract is itself!");
         }
 
-        ContractDetailsCacheImpl copyCache = new ContractDetailsCacheImpl(this.origContract.copy());
+        ContractDetailsCacheImpl copyCache = new ContractDetailsCacheImpl((this.origContract == null) ? null : this.origContract.copy());
         copyCache.setCodes(deepCopyOfCodes());
         copyCache.storage = deepCopyOfStorage();
         copyCache.setDirty(this.isDirty());

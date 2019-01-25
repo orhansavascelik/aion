@@ -37,9 +37,15 @@ package org.aion.mcf.trie;
 
 import static org.aion.crypto.HashUtil.h256;
 
+import java.util.Arrays;
 import org.aion.base.db.IByteArrayKeyValueStore;
 
 public class SecureTrie extends TrieImpl implements Trie {
+
+    // used by copy()
+    private SecureTrie() {
+        this(null, null);
+    }
 
     public SecureTrie(IByteArrayKeyValueStore db) {
         this(db, "");
@@ -65,6 +71,36 @@ public class SecureTrie extends TrieImpl implements Trie {
     }
 
     public SecureTrie copy() {
-        //TODO
+        SecureTrie trieCopy = new SecureTrie();
+
+        Object actualPrevRoot = super.getPrevRoot();
+        Object copyPrevRoot = null;
+
+        // prevRoot and root should only be byte arrays for us.
+
+        if (actualPrevRoot instanceof byte[]) {
+            byte[] actualPrevRootBytes = (byte[]) actualPrevRoot;
+            copyPrevRoot = Arrays.copyOf(actualPrevRootBytes, actualPrevRootBytes.length);
+        } else if (actualPrevRoot != null) {
+            // Not much we can do here, thankfully this should never be hit anyway.
+            copyPrevRoot = actualPrevRoot;
+        }
+
+        Object actualRoot = super.getRoot();
+        Object copyRoot = null;
+
+        if (actualRoot instanceof byte[]) {
+            byte[] actualRootBytes = (byte[]) actualRoot;
+            copyRoot = Arrays.copyOf(actualRootBytes, actualRootBytes.length);
+        } else if (actualRoot != null) {
+            // Not much we can do here, thankfully this should never be hit anyway.
+            copyRoot = actualRoot;
+        }
+
+        trieCopy.setPrevRoot(copyPrevRoot);
+        trieCopy.setRoot(copyRoot);
+        trieCopy.setCache(super.getCache().copy());
+        trieCopy.setPruningEnabled(super.isPruningEnabled());
+        return trieCopy;
     }
 }

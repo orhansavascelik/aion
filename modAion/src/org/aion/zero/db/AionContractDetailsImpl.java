@@ -356,12 +356,12 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     @Override
     public AionContractDetailsImpl copy() {
         AionContractDetailsImpl detailsCopy = new AionContractDetailsImpl();
-        detailsCopy.dataSource = (this.dataSource == null) ? null : this.dataSource.copy();
+        detailsCopy.dataSource = this.dataSource; //TODO: confirm, do we need a copy of this?
         detailsCopy.rlpEncoded = (this.rlpEncoded == null) ? null : Arrays.copyOf(this.rlpEncoded, this.rlpEncoded.length);
         detailsCopy.address = (this.address == null) ? null : new AionAddress(this.address.toBytes());
         detailsCopy.storageTrie = (this.storageTrie == null) ? null : this.storageTrie.copy();
         detailsCopy.externalStorage = this.externalStorage;
-        detailsCopy.externalStorageDataSource = this.externalStorageDataSource.copy();
+        detailsCopy.externalStorageDataSource = this.externalStorageDataSource; //TODO: confirm, do we need a copy of this?
 
         detailsCopy.id = globalCount;
         globalCount++;

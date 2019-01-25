@@ -35,8 +35,4 @@
 
 package org.aion.base.db;
 
-public interface IByteArrayKeyValueStore extends IKeyValueStore<byte[], byte[]> {
-
-    IByteArrayKeyValueStore copy();
-
-}
+public interface IByteArrayKeyValueStore extends IKeyValueStore<byte[], byte[]> {}

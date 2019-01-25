@@ -73,30 +73,20 @@ public class AionRepositoryCache extends AbstractRepositoryCache<IBlockStoreBase
             // determine which contracts should get stored
 
             for (Entry<Address, IContractDetails> entry : cachedDetails.entrySet()) {
-
-            }
-
-            //<----------->
-
-            // determine which contracts should get stored
-            for (Map.Entry<Address, IContractDetails> entry : cachedDetails.entrySet()) {
-                IContractDetails ctd = entry.getValue();
-                // TODO: this functionality will be improved with the switch to a
-                // different ContractDetails implementation
+                IContractDetails ctd = entry.getValue().copy();
+                // TODO: this functionality will be improved with the switch to a different ContractDetails implementation
                 if (ctd != null && ctd instanceof ContractDetailsCacheImpl) {
                     ContractDetailsCacheImpl contractDetailsCache = (ContractDetailsCacheImpl) ctd;
                     contractDetailsCache.commit();
 
-                    if (contractDetailsCache.origContract == null
-                        && other.hasContractDetails(entry.getKey())) {
+                    if (contractDetailsCache.origContract == null && other.hasContractDetails(entry.getKey())) {
                         // in forked block the contract account might not exist thus
                         // it is created without
                         // origin, but on the main chain details can contain data
                         // which should be merged
                         // into a single storage trie so both branches with
                         // different stateRoots are valid
-                        contractDetailsCache.origContract =
-                            other.getContractDetails(entry.getKey());
+                        contractDetailsCache.origContract = other.getContractDetails(entry.getKey()).copy();
                         contractDetailsCache.commit();
                     }
                 }

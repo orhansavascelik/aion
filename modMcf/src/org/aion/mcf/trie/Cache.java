@@ -38,12 +38,14 @@ import static org.aion.base.util.ByteArrayWrapper.wrap;
 import static org.aion.rlp.Value.fromRlpEncoded;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
 import org.aion.base.db.IByteArrayKeyValueStore;
@@ -250,5 +252,31 @@ public class Cache {
 
     public int getSize() {
         return nodes.size();
+    }
+
+    public Cache copy() {
+        Cache cacheCopy = new Cache(this.dataSource); //TODO: confirm, do we need a copy of this?
+        cacheCopy.nodes = deepCopyOfNodes();
+        cacheCopy.removedNodes = deepCopyOfRemovedNodes();
+        cacheCopy.isDirty = this.isDirty;
+        return cacheCopy;
+    }
+
+    private Map<ByteArrayWrapper, Node> deepCopyOfNodes() {
+        Map<ByteArrayWrapper, Node> nodesCopy = new HashMap<>();
+        for (Entry<ByteArrayWrapper, Node> node : this.nodes.entrySet()) {
+            byte[] bytesOfKey = node.getKey().getData();
+            nodesCopy.put(new ByteArrayWrapper(Arrays.copyOf(bytesOfKey, bytesOfKey.length)), node.getValue().copy());
+        }
+        return nodesCopy;
+    }
+
+    private Set<ByteArrayWrapper> deepCopyOfRemovedNodes() {
+        Set<ByteArrayWrapper> removedCopy = new HashSet<>();
+        for (ByteArrayWrapper removedNode : this.removedNodes) {
+            byte[] removedNodeBytes = removedNode.toBytes();
+            removedCopy.add(new ByteArrayWrapper(Arrays.copyOf(removedNodeBytes, removedNodeBytes.length)));
+        }
+        return removedCopy;
     }
 }
