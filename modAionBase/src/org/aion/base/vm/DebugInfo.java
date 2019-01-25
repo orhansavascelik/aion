@@ -12,4 +12,6 @@ public class DebugInfo {
 
     public static boolean isSecondTransaction = false;
 
+    public static String currentPipelineStage = "-1";
+
 }

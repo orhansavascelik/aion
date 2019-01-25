@@ -1145,6 +1145,11 @@ public class AionBlockchainImpl implements IAionBlockchain {
                 transaction,
                 blockEnergyLeft) -> {
             if (!transactionSummary.isRejected()) {
+
+                if (DebugInfo.currentBlockNumber == 257159) {
+                    DebugInfo.currentPipelineStage = "generatePreBlockWork childRepository.flush()";
+                }
+
                 childRepository.flush();
 
                 AionTxReceipt receipt = transactionSummary.getReceipt();
@@ -1212,6 +1217,11 @@ public class AionBlockchainImpl implements IAionBlockchain {
                 transactionSummary,
                 transaction,
                 blockEnergyLeft) -> {
+
+            if (DebugInfo.currentBlockNumber == 257159) {
+                DebugInfo.currentPipelineStage = "applyBlockWork childRepository.flush()";
+            }
+
             childRepository.flush();
             AionTxReceipt receipt = transactionSummary.getReceipt();
             byte[] root = topRepository.getRoot();

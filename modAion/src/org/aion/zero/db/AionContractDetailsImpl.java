@@ -62,10 +62,18 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     public boolean externalStorage;
     private IByteArrayKeyValueStore externalStorageDataSource;
 
-    public AionContractDetailsImpl() {}
+    private static int globalCount = 0;
+    public int id = -1;
+
+    public AionContractDetailsImpl() {
+        id = globalCount;
+        globalCount++;
+    }
 
     public AionContractDetailsImpl(int prune, int memStorageLimit) {
         super(prune, memStorageLimit);
+        id = globalCount;
+        globalCount++;
     }
 
     private AionContractDetailsImpl(
@@ -73,6 +81,8 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
         this.address = address;
         this.storageTrie = storageTrie;
         setCodes(codes);
+        id = globalCount;
+        globalCount++;
     }
 
     public AionContractDetailsImpl(byte[] code) throws Exception {
@@ -81,6 +91,8 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
         }
 
         decode(code);
+        id = globalCount;
+        globalCount++;
     }
 
     /**

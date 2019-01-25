@@ -7,6 +7,7 @@ import org.aion.base.db.IRepository;
 import org.aion.base.db.IRepositoryCache;
 import org.aion.base.type.AionAddress;
 import org.aion.base.type.ITxExecSummary;
+import org.aion.base.vm.DebugInfo;
 import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.fastvm.FastVirtualMachine;
 import org.aion.fastvm.FastVmResultCode;
@@ -158,8 +159,6 @@ public class BulkExecutor {
             AionTxExecSummary summary =
                     buildSummaryAndUpdateRepository(transaction, context, kernelFromVM, result);
 
-            AccountState contract = (AccountState) this.repository.getAccountState(AionAddress.wrap(Hex.decode("0000000000000000000000000000000000000000000000000000000000000200")));
-
             // 3. Do any post execution work and update the remaining block energy.
             this.blockRemainingEnergy -=
                     this.postExecutionWork.doPostExecutionWork(
@@ -208,6 +207,10 @@ public class BulkExecutor {
                         .result(result.getReturnData());
 
         ResultCode resultCode = result.getResultCode();
+
+        if (DebugInfo.currentBlockNumber == 257159) {
+            DebugInfo.currentPipelineStage = "BulkExe kernelFromVM.commitTo(this.repositoryChild)";
+        }
 
         // FastVirtualMachine guarantees us that we are always safe to flush its state changes.
         if (transactionIsForAionVirtualMachine(transaction)) {
@@ -282,6 +285,10 @@ public class BulkExecutor {
                 for (Address addr : deleteAccounts) {
                     track.deleteAccount(addr);
                 }
+            }
+
+            if (DebugInfo.currentBlockNumber == 257159) {
+                DebugInfo.currentPipelineStage = "BulkExe track.flush()";
             }
             track.flush();
         }
