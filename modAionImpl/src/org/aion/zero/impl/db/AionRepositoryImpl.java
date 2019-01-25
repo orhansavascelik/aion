@@ -42,6 +42,7 @@ import org.aion.base.db.IRepositoryCache;
 import org.aion.base.db.IRepositoryConfig;
 import org.aion.base.util.ByteArrayWrapper;
 import org.aion.base.util.Hex;
+import org.aion.base.vm.DebugInfo;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepository;
 import org.aion.mcf.db.ContractDetailsCacheImpl;
@@ -198,7 +199,16 @@ public class AionRepositoryImpl
                     updateContractDetails(address, contractDetails);
 
                     if (!Arrays.equals(accountState.getCodeHash(), EMPTY_TRIE_HASH)) {
-                        accountState.setStateRoot(contractDetails.getStorageHash());
+                        byte[] storageHash = contractDetails.getStorageHash();
+                        accountState.setStateRoot(storageHash);
+                        if (DebugInfo.currentBlockNumber == 257159) {
+                            String stage = (DebugInfo.isGeneratePreBlock) ? "gen" : "apply";
+                            System.out.println(
+                                    "$$$_ARI_" + stage + "_$$$ Setting storage hash ("
+                                            + entry.getKey()
+                                            + ") = "
+                                            + Hex.toHexString(storageHash));
+                        }
                     }
 
                     updateAccountState(address, accountState);

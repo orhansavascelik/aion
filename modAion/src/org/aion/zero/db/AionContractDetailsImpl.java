@@ -36,6 +36,7 @@ import org.aion.base.db.IContractDetails;
 import org.aion.base.type.AionAddress;
 import org.aion.base.util.ByteArrayWrapper;
 import org.aion.base.util.ByteUtil;
+import org.aion.base.vm.DebugInfo;
 import org.aion.mcf.db.AbstractContractDetails;
 import org.aion.mcf.ds.XorDataSource;
 import org.aion.mcf.trie.SecureTrie;
@@ -45,6 +46,7 @@ import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPItem;
 import org.aion.rlp.RLPList;
+import org.aion.util.conversions.Hex;
 import org.aion.vm.api.interfaces.Address;
 
 public class AionContractDetailsImpl extends AbstractContractDetails {
@@ -202,6 +204,24 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      */
     @Override
     public byte[] getEncoded() {
+        if (DebugInfo.currentBlockNumber == 257159) {
+            String stage = (DebugInfo.isGeneratePreBlock) ? "gen" : "apply";
+            System.out.println(
+                    "$$$_ACDI_" + stage + "_$$$ Encoding: "
+                            + address
+                            + " "
+                            + externalStorage
+                            + " "
+                            + Hex.toHexString(storageTrie.getRootHash())
+                            + " "
+                            + getCodes().size()
+                            + " ");
+            System.out.print("[codes = ");
+            for (byte[] codes : getCodes().values()) {
+                System.out.print(Hex.toHexString(codes) + " ");
+            }
+        }
+
         if (rlpEncoded == null) {
 
             byte[] rlpAddress = RLP.encodeElement(address.toBytes());

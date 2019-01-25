@@ -27,6 +27,7 @@ import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 
 import java.math.BigInteger;
 import org.aion.base.util.FastByteComparisons;
+import org.aion.base.vm.DebugInfo;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPList;
 import org.aion.util.conversions.Hex;
@@ -285,6 +286,15 @@ public class AccountState extends AbstractState {
     }
 
     public byte[] getEncoded() {
+        if (DebugInfo.currentBlockNumber == 257159) {
+            String stage = (DebugInfo.isGeneratePreBlock) ? "gen" : "apply";
+            System.out.println("$$$_AS_" + stage + "_$$$ encoding: "
+                + this.nonce + " "
+                + this.balance + " "
+                + Hex.toHexString(this.stateRoot) + " "
+                + Hex.toHexString(this.codeHash));
+        }
+
         if (rlpEncoded == null) {
             byte[] nonce = RLP.encodeBigInteger(this.nonce);
             byte[] balance = RLP.encodeBigInteger(this.balance);

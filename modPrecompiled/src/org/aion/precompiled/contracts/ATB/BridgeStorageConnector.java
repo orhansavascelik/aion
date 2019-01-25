@@ -237,8 +237,14 @@ public class BridgeStorageConnector {
     private byte[] getWORD(@Nonnull final DataWord key) {
         ByteArrayWrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
         // C1
-        if (word == null || Arrays.equals(word.getData(), ByteUtil.EMPTY_HALFWORD)) return null;
-        return new DataWord(word.getData()).getData();
+
+        if (word == null) {
+            return null;
+        }
+
+        byte[] bytes = new DataWord(word.getData()).getData();
+        if (Arrays.equals(bytes, ByteUtil.EMPTY_HALFWORD)) return null;
+        return bytes;
     }
 
     private void setWORD(@Nonnull final DataWord key, @Nonnull final DataWord word) {
@@ -251,6 +257,11 @@ public class BridgeStorageConnector {
 
     private void setDWORD(@Nonnull final DataWord key, @Nonnull final byte[] dword) {
         assert dword.length > 16;
+
+        if (dword.length <= 16) {
+            System.out.print(
+                    "A DATA WORD GOT IN HERE !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
         DoubleDataWord word = new DoubleDataWord(dword);
         if (word.isZero()) {
             this.track.removeStorageRow(contractAddress, key.toWrapper());

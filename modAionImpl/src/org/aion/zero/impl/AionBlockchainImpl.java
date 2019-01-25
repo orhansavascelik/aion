@@ -57,6 +57,7 @@ import org.aion.base.util.ByteArrayWrapper;
 import org.aion.base.util.ByteUtil;
 import org.aion.base.util.FastByteComparisons;
 import org.aion.base.util.Hex;
+import org.aion.base.vm.DebugInfo;
 import org.aion.crypto.HashUtil;
 import org.aion.equihash.EquihashMiner;
 import org.aion.evtmgr.IEvent;
@@ -812,10 +813,10 @@ public class AionBlockchainImpl implements IAionBlockchain {
 
     public synchronized AionBlockSummary add(AionBlock block, boolean rebuild) {
 
-//        if (!isValid(block)) {
-//            LOG.error("Attempting to add {} block.", (block == null ? "NULL" : "INVALID"));
-//            return null;
-//        }
+        if (!isValid(block)) {
+            LOG.error("Attempting to add {} block.", (block == null ? "NULL" : "INVALID"));
+            return null;
+        }
 
         track = repository.startTracking();
         byte[] origRoot = repository.getRoot();
@@ -1089,6 +1090,9 @@ public class AionBlockchainImpl implements IAionBlockchain {
      * @return
      */
     private RetValidPreBlock generatePreBlock(IAionBlock block) {
+        DebugInfo.currentBlockNumber = block.getNumber();
+        DebugInfo.isGeneratePreBlock = true;
+        DebugInfo.isApplyBlock = false;
 
         long saveTime = System.nanoTime();
 
@@ -1144,8 +1148,13 @@ public class AionBlockchainImpl implements IAionBlockchain {
                 childRepository.flush();
 
                 AionTxReceipt receipt = transactionSummary.getReceipt();
-                receipt.setPostTxState(topRepository.getRoot());
+                byte[] root = topRepository.getRoot();
+                receipt.setPostTxState(root);
                 receipt.setTransaction(transaction);
+
+                if (DebugInfo.currentBlockNumber == 257159) {
+                    System.out.println("$$$_WORK_gen_$$$ topRepo root hash = " + Hex.toHexString(root));
+                }
 
                 return receipt.getEnergyUsed();
             } else {
@@ -1155,6 +1164,10 @@ public class AionBlockchainImpl implements IAionBlockchain {
     }
 
     private AionBlockSummary applyBlock(IAionBlock block) {
+        DebugInfo.currentBlockNumber = block.getNumber();
+        DebugInfo.isGeneratePreBlock = false;
+        DebugInfo.isApplyBlock = true;
+
         long saveTime = System.nanoTime();
 
         List<AionTxReceipt> receipts = new ArrayList<>();
@@ -1201,7 +1214,14 @@ public class AionBlockchainImpl implements IAionBlockchain {
                 blockEnergyLeft) -> {
             childRepository.flush();
             AionTxReceipt receipt = transactionSummary.getReceipt();
-            receipt.setPostTxState(topRepository.getRoot());
+            byte[] root = topRepository.getRoot();
+            receipt.setPostTxState(root);
+
+            if (DebugInfo.currentBlockNumber == 257159) {
+                System.out.println("$$$_WORK_apply_$$$ topRepo root hash = " + Hex.toHexString(root));
+            }
+
+
             return 0;
         };
     }

@@ -82,7 +82,7 @@ public class PcTest {
             value,
             inputData,
             2_000_000,
-            1,
+            10_000_000_000L,
             (byte) 0x01
         );
     }
@@ -101,7 +101,7 @@ public class PcTest {
             value,
             inputData,
             2_000_000,
-            1,
+            10_000_000_000L,
             (byte) 0x01
         );
     }

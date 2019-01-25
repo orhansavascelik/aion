@@ -62,6 +62,7 @@ import org.aion.base.db.IByteArrayKeyValueDatabase;
 import org.aion.base.db.IByteArrayKeyValueStore;
 import org.aion.base.util.ByteArrayWrapper;
 import org.aion.base.util.FastByteComparisons;
+import org.aion.base.vm.DebugInfo;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.trie.scan.CollectFullSetOfNodes;
 import org.aion.mcf.trie.scan.CountNodes;
@@ -196,6 +197,11 @@ public class TrieImpl implements Trie {
 
     @Override
     public void update(byte[] key, byte[] value) {
+        if (DebugInfo.currentBlockNumber == 257159) {
+            String stage = (DebugInfo.isGeneratePreBlock) ? "gen" : "apply";
+            System.out.println("$$$_TI_" + stage + "_$$$ update key = " + Hex.toHexString(key) + ", value = " + Hex.toHexString(value));
+        }
+
         if (key == null) {
             throw new NullPointerException("The key should not be null.");
         }
