@@ -22,8 +22,10 @@
  */
 package org.aion.mcf.db;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import org.aion.base.db.IByteArrayKeyValueStore;
 import org.aion.base.db.IContractDetails;
@@ -48,6 +50,14 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
         }
     }
 
+    /**
+     * Makes a copy of cache. This copy is not guaranteed to be a deep copy. There may be certain
+     * references that are held by both this copy and cache after calling this method. For a truly
+     * deep copy, use copy().
+     *
+     * @param cache The cache to copy.
+     * @return A non-deep copy of cache.
+     */
     public static ContractDetailsCacheImpl copy(ContractDetailsCacheImpl cache) {
         ContractDetailsCacheImpl copy = new ContractDetailsCacheImpl(cache.origContract);
         copy.setCodes(new HashMap<>(cache.getCodes()));
@@ -221,4 +231,55 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
     public void setDataSource(IByteArrayKeyValueStore dataSource) {
         throw new UnsupportedOperationException("Can't set datasource in cache implementation.");
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public ContractDetailsCacheImpl copy() {
+        //TODO: move this check into constructors... first will have to privatize the variable.
+        if (this.origContract == this) {
+            throw new IllegalStateException("Cannot make a copy of a ContractDetailsCacheImpl whose original contract is itself!");
+        }
+
+        ContractDetailsCacheImpl copyCache = new ContractDetailsCacheImpl(this.origContract.copy());
+        copyCache.setCodes(deepCopyOfCodes());
+        copyCache.storage = deepCopyOfStorage();
+        copyCache.setDirty(this.isDirty());
+        copyCache.setDeleted(this.isDeleted());
+        copyCache.prune = this.prune;
+        copyCache.detailsInMemoryStorageLimit = this.detailsInMemoryStorageLimit;
+        return copyCache;
+    }
+
+    private Map<ByteArrayWrapper, byte[]> deepCopyOfCodes() {
+        Map<ByteArrayWrapper, byte[]> actualCodes = this.getCodes();
+
+        if (actualCodes == null) {
+            return null;
+        }
+
+        Map<ByteArrayWrapper, byte[]> copyCodes = new HashMap<>();
+        for (Entry<ByteArrayWrapper, byte[]> codeEntry : actualCodes.entrySet()) {
+            byte[] bytesOfKey = codeEntry.getKey().getData();
+            byte[] bytesOfValue = codeEntry.getValue();
+            copyCodes.put(new ByteArrayWrapper(Arrays.copyOf(bytesOfKey, bytesOfKey.length)), Arrays.copyOf(bytesOfValue, bytesOfValue.length));
+        }
+        return copyCodes;
+    }
+
+    private Map<ByteArrayWrapper, ByteArrayWrapper> deepCopyOfStorage() {
+        if (this.storage == null) {
+            return null;
+        }
+
+        Map<ByteArrayWrapper, ByteArrayWrapper> copyStorage = new HashMap<>();
+        for (Entry<ByteArrayWrapper, ByteArrayWrapper> storageEntry : this.storage.entrySet()) {
+            byte[] bytesOfKey = storageEntry.getKey().getData();
+            byte[] bytesOfValue = storageEntry.getValue().getData();
+            copyStorage.put(new ByteArrayWrapper(Arrays.copyOf(bytesOfKey, bytesOfKey.length)), new ByteArrayWrapper(Arrays.copyOf(bytesOfValue, bytesOfValue.length)));
+        }
+        return copyStorage;
+    }
+
 }

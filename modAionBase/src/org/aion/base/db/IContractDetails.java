@@ -210,4 +210,12 @@ public interface IContractDetails {
      * @param dataSource The new dataSource.
      */
     void setDataSource(IByteArrayKeyValueStore dataSource);
+
+    /**
+     * Returns a deep copy of this object.
+     *
+     * @return a deep copy of this object.
+     */
+    IContractDetails copy();
+
 }

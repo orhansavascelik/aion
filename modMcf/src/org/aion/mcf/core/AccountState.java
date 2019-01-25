@@ -25,7 +25,9 @@ package org.aion.mcf.core;
 import static org.aion.crypto.HashUtil.EMPTY_DATA_HASH;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 
+import java.lang.reflect.Array;
 import java.math.BigInteger;
+import java.util.Arrays;
 import org.aion.base.util.FastByteComparisons;
 import org.aion.base.vm.DebugInfo;
 import org.aion.rlp.RLP;
@@ -309,6 +311,18 @@ public class AccountState extends AbstractState {
         return FastByteComparisons.equal(codeHash, EMPTY_DATA_HASH)
                 && BigInteger.ZERO.equals(balance)
                 && BigInteger.ZERO.equals(nonce);
+    }
+
+    public AccountState copy() {
+        AccountState copyState = new AccountState();
+        copyState.balance = this.balance;
+        copyState.nonce = this.nonce;
+        copyState.stateRoot = (this.stateRoot == null) ? null : Arrays.copyOf(this.stateRoot, this.stateRoot.length);
+        copyState.dirty = this.dirty;
+        copyState.deleted = this.deleted;
+        copyState.codeHash = (this.codeHash == null) ? null : Arrays.copyOf(this.codeHash, this.codeHash.length);
+        copyState.rlpEncoded = (this.rlpEncoded == null) ? null : Arrays.copyOf(this.rlpEncoded, this.rlpEncoded.length);
+        return copyState;
     }
 
     public String toString() {

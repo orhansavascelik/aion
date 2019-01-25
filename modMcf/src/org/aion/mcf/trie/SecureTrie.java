@@ -63,4 +63,8 @@ public class SecureTrie extends TrieImpl implements Trie {
     public void delete(byte[] key) {
         super.delete(h256(key));
     }
+
+    public SecureTrie copy() {
+        //TODO
+    }
 }

@@ -29,7 +29,9 @@ import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.crypto.HashUtil.h256;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
 import org.aion.base.db.IByteArrayKeyValueStore;
 import org.aion.base.db.IContractDetails;
@@ -348,5 +350,43 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
         details.dataSource = dataSource;
 
         return details;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public AionContractDetailsImpl copy() {
+        AionContractDetailsImpl detailsCopy = new AionContractDetailsImpl();
+        detailsCopy.dataSource = (this.dataSource == null) ? null : this.dataSource.copy();
+        detailsCopy.rlpEncoded = (this.rlpEncoded == null) ? null : Arrays.copyOf(this.rlpEncoded, this.rlpEncoded.length);
+        detailsCopy.address = (this.address == null) ? null : new AionAddress(this.address.toBytes());
+        detailsCopy.storageTrie = (this.storageTrie == null) ? null : this.storageTrie.copy();
+        detailsCopy.externalStorage = this.externalStorage;
+        detailsCopy.externalStorageDataSource = this.externalStorageDataSource.copy();
+
+        detailsCopy.id = globalCount;
+        globalCount++;
+
+        detailsCopy.setCodes(deepCopyOfCodes());
+        detailsCopy.setDirty(this.isDirty());
+        detailsCopy.setDeleted(this.isDeleted());
+        detailsCopy.prune = this.prune;
+        detailsCopy.detailsInMemoryStorageLimit = this.detailsInMemoryStorageLimit;
+        return detailsCopy;
+    }
+
+    private Map<ByteArrayWrapper, byte[]> deepCopyOfCodes() {
+        Map<ByteArrayWrapper, byte[]> actualCodes = this.getCodes();
+
+        if (actualCodes == null) {
+            return null;
+        }
+
+        Map<ByteArrayWrapper, byte[]> copyCodes = new HashMap<>();
+        for (Entry<ByteArrayWrapper, byte[]> codeEntry : actualCodes.entrySet()) {
+            byte[] bytesOfKey = codeEntry.getKey().getData();
+            byte[] bytesOfValue = codeEntry.getValue();
+            copyCodes.put(new ByteArrayWrapper(Arrays.copyOf(bytesOfKey, bytesOfKey.length)), Arrays.copyOf(bytesOfValue, bytesOfValue.length));
+        }
+        return copyCodes;
     }
 }

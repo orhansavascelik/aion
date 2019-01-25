@@ -26,10 +26,12 @@ package org.aion.zero.db;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import org.aion.base.db.IContractDetails;
 import org.aion.base.db.IRepository;
 import org.aion.base.db.IRepositoryCache;
+import org.aion.base.type.AionAddress;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepositoryCache;
 import org.aion.mcf.db.ContractDetailsCacheImpl;
@@ -47,6 +49,67 @@ public class AionRepositoryCache extends AbstractRepositoryCache<IBlockStoreBase
     @Override
     public IRepositoryCache startTracking() {
         return new AionRepositoryCache(this);
+    }
+
+    public void flushCopyTo(IRepository other, boolean clearStateAfterFlush) {
+        fullyWriteLock();
+        try {
+            // determine which accounts should get stored
+
+            // Collect all account states we want to flush.
+            HashMap<Address, AccountState> cleanedCacheAccounts = new HashMap<>();
+
+            for (Entry<Address, AccountState> entry : cachedAccounts.entrySet()) {
+                AccountState account = entry.getValue().copy();
+                if (account != null && account.isDirty() && account.isEmpty()) {
+                    // ignore contract state for empty accounts at storage
+                    //TODO: what are the implications of this in the context of !clearStateAfterFlush?
+                    cachedDetails.remove(entry.getKey());
+                } else {
+                    cleanedCacheAccounts.put(new AionAddress(entry.getKey().toBytes()), account);
+                }
+            }
+
+            // determine which contracts should get stored
+
+            for (Entry<Address, IContractDetails> entry : cachedDetails.entrySet()) {
+
+            }
+
+            //<----------->
+
+            // determine which contracts should get stored
+            for (Map.Entry<Address, IContractDetails> entry : cachedDetails.entrySet()) {
+                IContractDetails ctd = entry.getValue();
+                // TODO: this functionality will be improved with the switch to a
+                // different ContractDetails implementation
+                if (ctd != null && ctd instanceof ContractDetailsCacheImpl) {
+                    ContractDetailsCacheImpl contractDetailsCache = (ContractDetailsCacheImpl) ctd;
+                    contractDetailsCache.commit();
+
+                    if (contractDetailsCache.origContract == null
+                        && other.hasContractDetails(entry.getKey())) {
+                        // in forked block the contract account might not exist thus
+                        // it is created without
+                        // origin, but on the main chain details can contain data
+                        // which should be merged
+                        // into a single storage trie so both branches with
+                        // different stateRoots are valid
+                        contractDetailsCache.origContract =
+                            other.getContractDetails(entry.getKey());
+                        contractDetailsCache.commit();
+                    }
+                }
+            }
+
+            other.updateBatch(cleanedCacheAccounts, cachedDetails);
+            if (clearStateAfterFlush) {
+                cachedAccounts.clear();
+                cachedDetails.clear();
+            }
+        } finally {
+            fullyWriteUnlock();
+        }
     }
 
     @Override
