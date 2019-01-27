@@ -65,7 +65,9 @@ import org.aion.evtmgr.IEventMgr;
 import org.aion.evtmgr.impl.evt.EventBlock;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
+import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.ImportResult;
+import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.db.IBlockStorePow;
 import org.aion.mcf.db.TransactionStore;
 import org.aion.mcf.manager.ChainStatistics;
@@ -1139,33 +1141,64 @@ public class AionBlockchainImpl implements IAionBlockchain {
      * method.
      */
     private static PostExecutionWork getPostExecutionWorkForGeneratePreBlock() {
-        return (topRepository,
-                childRepository,
-                transactionSummary,
-                transaction,
-                blockEnergyLeft) -> {
-            if (!transactionSummary.isRejected()) {
+        return new PostExecutionWork() {
+            @Override
+            public long doPostExecutionWork(IRepository repository,
+                IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild,
+                AionTxExecSummary summary, AionTransaction transaction, long blockEnergyRemaining) {
 
-                if (DebugInfo.currentBlockNumber == 257159) {
-                    DebugInfo.currentPipelineStage = "generatePreBlockWork childRepository.flush()";
+                if (!summary.isRejected()) {
+                    if (DebugInfo.currentBlockNumber == 257159) {
+                        DebugInfo.currentPipelineStage = "generatePreBlockWork childRepository.flush()";
+                    }
+
+                    repositoryChild.flush();
+
+                    AionTxReceipt receipt = summary.getReceipt();
+                    byte[] root = repository.getRoot();
+                    receipt.setPostTxState(root);
+                    receipt.setTransaction(transaction);
+
+                    if (DebugInfo.currentBlockNumber == 257159) {
+                        System.out.println("$$$_WORK_gen_$$$ topRepo root hash = " + Hex.toHexString(root));
+                    }
+
+                    return receipt.getEnergyUsed();
+                } else {
+                    return 0;
                 }
-
-                childRepository.flush();
-
-                AionTxReceipt receipt = transactionSummary.getReceipt();
-                byte[] root = topRepository.getRoot();
-                receipt.setPostTxState(root);
-                receipt.setTransaction(transaction);
-
-                if (DebugInfo.currentBlockNumber == 257159) {
-                    System.out.println("$$$_WORK_gen_$$$ topRepo root hash = " + Hex.toHexString(root));
-                }
-
-                return receipt.getEnergyUsed();
-            } else {
-                return 0;
             }
         };
+
+
+
+//        return (topRepository,
+//                childRepository,
+//                transactionSummary,
+//                transaction,
+//                blockEnergyLeft) -> {
+//            if (!transactionSummary.isRejected()) {
+//
+//                if (DebugInfo.currentBlockNumber == 257159) {
+//                    DebugInfo.currentPipelineStage = "generatePreBlockWork childRepository.flush()";
+//                }
+//
+//                childRepository.flush();
+//
+//                AionTxReceipt receipt = transactionSummary.getReceipt();
+//                byte[] root = topRepository.getRoot();
+//                receipt.setPostTxState(root);
+//                receipt.setTransaction(transaction);
+//
+//                if (DebugInfo.currentBlockNumber == 257159) {
+//                    System.out.println("$$$_WORK_gen_$$$ topRepo root hash = " + Hex.toHexString(root));
+//                }
+//
+//                return receipt.getEnergyUsed();
+//            } else {
+//                return 0;
+//            }
+//        };
     }
 
     private AionBlockSummary applyBlock(IAionBlock block) {
@@ -1212,28 +1245,57 @@ public class AionBlockchainImpl implements IAionBlockchain {
      * <p>This "work" is specific to the {@link AionBlockchainImpl#applyBlock(IAionBlock)} method.
      */
     private static PostExecutionWork getPostExecutionWorkForApplyBlock() {
-        return (topRepository,
-                childRepository,
-                transactionSummary,
-                transaction,
-                blockEnergyLeft) -> {
+        return new PostExecutionWork() {
+            @Override
+            public long doPostExecutionWork(IRepository repository,
+                IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild,
+                AionTxExecSummary summary, AionTransaction transaction, long blockEnergyRemaining) {
 
-            if (DebugInfo.currentBlockNumber == 257159) {
-                DebugInfo.currentPipelineStage = "applyBlockWork childRepository.flush()";
+                if (DebugInfo.currentBlockNumber == 257159) {
+                    DebugInfo.currentPipelineStage = "applyBlockWork childRepository.flush()";
+                }
+
+                repositoryChild.flush();
+                AionTxReceipt receipt = summary.getReceipt();
+                byte[] root = repository.getRoot();
+                receipt.setPostTxState(root);
+
+                if (DebugInfo.currentBlockNumber == 257159) {
+                    System.out.println("$$$_WORK_apply_$$$ topRepo root hash = " + Hex.toHexString(root));
+                }
+
+
+                return 0;
             }
-
-            childRepository.flush();
-            AionTxReceipt receipt = transactionSummary.getReceipt();
-            byte[] root = topRepository.getRoot();
-            receipt.setPostTxState(root);
-
-            if (DebugInfo.currentBlockNumber == 257159) {
-                System.out.println("$$$_WORK_apply_$$$ topRepo root hash = " + Hex.toHexString(root));
-            }
-
-
-            return 0;
         };
+
+
+
+
+
+
+//        return (topRepository,
+//                childRepository,
+//                transactionSummary,
+//                transaction,
+//                blockEnergyLeft) -> {
+//
+//            if (DebugInfo.currentBlockNumber == 257159) {
+//                DebugInfo.currentPipelineStage = "applyBlockWork childRepository.flush()";
+//            }
+//
+//            childRepository.flush();
+//            AionTxReceipt receipt = transactionSummary.getReceipt();
+//            byte[] root = topRepository.getRoot();
+//            receipt.setPostTxState(root);
+//
+//            if (DebugInfo.currentBlockNumber == 257159) {
+//                System.out.println("$$$_WORK_apply_$$$ topRepo root hash = " + Hex.toHexString(root));
+//            }
+//
+//
+//            return 0;
+//        };
     }
 
     /**

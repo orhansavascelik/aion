@@ -173,7 +173,7 @@ public class AionRepositoryCache extends AbstractRepositoryCache<IBlockStoreBase
 
             for (Map.Entry<Address, IContractDetails> ctdEntry : details.entrySet()) {
                 ContractDetailsCacheImpl contractDetailsCache =
-                        (ContractDetailsCacheImpl) ctdEntry.getValue();
+                        (ContractDetailsCacheImpl) ctdEntry.getValue().copy();
                 if (contractDetailsCache.origContract != null
                         && !(contractDetailsCache.origContract
                                 instanceof AionContractDetailsImpl)) {

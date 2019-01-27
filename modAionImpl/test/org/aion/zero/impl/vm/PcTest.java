@@ -9,22 +9,30 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Properties;
+import org.aion.base.db.IRepository;
+import org.aion.base.db.IRepositoryCache;
 import org.aion.base.type.AionAddress;
+import org.aion.base.util.ByteArrayWrapper;
 import org.aion.crypto.ECKeyFac;
 import org.aion.crypto.HashUtil;
 import org.aion.log.AionLoggerFactory;
+import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.ImportResult;
 import org.aion.mcf.types.AbstractBlockSummary;
+import org.aion.mcf.vm.types.DataWord;
+import org.aion.mcf.vm.types.DoubleDataWord;
 import org.aion.solidity.Compiler;
 import org.aion.util.conversions.Hex;
 import org.aion.utils.NativeLibrary;
 import org.aion.vm.api.interfaces.Address;
+import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.AionHub;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.core.IAionBlockchain;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.types.AionTransaction;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,6 +69,85 @@ public class PcTest {
 
         // Send them off.
         sendTransactionsInBulk(transaction1, transaction2);
+    }
+
+    @Test
+    public void testContractState() {
+        IRepository topRepository = AionHub.inst().getRepository();
+        IRepositoryCache repositoryChild = topRepository.startTracking();
+        IRepositoryCache snapshot = repositoryChild.startTracking();
+
+        IRepositoryCache kernel1 = repositoryChild.startTracking();
+        IRepositoryCache child1 = kernel1.startTracking();
+        IRepositoryCache grand1 = child1.startTracking();
+
+        Address contract1 = AionAddress.wrap("0x0000000000000000000000000000000000000000000000000000000000000200");
+        byte[] key = Hex.decode("fbe129140032622b0237f6da53b32dc5");
+        byte[] value = Hex.decode("5e5adf199f41f3efba2bd6baafdd446990a7a096c2f5297ce9a241231350260a");
+
+        child1.incrementNonce(contract1);
+        child1.addBalance(contract1, BigInteger.ONE.negate());
+        grand1.addStorageRow(contract1, new ByteArrayWrapper(key), new ByteArrayWrapper(value));
+
+        grand1.flush();
+        child1.flush();
+        ((AionRepositoryCache) kernel1).flushCopyTo(snapshot, false);
+
+        // update
+        IRepositoryCache snapTrack = snapshot.startTracking();
+        snapTrack.addBalance(contract1, BigInteger.ONE);
+        snapTrack.addBalance(AionAddress.wrap("0x0000000000000000000000000000000000000000000000000000000000000000"), BigInteger.TEN);
+        snapTrack.flush();
+
+        key = Hex.decode("5ea0f3cb150d3203cd857c9e018034b0");
+        value = Hex.decode("43133a8e03f3fd399066d5e26a07ff3fe6aeb2d08660f0216cdb789deb9f8484");
+
+        IRepositoryCache kernel2 = repositoryChild.startTracking();
+        IRepositoryCache child2 = kernel2.startTracking();
+        IRepositoryCache grand2 = child2.startTracking();
+
+        child2.incrementNonce(contract1);
+        child2.addBalance(contract1, BigInteger.TWO.negate());
+        grand2.addStorageRow(contract1, new ByteArrayWrapper(key), new ByteArrayWrapper(value));
+
+        grand2.flush();
+        child2.flush();
+        ((AionRepositoryCache) kernel2).flushCopyTo(snapshot, false);
+
+        // update
+        snapTrack = snapshot.startTracking();
+        snapTrack.addBalance(contract1, BigInteger.TWO);
+        snapTrack.addBalance(AionAddress.wrap("0x0000000000000000000000000000000000000000000000000000000000000000"), BigInteger.TEN.subtract(BigInteger.ONE));
+        snapTrack.flush();
+
+        // Now Java Kernel consumes the changes.
+        kernel1.flushTo(repositoryChild, false);
+
+        IRepositoryCache repoChildTrack = repositoryChild.startTracking();
+        repoChildTrack.addBalance(contract1, BigInteger.ONE);
+        repoChildTrack.addBalance(AionAddress.wrap("0x0000000000000000000000000000000000000000000000000000000000000000"), BigInteger.TEN);
+        repoChildTrack.flush();
+
+        repositoryChild.flush();
+
+        System.out.println("ROOT = " + Hex.toHexString(topRepository.getRoot()));
+
+        kernel2.flushTo(repositoryChild, false);
+
+        repoChildTrack = repositoryChild.startTracking();
+        repoChildTrack.addBalance(contract1, BigInteger.TWO);
+        repoChildTrack.addBalance(AionAddress.wrap("0x0000000000000000000000000000000000000000000000000000000000000000"), BigInteger.TEN.subtract(BigInteger.ONE));
+        repoChildTrack.flush();
+
+        repositoryChild.flush();
+
+        System.out.println("ROOT = " + Hex.toHexString(topRepository.getRoot()));
+    }
+
+    private Address randomAddress() {
+        byte[] bytes = RandomUtils.nextBytes(Address.SIZE);
+        bytes[0] = 0x0f;
+        return AionAddress.wrap(bytes);
     }
 
     private AbstractBlockSummary sendTransactionsInBulk(AionTransaction... transactions) {
