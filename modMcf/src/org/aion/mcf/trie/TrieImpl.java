@@ -138,6 +138,10 @@ public class TrieImpl implements Trie {
         return prevRoot;
     }
 
+    public void setPrevRoot(Object previousRoot) {
+        prevRoot = previousRoot;
+    }
+
     public Object getRoot() {
         return root;
     }
@@ -166,6 +170,10 @@ public class TrieImpl implements Trie {
 
     public boolean isPruningEnabled() {
         return pruningEnabled;
+    }
+
+    public void setPruningEnabled(boolean pruningIsEnabled) {
+        pruningEnabled = pruningIsEnabled;
     }
 
     public TrieImpl withPruningEnabled(boolean pruningEnabled) {
