@@ -26,6 +26,7 @@ dependencies {
     compile project(':aion_api')
     compile project(':aion_fastvm')
     compile files('../lib/org-aion-avm-rt.jar')
+    compile files('../lib/org-aion-avm-userlib.jar')
     //compile files('../lib/libJson.jar')
     compile 'org.json:json:20180813'
     compile 'info.picocli:picocli:3.6.1'
