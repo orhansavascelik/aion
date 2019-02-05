@@ -22,6 +22,7 @@ import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.Statefulness;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
+import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxExecSummary;
 import org.apache.commons.lang3.RandomUtils;
@@ -206,19 +207,11 @@ public class AvmBulkTransactionTest {
 
     // Deploys the Statefulness.java contract
     private AionTransaction makeAvmContractCreateTransaction(ECKey sender, BigInteger nonce) {
-        byte[] jar = getJarBytes();
-        AionTransaction transaction =
-                newTransaction(
-                        nonce,
-                        AionAddress.wrap(sender.getAddress()),
-                        null,
-                        BigInteger.ZERO,
-                        jar,
-                        5_000_000,
-                        this.energyPrice,
-                        VirtualMachineSpecs.AVM_CREATE_CODE);
-        transaction.sign(this.deployerKey);
-        return transaction;
+        return new AvmCreateTransactionBuilder()
+            .senderKey(sender)
+            .nonce(nonce)
+            .mainClass(Statefulness.class)
+            .build();
     }
 
     private AionTransaction makeAvmContractCallTransaction(
@@ -335,12 +328,6 @@ public class AvmBulkTransactionTest {
             accounts.add(getRandomAccount());
         }
         return accounts;
-    }
-
-    private byte[] getJarBytes() {
-        return new CodeAndArguments(
-                        JarBuilder.buildJarForMainAndClasses(Statefulness.class), new byte[0])
-                .encodeToBytes();
     }
 
     private byte[] abiEncodeMethodCall(String method, Object... arguments) {

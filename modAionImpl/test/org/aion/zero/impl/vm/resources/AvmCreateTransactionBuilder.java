@@ -97,7 +97,7 @@ public class AvmCreateTransactionBuilder {
         this.energyLimit = (this.energyLimit == -1) ? Constants.NRG_CREATE_CONTRACT_MAX : this.energyLimit;
         this.energyPrice = (this.energyPrice == -1) ? 1 : this.energyPrice;
 
-        return new AionTransaction(
+        AionTransaction transaction = new AionTransaction(
             this.nonce.toByteArray(),
             AionAddress.wrap(this.senderKey.getAddress()),
             null,
@@ -106,6 +106,8 @@ public class AvmCreateTransactionBuilder {
             this.energyLimit,
             this.energyPrice,
             VirtualMachineSpecs.AVM_CREATE_CODE);
+        transaction.sign(this.senderKey);
+        return transaction;
     }
 
     private byte[] getDeploymentJarBytes() {

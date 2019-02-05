@@ -19,6 +19,7 @@ import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.AvmHelloWorld;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
+import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
 import org.apache.commons.lang3.tuple.Pair;
@@ -61,14 +62,11 @@ public class AvmHelloWorldTest {
 
     @Test
     public void testDeployContract() {
-        byte[] jar = getJarBytes();
-        AionTransaction transaction = newTransaction(
-            BigInteger.ZERO,
-            AionAddress.wrap(deployerKey.getAddress()),
-            null,
-            jar,
-            5_000_000);
-        transaction.sign(this.deployerKey);
+        AionTransaction transaction = new AvmCreateTransactionBuilder()
+            .senderKey(deployerKey)
+            .nonce(BigInteger.ZERO)
+            .mainClass(AvmHelloWorld.class)
+            .build();
 
         AionBlock block = this.blockchain.createNewBlock(this.blockchain.getBestBlock(), Collections.singletonList(transaction), false);
         Pair<ImportResult, AionBlockSummary> connectResult = this.blockchain.tryToConnectAndFetchSummary(block);
@@ -83,14 +81,11 @@ public class AvmHelloWorldTest {
     @Test
     public void testDeployAndCallContract() {
         // Deploy the contract.
-        byte[] jar = getJarBytes();
-        AionTransaction transaction = newTransaction(
-            BigInteger.ZERO,
-            AionAddress.wrap(deployerKey.getAddress()),
-            null,
-            jar,
-            5_000_000);
-        transaction.sign(this.deployerKey);
+        AionTransaction transaction = new AvmCreateTransactionBuilder()
+            .senderKey(deployerKey)
+            .nonce(BigInteger.ZERO)
+            .mainClass(AvmHelloWorld.class)
+            .build();
 
         AionBlock block = this.blockchain.createNewBlock(this.blockchain.getBestBlock(), Collections.singletonList(transaction), false);
         Pair<ImportResult, AionBlockSummary> connectResult = this.blockchain.tryToConnectAndFetchSummary(block);
@@ -122,10 +117,6 @@ public class AvmHelloWorldTest {
 
     private byte[] getCallArguments() {
         return ABIEncoder.encodeMethodArguments("sayHello");
-    }
-
-    private byte[] getJarBytes() {
-        return new CodeAndArguments(JarBuilder.buildJarForMainAndClasses(AvmHelloWorld.class), new byte[0]).encodeToBytes();
     }
 
     private AionTransaction newTransaction(BigInteger nonce, Address sender, Address destination, byte[] data, long energyLimit) {
