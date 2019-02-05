@@ -17,6 +17,7 @@ import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.impl.vm.resources.AvmCallTransactionBuilder;
 import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
+import org.aion.zero.impl.vm.resources.TransferValueTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
 import org.apache.commons.lang3.RandomUtils;
@@ -191,17 +192,12 @@ public class StatefulnessTest {
     }
 
     private AionTxReceipt transferValueTo(Address beneficiary, BigInteger value) {
-        AionTransaction transaction =
-                newTransaction(
-                        getNonce(this.deployer),
-                        this.deployer,
-                        beneficiary,
-                        value,
-                        new byte[0],
-                        2_000_000,
-                        this.energyPrice,
-                        (byte) 0x1);
-        transaction.sign(this.deployerKey);
+        AionTransaction transaction = new TransferValueTransactionBuilder()
+            .senderKey(this.deployerKey)
+            .beneficiary(beneficiary)
+            .nonce(getNonce(this.deployer))
+            .value(value)
+            .buildValueTransfer();
 
         return sendTransactions(transaction);
     }
@@ -218,26 +214,6 @@ public class StatefulnessTest {
                 this.blockchain.tryToConnectAndFetchSummary(block);
         assertEquals(ImportResult.IMPORTED_BEST, connectResult.getLeft());
         return connectResult.getRight().getReceipts().get(0);
-    }
-
-    private AionTransaction newTransaction(
-            BigInteger nonce,
-            Address sender,
-            Address destination,
-            BigInteger value,
-            byte[] data,
-            long energyLimit,
-            long energyPrice,
-            byte vm) {
-        return new AionTransaction(
-                nonce.toByteArray(),
-                sender,
-                destination,
-                value.toByteArray(),
-                data,
-                energyLimit,
-                energyPrice,
-                vm);
     }
 
     private BigInteger getBalance(Address address) {

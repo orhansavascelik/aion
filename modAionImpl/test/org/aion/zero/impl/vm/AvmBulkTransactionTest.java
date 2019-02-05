@@ -20,6 +20,7 @@ import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.impl.vm.resources.AvmCallTransactionBuilder;
 import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
+import org.aion.zero.impl.vm.resources.TransferValueTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxExecSummary;
 import org.apache.commons.lang3.RandomUtils;
@@ -223,20 +224,13 @@ public class AvmBulkTransactionTest {
 
     private AionTransaction makeValueTransferTransaction(
             ECKey sender, ECKey beneficiary, BigInteger value, BigInteger nonce) {
-        Address senderAddress = AionAddress.wrap(sender.getAddress());
 
-        AionTransaction transaction =
-                newTransaction(
-                        nonce,
-                        senderAddress,
-                        AionAddress.wrap(beneficiary.getAddress()),
-                        value,
-                        new byte[0],
-                        2_000_000,
-                        this.energyPrice,
-                        (byte) 0x1);
-        transaction.sign(sender);
-        return transaction;
+        return new TransferValueTransactionBuilder()
+            .senderKey(sender)
+            .beneficiary(AionAddress.wrap(beneficiary.getAddress()))
+            .nonce(nonce)
+            .value(value)
+            .buildValueTransfer();
     }
 
     private int getDeployedStatefulnessCountValue(
@@ -265,26 +259,6 @@ public class AvmBulkTransactionTest {
                 this.blockchain.tryToConnectAndFetchSummary(block);
         assertEquals(ImportResult.IMPORTED_BEST, connectResult.getLeft());
         return connectResult.getRight();
-    }
-
-    private AionTransaction newTransaction(
-            BigInteger nonce,
-            Address sender,
-            Address destination,
-            BigInteger value,
-            byte[] data,
-            long energyLimit,
-            long energyPrice,
-            byte vm) {
-        return new AionTransaction(
-                nonce.toByteArray(),
-                sender,
-                destination,
-                value.toByteArray(),
-                data,
-                energyLimit,
-                energyPrice,
-                vm);
     }
 
     private BigInteger getNonce(Address address) {
