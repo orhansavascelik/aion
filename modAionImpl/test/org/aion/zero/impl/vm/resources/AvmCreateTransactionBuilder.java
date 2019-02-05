@@ -13,6 +13,8 @@ import org.aion.zero.types.AionTransaction;
  * A convenience class for constructing transactions that will deploy a new Avm dApp.
  */
 public class AvmCreateTransactionBuilder {
+    private static String errorMessage = "Cannot build an avm create transaction without ";
+
     private ECKey senderKey = null;
     private BigInteger nonce = null;
     private BigInteger value = null;
@@ -21,7 +23,6 @@ public class AvmCreateTransactionBuilder {
     private byte[] clinitArgs = null;
     private long energyLimit = -1;
     private long energyPrice = -1;
-    private static String errorMessage = "Cannot build an avm create transaction without ";
 
     public AvmCreateTransactionBuilder senderKey(ECKey senderKey) {
         this.senderKey = senderKey;
@@ -80,7 +81,7 @@ public class AvmCreateTransactionBuilder {
      *
      * @return A new avm create transaction.
      */
-    public AionTransaction build() {
+    public AionTransaction buildAvmCreate() {
         if (this.senderKey == null) {
             throw new IllegalStateException(errorMessage + "a sender.");
         }

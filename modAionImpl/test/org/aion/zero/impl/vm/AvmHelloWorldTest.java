@@ -5,12 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Collections;
-import org.aion.avm.api.ABIEncoder;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.avm.core.dappreading.JarBuilder;
-import org.aion.avm.core.util.CodeAndArguments;
 import org.aion.base.type.AionAddress;
-import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.core.ImportResult;
 import org.aion.vm.VirtualMachineProvider;
@@ -19,6 +15,7 @@ import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.AvmHelloWorld;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
+import org.aion.zero.impl.vm.resources.AvmCallTransactionBuilder;
 import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
@@ -66,7 +63,7 @@ public class AvmHelloWorldTest {
             .senderKey(deployerKey)
             .nonce(BigInteger.ZERO)
             .mainClass(AvmHelloWorld.class)
-            .build();
+            .buildAvmCreate();
 
         AionBlock block = this.blockchain.createNewBlock(this.blockchain.getBestBlock(), Collections.singletonList(transaction), false);
         Pair<ImportResult, AionBlockSummary> connectResult = this.blockchain.tryToConnectAndFetchSummary(block);
@@ -82,10 +79,10 @@ public class AvmHelloWorldTest {
     public void testDeployAndCallContract() {
         // Deploy the contract.
         AionTransaction transaction = new AvmCreateTransactionBuilder()
-            .senderKey(deployerKey)
+            .senderKey(this.deployerKey)
             .nonce(BigInteger.ZERO)
             .mainClass(AvmHelloWorld.class)
-            .build();
+            .buildAvmCreate();
 
         AionBlock block = this.blockchain.createNewBlock(this.blockchain.getBestBlock(), Collections.singletonList(transaction), false);
         Pair<ImportResult, AionBlockSummary> connectResult = this.blockchain.tryToConnectAndFetchSummary(block);
@@ -97,14 +94,12 @@ public class AvmHelloWorldTest {
         assertTrue(receipt.isSuccessful());
 
         Address contract = AionAddress.wrap(receipt.getTransactionOutput());
-        byte[] call = getCallArguments();
-        transaction = newTransaction(
-            BigInteger.ONE,
-            AionAddress.wrap(deployerKey.getAddress()),
-            contract,
-            call,
-            2_000_000);
-        transaction.sign(this.deployerKey);
+        transaction = new AvmCallTransactionBuilder()
+            .senderKey(this.deployerKey)
+            .contract(contract)
+            .nonce(BigInteger.ONE)
+            .method("sayHello")
+            .buildAvmCall();
 
         block = this.blockchain.createNewBlock(this.blockchain.getBestBlock(), Collections.singletonList(transaction), false);
         connectResult = this.blockchain.tryToConnectAndFetchSummary(block);
@@ -113,14 +108,6 @@ public class AvmHelloWorldTest {
         // Check the block was imported and the transaction was successful.
         assertEquals(ImportResult.IMPORTED_BEST, connectResult.getLeft());
         assertTrue(receipt.isSuccessful());
-    }
-
-    private byte[] getCallArguments() {
-        return ABIEncoder.encodeMethodArguments("sayHello");
-    }
-
-    private AionTransaction newTransaction(BigInteger nonce, Address sender, Address destination, byte[] data, long energyLimit) {
-        return new AionTransaction(nonce.toByteArray(), sender, destination, BigInteger.ZERO.toByteArray(), data, energyLimit, 1, VirtualMachineSpecs.AVM_CREATE_CODE);
     }
 
 }

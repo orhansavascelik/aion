@@ -8,11 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.aion.avm.api.ABIDecoder;
-import org.aion.avm.api.ABIEncoder;
-import org.aion.avm.core.dappreading.JarBuilder;
-import org.aion.avm.core.util.CodeAndArguments;
 import org.aion.base.type.AionAddress;
-import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.core.ImportResult;
@@ -22,6 +18,7 @@ import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.Statefulness;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
+import org.aion.zero.impl.vm.resources.AvmCallTransactionBuilder;
 import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxExecSummary;
@@ -211,23 +208,17 @@ public class AvmBulkTransactionTest {
             .senderKey(sender)
             .nonce(nonce)
             .mainClass(Statefulness.class)
-            .build();
+            .buildAvmCreate();
     }
 
     private AionTransaction makeAvmContractCallTransaction(
             ECKey sender, BigInteger nonce, Address contract) {
-        AionTransaction transaction =
-                newTransaction(
-                        nonce,
-                        AionAddress.wrap(sender.getAddress()),
-                        contract,
-                        BigInteger.ZERO,
-                        abiEncodeMethodCall("incrementCounter"),
-                        2_000_000,
-                        this.energyPrice,
-                        VirtualMachineSpecs.AVM_CREATE_CODE);
-        transaction.sign(this.deployerKey);
-        return transaction;
+        return new AvmCallTransactionBuilder()
+            .senderKey(sender)
+            .contract(contract)
+            .nonce(nonce)
+            .method("incrementCounter")
+            .buildAvmCall();
     }
 
     private AionTransaction makeValueTransferTransaction(
@@ -250,19 +241,13 @@ public class AvmBulkTransactionTest {
 
     private int getDeployedStatefulnessCountValue(
             ECKey sender, BigInteger nonce, Address contract) {
-        Address senderAddress = AionAddress.wrap(sender.getAddress());
 
-        AionTransaction transaction =
-                newTransaction(
-                        nonce,
-                        senderAddress,
-                        contract,
-                        BigInteger.ZERO,
-                        abiEncodeMethodCall("getCount"),
-                        2_000_000,
-                        this.energyPrice,
-                        VirtualMachineSpecs.AVM_CREATE_CODE);
-        transaction.sign(sender);
+        AionTransaction transaction = new AvmCallTransactionBuilder()
+            .senderKey(sender)
+            .contract(contract)
+            .nonce(nonce)
+            .method("getCount")
+            .buildAvmCall();
 
         AionBlockSummary summary =
                 sendTransactionsInBulkInSingleBlock(Collections.singletonList(transaction));
@@ -328,10 +313,6 @@ public class AvmBulkTransactionTest {
             accounts.add(getRandomAccount());
         }
         return accounts;
-    }
-
-    private byte[] abiEncodeMethodCall(String method, Object... arguments) {
-        return ABIEncoder.encodeMethodArguments(method, arguments);
     }
 
     private List<BigInteger> getRandomValues(int num, int lowerBound, int upperBound) {
