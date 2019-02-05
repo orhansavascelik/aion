@@ -28,7 +28,7 @@ public class StatefulnessTest {
 
     @BeforeClass
     public static void setupAvm() {
-        helper = TransactionExecutionHelper.start();
+        helper = TransactionExecutionHelper.newExecutionHelper();
     }
 
     @AfterClass

@@ -13,13 +13,25 @@ import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.types.AionTransaction;
 import org.apache.commons.lang3.tuple.Pair;
 
+/**
+ * A class that provides methods that should make writing virtual machine integration tests simple
+ * and easy.
+ *
+ * This class abstracts away the notion of a blockchain or a repository or private keys.
+ *
+ * There is a single pre-mined account that will be the sender of every transaction if no sender
+ * parameter exists.
+ *
+ * There are convenient methods for creating various types of transactions, for executing them, and
+ * also for some simple state querying.
+ */
 public class TransactionExecutionHelper {
-    private StandaloneBlockchain blockchain;
-    private ECKey deployerKey;
-    private Address deployer;
+    private final StandaloneBlockchain blockchain;
+    private final ECKey deployerKey;
+    private final Address deployer;
+    private boolean virtualMachinesAreLive = false;
 
     private TransactionExecutionHelper() {
-        VirtualMachineProvider.initializeAllVirtualMachines();
         StandaloneBlockchain.Bundle bundle = new StandaloneBlockchain.Builder()
             .withDefaultAccounts()
             .withValidatorConfiguration("simple")
@@ -31,12 +43,15 @@ public class TransactionExecutionHelper {
     }
 
     /**
-     * Starts the transaction helper and initializes all virtual machines.
+     * Returns a new execution helper and initializes all the supported virtual machines.
      *
      * Once done with this class, the {@code shutdown()} method must be invoked!
      */
-    public static TransactionExecutionHelper start() {
-        return new TransactionExecutionHelper();
+    public static TransactionExecutionHelper newExecutionHelper() {
+        TransactionExecutionHelper helper = new TransactionExecutionHelper();
+        VirtualMachineProvider.initializeAllVirtualMachines();
+        helper.virtualMachinesAreLive = true;
+        return helper;
     }
 
     /**
@@ -105,6 +120,9 @@ public class TransactionExecutionHelper {
      * @return The import result and block summary pertaining to the provided transactions.
      */
     public Pair<ImportResult, AionBlockSummary> runTransactions(AionTransaction... transactions) {
+        if (!this.virtualMachinesAreLive) {
+            throw new IllegalStateException("Cannot run: virtual machines have been shut down.");
+        }
         AionBlock parent = this.blockchain.getBestBlock();
         AionBlock block = this.blockchain.createBlock(parent, Arrays.asList(transactions), false, parent.getTimestamp());
         return this.blockchain.tryToConnectAndFetchSummary(block);
@@ -149,13 +167,19 @@ public class TransactionExecutionHelper {
     }
 
     /**
+     * Starts up all supported virtual machines.
+     */
+    public void start() {
+        VirtualMachineProvider.initializeAllVirtualMachines();
+        this.virtualMachinesAreLive = true;
+    }
+
+    /**
      * Shuts down the virtual machines. This method must be invoked when done with this class.
      */
     public void shutdown() {
         VirtualMachineProvider.shutdownAllVirtualMachines();
-        this.blockchain = null;
-        this.deployerKey = null;
-        this.deployer = null;
+        this.virtualMachinesAreLive = false;
     }
 
 }
