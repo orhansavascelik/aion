@@ -6,6 +6,7 @@ import org.aion.base.type.AionAddress;
 import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.vm.Constants;
+import org.aion.vm.api.interfaces.Address;
 import org.aion.zero.types.AionTransaction;
 
 /**
@@ -26,6 +27,7 @@ public class AvmCallTransactionBuilder {
     private ECKey senderKey = null;
     private BigInteger nonce = null;
     private String method = null;
+    private Address contract = null;
     private Object[] parameters = new Object[0];
     private BigInteger value = BigInteger.ZERO;
     private long energyLimit = Constants.NRG_TRANSACTION_MAX;
@@ -68,6 +70,17 @@ public class AvmCallTransactionBuilder {
      */
     public AvmCallTransactionBuilder methodToInvoke(String methodName) {
         this.method = methodName;
+        return this;
+    }
+
+    /**
+     * Sets the address of the dApp to call into.
+     *
+     * @param contract The dApp address.
+     * @return this builder.
+     */
+    public AvmCallTransactionBuilder contractToCall(Address contract) {
+        this.contract = contract;
         return this;
     }
 
@@ -131,12 +144,15 @@ public class AvmCallTransactionBuilder {
      *
      * @return a new transaction for calling into an existing avm dApp.
      */
-    public AionTransaction buildAvmCreateTransaction() {
+    public AionTransaction buildAvmCallTransaction() {
         if (this.senderKey == null) {
             throw new IllegalStateException(ERROR_MESSAGE + "no sender.");
         }
         if (this.nonce == null) {
             throw new IllegalStateException(ERROR_MESSAGE + "no sender nonce.");
+        }
+        if (this.contract == null) {
+            throw new IllegalStateException(ERROR_MESSAGE + "no dapp address to call into.");
         }
         if (this.method == null) {
             throw new IllegalStateException(ERROR_MESSAGE + "no dapp method to call.");
@@ -145,7 +161,7 @@ public class AvmCallTransactionBuilder {
         AionTransaction transaction = new AionTransaction(
             this.nonce.toByteArray(),
             AionAddress.wrap(this.senderKey.getAddress()),
-            null,
+            this.contract,
             this.value.toByteArray(),
             getEncodingOfMethodCall(),
             this.energyLimit,
@@ -164,6 +180,7 @@ public class AvmCallTransactionBuilder {
         this.senderKey = null;
         this.nonce = null;
         this.method = null;
+        this.contract = null;
         this.value = BigInteger.ZERO;
         this.parameters = new Object[0];
         this.energyLimit = Constants.NRG_TRANSACTION_MAX;

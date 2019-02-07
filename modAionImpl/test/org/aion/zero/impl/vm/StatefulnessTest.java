@@ -5,10 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.aion.avm.api.ABIEncoder;
 import org.aion.avm.core.NodeEnvironment;
 import org.aion.base.type.AionAddress;
-import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.core.ImportResult;
 import org.aion.vm.VirtualMachineProvider;
@@ -17,6 +15,7 @@ import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.Statefulness;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
+import org.aion.zero.impl.vm.resources.AvmCallTransactionBuilder;
 import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
@@ -180,17 +179,13 @@ public class StatefulnessTest {
     }
 
     private AionTxReceipt callContract(Address contract, String method, Object... arguments) {
-        AionTransaction transaction =
-                newTransaction(
-                        getNonce(this.deployer),
-                        this.deployer,
-                        contract,
-                        BigInteger.ZERO,
-                        abiEncodeMethodCall(method, arguments),
-                        2_000_000,
-                        this.energyPrice,
-                        VirtualMachineSpecs.AVM_CREATE_CODE);
-        transaction.sign(this.deployerKey);
+        AionTransaction transaction = new AvmCallTransactionBuilder()
+            .senderKey(this.deployerKey)
+            .senderNonce(getNonce(this.deployer))
+            .contractToCall(contract)
+            .methodToInvoke(method)
+            .parametersToInvokeMethodWith(arguments)
+            .buildAvmCallTransaction();
 
         return sendTransactions(transaction);
     }
@@ -223,10 +218,6 @@ public class StatefulnessTest {
                 this.blockchain.tryToConnectAndFetchSummary(block);
         assertEquals(ImportResult.IMPORTED_BEST, connectResult.getLeft());
         return connectResult.getRight().getReceipts().get(0);
-    }
-
-    private byte[] abiEncodeMethodCall(String method, Object... arguments) {
-        return ABIEncoder.encodeMethodArguments(method, arguments);
     }
 
     private AionTransaction newTransaction(
