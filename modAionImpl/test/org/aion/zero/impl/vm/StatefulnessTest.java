@@ -5,11 +5,8 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 import org.aion.avm.api.ABIEncoder;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.avm.core.dappreading.JarBuilder;
-import org.aion.avm.core.util.CodeAndArguments;
 import org.aion.base.type.AionAddress;
 import org.aion.base.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
@@ -20,6 +17,7 @@ import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.Statefulness;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
+import org.aion.zero.impl.vm.resources.AvmCreateTransactionBuilder;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
 import org.apache.commons.lang3.RandomUtils;
@@ -28,7 +26,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 // These tests are ignored for now because in order for them to pass we need the clock drift buffer
@@ -173,18 +170,11 @@ public class StatefulnessTest {
     }
 
     private AionTxReceipt deployContract() {
-        byte[] jar = getJarBytes();
-        AionTransaction transaction =
-                newTransaction(
-                        getNonce(this.deployer),
-                        this.deployer,
-                        null,
-                        BigInteger.ZERO,
-                        jar,
-                        5_000_000,
-                        this.energyPrice,
-                        VirtualMachineSpecs.AVM_CREATE_CODE);
-        transaction.sign(this.deployerKey);
+        AionTransaction transaction = new AvmCreateTransactionBuilder()
+            .senderKey(this.deployerKey)
+            .senderNonce(getNonce(this.deployer))
+            .dappMainClass(Statefulness.class)
+            .buildAvmCreateTransaction();
 
         return sendTransactions(transaction);
     }
@@ -233,12 +223,6 @@ public class StatefulnessTest {
                 this.blockchain.tryToConnectAndFetchSummary(block);
         assertEquals(ImportResult.IMPORTED_BEST, connectResult.getLeft());
         return connectResult.getRight().getReceipts().get(0);
-    }
-
-    private byte[] getJarBytes() {
-        return new CodeAndArguments(
-                        JarBuilder.buildJarForMainAndClasses(Statefulness.class), new byte[0])
-                .encodeToBytes();
     }
 
     private byte[] abiEncodeMethodCall(String method, Object... arguments) {
