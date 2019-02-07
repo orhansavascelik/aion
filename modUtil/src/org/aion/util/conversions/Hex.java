@@ -3,6 +3,7 @@ package org.aion.util.conversions;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Arrays;
 
 /** Utility class for converting hex data to bytes and back again. */
 public class Hex {
@@ -45,7 +46,7 @@ public class Hex {
      *
      * @return the number of bytes produced.
      */
-    public static int encode(byte[] data, OutputStream out) throws IOException {
+    public static int encode(byte[] data, OutputStream out) {
         return encoder.encode(data, 0, data.length, out);
     }
 
@@ -54,8 +55,7 @@ public class Hex {
      *
      * @return the number of bytes produced.
      */
-    public static int encode(byte[] data, int off, int length, OutputStream out)
-            throws IOException {
+    public static int encode(byte[] data, int off, int length, OutputStream out) {
         return encoder.encode(data, off, length, out);
     }
 
@@ -69,7 +69,7 @@ public class Hex {
         try {
             encoder.decode(data, 0, data.length, bOut);
         } catch (IOException e) {
-            System.err.println("Hex decode failed! " + data);
+            System.err.println("Hex decode failed! " + Arrays.toString(data));
             return null;
         }
 

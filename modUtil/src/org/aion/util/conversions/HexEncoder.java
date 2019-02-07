@@ -6,7 +6,7 @@ import java.io.OutputStream;
 /** A streaming Hex encoder. */
 public class HexEncoder {
 
-    protected final byte[] encodingTable = {
+    private final static byte[] encodingTable = {
         (byte) '0', (byte) '1', (byte) '2', (byte) '3', (byte) '4', (byte) '5', (byte) '6',
                 (byte) '7',
         (byte) '8', (byte) '9', (byte) 'a', (byte) 'b', (byte) 'c', (byte) 'd', (byte) 'e',
@@ -16,9 +16,9 @@ public class HexEncoder {
     /*
      * set up the decoding table.
      */
-    protected final byte[] decodingTable = new byte[128];
+    private final static byte[] decodingTable = new byte[128];
 
-    protected void initialiseDecodingTable() {
+    private void initialiseDecodingTable() {
         for (int i = 0; i < decodingTable.length; i++) {
             decodingTable[i] = (byte) 0xff;
         }
@@ -44,13 +44,13 @@ public class HexEncoder {
      *
      * @return the number of bytes produced.
      */
-    public int encode(byte[] data, int off, int length, OutputStream out) {
+    public static int encode(byte[] data, int off, int length, OutputStream out) {
         for (int i = off; i < (off + length); i++) {
             int v = data[i] & 0xff;
             try {
                 out.write(encodingTable[(v >>> 4)]);
                 out.write(encodingTable[v & 0xf]);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
 
@@ -67,7 +67,7 @@ public class HexEncoder {
      *
      * @return the number of bytes produced.
      */
-    public int decode(byte[] data, int off, int length, OutputStream out) throws IOException {
+    public static int decode(byte[] data, int off, int length, OutputStream out) throws IOException {
         byte b1, b2;
         int outLen = 0;
 
@@ -78,7 +78,7 @@ public class HexEncoder {
                 break;
             }
 
-            end--;
+            --end;
         }
 
         int i = off;
@@ -101,11 +101,11 @@ public class HexEncoder {
 
             try {
                 out.write((b1 << 4) | b2);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
 
             }
 
-            outLen++;
+            ++outLen;
         }
 
         return outLen;
@@ -117,7 +117,7 @@ public class HexEncoder {
      *
      * @return the number of bytes produced.
      */
-    public int decode(String data, OutputStream out) throws IOException {
+    public static int decode(String data, OutputStream out) throws IOException {
         byte b1, b2;
         int length = 0;
 
@@ -128,19 +128,19 @@ public class HexEncoder {
                 break;
             }
 
-            end--;
+            --end;
         }
 
         int i = 0;
         while (i < end) {
             while (i < end && ignore(data.charAt(i))) {
-                i++;
+                ++i;
             }
 
             b1 = decodingTable[data.charAt(i++)];
 
             while (i < end && ignore(data.charAt(i))) {
-                i++;
+                ++i;
             }
 
             b2 = decodingTable[data.charAt(i++)];
@@ -151,7 +151,7 @@ public class HexEncoder {
 
             out.write((b1 << 4) | b2);
 
-            length++;
+            ++length;
         }
 
         return length;

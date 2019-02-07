@@ -138,11 +138,9 @@ public class ByteUtilTest {
     @SuppressWarnings("unused")
     private Object shortValues() {
 
-        Short[] temp = {
+        return new Short[]{
             0, 1, 10, 15, 20, (short) random.nextInt(Integer.MAX_VALUE), (short) Integer.MAX_VALUE
         };
-
-        return temp;
     }
 
     /**
@@ -176,9 +174,9 @@ public class ByteUtilTest {
     // encodeDataList(Object)
     @Test
     public void objectTest() {
-        for (int a = 0; a < testNum.length; a++) {
+        for (String[] strings : testNum) {
             try {
-                byte[] temp1 = encodeValFor32Bits(testNum[a][1]);
+                encodeValFor32Bits(strings[1]);
             } catch (NullPointerException e) {
                 System.out.println("\nNull Object Test!");
             }
@@ -277,12 +275,14 @@ public class ByteUtilTest {
 
         // Empty Array
         byte[] temp1 = stripLeadingZeroes(testByte[1]);
+        assert temp1 != null;
         assertEquals(-1, firstNonZeroByte(temp1));
         assertEquals(-1, firstNonZeroByte(testByte[1]));
         assertTrue(isNullOrZeroArray(testByte[1]));
 
         // Leading Non-zero
         byte[] temp2 = stripLeadingZeroes(testByte[2]);
+        assert temp2 != null;
         assertEquals(0, firstNonZeroByte(temp2));
         assertEquals(0, firstNonZeroByte(testByte[2]));
         assertEquals(0, firstNonZeroByte(testByte[3]));
@@ -295,6 +295,7 @@ public class ByteUtilTest {
 
         // Leading Zeroes
         byte[] temp3 = stripLeadingZeroes(testByte[6]);
+        assert temp3 != null;
         assertEquals(0, firstNonZeroByte(temp3));
         assertEquals(31, firstNonZeroByte(testByte[6]));
 
@@ -312,13 +313,14 @@ public class ByteUtilTest {
         for (int a = 1; a < testBigInt.length; a++) {
             byte[] temp4 = bigIntegerToBytes(testBigInt[a][1]);
             String temp5 = toHexString(temp4);
+            assert temp4 != null;
             assertEquals(temp5.length() / 2, temp4.length);
             assertEquals(temp5.length() / 2, numBytes(testNum[a][1]));
         }
 
         // Append
-        for (int a = 0; a < testHex.length; a++) {
-            byte[] temp6 = hexStringToBytes(testHex[a]);
+        for (String testHex1 : testHex) {
+            byte[] temp6 = hexStringToBytes(testHex1);
             byte temp7 = toByte(testByte[2]);
             byte[] temp8 = appendByte(temp6, temp7);
             String temp9 = oneByteToHexString(temp7);
