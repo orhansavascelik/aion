@@ -1,21 +1,117 @@
 ext.moduleName = 'aion.crypto'
 
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = "network.aion"
+archivesBaseName = "crypto4j"
+version = "0.3.3"
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+}
+
+
 dependencies {
-    compile project(':modUtil')
-    compile project(':modRlp')
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:rlp4j:0.3.3'
+
     compile 'com.madgag.spongycastle:prov:1.58.0.0'
     compile 'com.madgag.spongycastle:core:1.58.0.0'
     compile 'org.slf4j:slf4j-api:1.7.25'
-    compile 'com.google.guava:guava:25.1-jre'
 
     testCompile 'com.google.truth:truth:0.42'
     testCompile 'org.hamcrest:hamcrest-core:1.3'
     testCompile "org.mockito:mockito-core:2.23.0"
 }
 
+tasks.withType(JavaCompile) {
+   doFirst {
+      println "Args for for $name are $options.allCompilerArgs"
+   }
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java']
+    }
+    test {
+        java.srcDirs = ['src/test/java']
+    }
+}
+
+
 task compileNative(type: Exec) { 
-    workingDir 'src_native'
+    workingDir 'src/main/native'
     commandLine 'make'
+}
+
+signing {
+    sign configurations.archives
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc {
+  inputs.property("moduleName", moduleName)
+  doFirst {
+    options.addStringOption('-module-path', classpath.asPath)
+    options.tags = [ "implNote" ]
+}
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+
+      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+        authentication(userName: ossrhUsername, password: ossrhPassword)
+      }
+
+      pom.project {
+        name 'crypto4j'
+        packaging 'jar'
+        // optionally artifactId can be defined here
+        description 'a crypto module for the aion java kernel.'
+        url 'https://github.com/aionnetwork/aion/tree/master-pre-merge/modCrypto'
+
+        scm {
+          connection 'scm:git:https://github.com/aionnetwork/aion.git'
+          developerConnection 'git:https://github.com/aionnetwork/aion.git'
+          url 'https://github.com/aionnetwork/aion/tree/master'
+        }
+
+        licenses {
+          license {
+            name 'MIT'
+            url 'https://opensource.org/licenses/MIT'
+          }
+        }
+
+        developers {
+          developer {
+            id 'aion foundation dev'
+            name 'aion foundation dev'
+            email 'toengineering@aion.network'
+          }
+        }
+      }
+    }
+  }
 }
 
 build.dependsOn compileNative 
