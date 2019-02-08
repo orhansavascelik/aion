@@ -83,7 +83,7 @@ uploadArchives {
         name 'rlp4j'
         packaging 'jar'
         // optionally artifactId can be defined here
-        description 'a util module for the aion java kernel.'
+        description 'a rlp module for the aion java kernel.'
         url 'https://github.com/aionnetwork/aion/tree/master-pre-merge/modRlp'
 
         scm {
