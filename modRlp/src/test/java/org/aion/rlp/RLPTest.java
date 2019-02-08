@@ -40,13 +40,13 @@ import static org.aion.rlp.RlpTestData.test12;
 import static org.aion.rlp.RlpTestData.test13;
 import static org.aion.rlp.RlpTestData.test16;
 import static org.aion.util.bytes.ByteUtil.byteArrayToInt;
+import static org.aion.util.conversions.Hex.encode;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
-import static org.spongycastle.util.encoders.Hex.encode;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
