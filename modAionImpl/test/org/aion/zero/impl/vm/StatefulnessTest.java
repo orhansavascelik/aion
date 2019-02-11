@@ -5,13 +5,12 @@ import static org.junit.Assert.assertTrue;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import java.util.Collections;
 import org.aion.avm.api.ABIEncoder;
 import org.aion.avm.core.NodeEnvironment;
 import org.aion.avm.core.dappreading.JarBuilder;
 import org.aion.avm.core.util.CodeAndArguments;
-import org.aion.base.type.AionAddress;
-import org.aion.base.vm.VirtualMachineSpecs;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.core.ImportResult;
 import org.aion.vm.VirtualMachineProvider;
@@ -28,7 +27,6 @@ import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 // These tests are ignored for now because in order for them to pass we need the clock drift buffer

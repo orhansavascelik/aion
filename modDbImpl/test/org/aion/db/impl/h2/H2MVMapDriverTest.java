@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.util.Properties;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
 import org.junit.Test;

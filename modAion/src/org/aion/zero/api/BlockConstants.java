@@ -1,7 +1,7 @@
 package org.aion.zero.api;
 
 import java.math.BigInteger;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.mcf.blockchain.IBlockConstants;
 import org.aion.mcf.types.AbstractBlockHeader;
 import org.aion.vm.api.interfaces.Address;

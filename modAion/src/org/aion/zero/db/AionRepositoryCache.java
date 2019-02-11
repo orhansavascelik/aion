@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IRepository;
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.db.IByteArrayKeyValueStore;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IRepository;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.type.AionAddress;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepositoryCache;
 import org.aion.mcf.db.ContractDetailsCacheImpl;
@@ -41,7 +42,7 @@ public class AionRepositoryCache extends AbstractRepositoryCache<IBlockStoreBase
      * as type {@link Object} and are cast to their expected types and copied, but will not be copied
      * if they are not in fact their expected types. This is something to be aware of. Most of the
      * imperfection results from the inability to copy
-     * {@link org.aion.base.db.IByteArrayKeyValueStore} and {@link org.aion.mcf.trie.SecureTrie}
+     * {@link IByteArrayKeyValueStore} and {@link org.aion.mcf.trie.SecureTrie}
      * perfectly or at all (in the case of the former), for the above reasons.
      *
      * @param other The repository that will consume the state of this repository.

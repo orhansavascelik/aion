@@ -4,7 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 
 import java.math.BigInteger;
 import java.util.Collections;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.zero.impl.types.AionBlock;
 import org.junit.Test;

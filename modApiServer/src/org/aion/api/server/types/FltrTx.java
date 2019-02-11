@@ -1,6 +1,6 @@
 package org.aion.api.server.types;
 
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.ITransaction;
 
 public class FltrTx extends Fltr {
 

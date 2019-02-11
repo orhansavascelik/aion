@@ -2,7 +2,7 @@ package org.aion.zero.types;
 
 import java.math.BigInteger;
 import java.util.List;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 import org.aion.vm.api.interfaces.Address;
 
 /** aion block interface. */

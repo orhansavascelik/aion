@@ -11,7 +11,7 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.contracts.DummyRepo;
 import org.aion.precompiled.contracts.TRS.AbstractTRS;

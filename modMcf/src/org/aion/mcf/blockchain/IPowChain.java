@@ -1,8 +1,8 @@
 package org.aion.mcf.blockchain;
 
 import java.math.BigInteger;
-import org.aion.base.type.Hash256;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.Hash256;
+import org.aion.type.api.type.IBlock;
 import org.aion.mcf.types.AbstractBlockHeader;
 
 /**

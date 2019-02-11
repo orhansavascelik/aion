@@ -2,7 +2,7 @@ package org.aion.mcf.trie.scan;
 
 import java.util.HashSet;
 import java.util.Set;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.rlp.Value;
 
 public class CollectFullSetOfNodes implements ScanAction {

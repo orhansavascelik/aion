@@ -1,6 +1,6 @@
 package org.aion.mcf.trie;
 
-import static org.aion.base.util.ByteArrayWrapper.wrap;
+import static org.aion.type.api.util.ByteArrayWrapper.wrap;
 import static org.aion.rlp.Value.fromRlpEncoded;
 
 import java.util.ArrayList;
@@ -14,8 +14,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.Set;
-import org.aion.base.db.IByteArrayKeyValueStore;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IByteArrayKeyValueStore;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.crypto.HashUtil;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;

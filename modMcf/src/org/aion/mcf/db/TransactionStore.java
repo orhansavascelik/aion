@@ -1,6 +1,6 @@
 package org.aion.mcf.db;
 
-import static org.aion.base.util.Utils.dummy;
+import static org.aion.type.api.util.Utils.dummy;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -8,9 +8,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.base.db.Flushable;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.Flushable;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.core.AbstractTxInfo;
 import org.aion.mcf.ds.ObjectDataSource;
 import org.aion.mcf.ds.Serializer;

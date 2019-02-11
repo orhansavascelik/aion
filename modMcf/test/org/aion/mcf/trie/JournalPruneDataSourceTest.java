@@ -14,7 +14,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
 import org.aion.db.impl.DatabaseFactory;
 import org.aion.log.AionLoggerFactory;
 import org.junit.After;

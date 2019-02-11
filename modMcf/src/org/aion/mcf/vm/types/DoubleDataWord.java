@@ -3,8 +3,8 @@ package org.aion.mcf.vm.types;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.vm.IDataWord;
+import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.vm.IDataWord;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 

@@ -1,7 +1,7 @@
 package org.aion.zero.impl.sync.handler;
 
 import java.util.List;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.p2p.Ctrl;
 import org.aion.p2p.Handler;
 import org.aion.p2p.IP2pMgr;

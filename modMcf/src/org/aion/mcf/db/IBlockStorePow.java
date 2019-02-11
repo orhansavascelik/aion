@@ -1,7 +1,7 @@
 package org.aion.mcf.db;
 
 import java.math.BigInteger;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 import org.aion.mcf.types.AbstractBlockHeader;
 
 /**

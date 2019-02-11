@@ -2,7 +2,7 @@ module aion.zero.impl {
     uses org.aion.evtmgr.EventMgrModule;
     uses org.aion.txpool.TxPoolModule;
 
-    requires aion.base;
+    requires aion.type.api;
     requires aion.mcf;
     requires aion.log;
     requires aion.p2p;

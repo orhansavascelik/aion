@@ -1,6 +1,6 @@
 package org.aion.precompiled.contracts;
 
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;

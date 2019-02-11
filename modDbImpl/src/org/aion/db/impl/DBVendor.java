@@ -3,7 +3,7 @@ package org.aion.db.impl;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import org.aion.base.db.PersistenceMethod;
+import org.aion.type.api.db.PersistenceMethod;
 import org.aion.db.impl.rocksdb.RocksDBWrapper;
 
 // @ThreadSafe

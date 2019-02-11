@@ -1,7 +1,7 @@
 // package org.aion.equihash.benchmark;
 //
-// import org.aion.base.type.AionAddress;
-// import org.aion.base.util.ByteUtil;
+// import AionAddress;
+// import ByteUtil;
 // import org.aion.equihash.EquiUtils;
 // import org.aion.equihash.OptimizedEquiValidator;
 // import org.aion.mcf.valid.BlockHeaderValidator;

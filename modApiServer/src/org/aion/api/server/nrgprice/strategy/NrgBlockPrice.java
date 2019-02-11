@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ArrayBlockingQueue;
 import org.aion.api.server.nrgprice.NrgPriceAdvisor;
-import org.aion.base.type.AionAddress;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.vm.api.interfaces.Address;

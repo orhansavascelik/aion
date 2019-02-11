@@ -1,7 +1,7 @@
 package org.aion.mcf.blockchain;
 
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.type.IBlock;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.db.IBlockStoreBase;

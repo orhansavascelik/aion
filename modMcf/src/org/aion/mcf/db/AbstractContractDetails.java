@@ -8,8 +8,8 @@ import com.google.common.annotations.VisibleForTesting;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.util.conversions.Hex;
 
 /** Abstract contract details. */

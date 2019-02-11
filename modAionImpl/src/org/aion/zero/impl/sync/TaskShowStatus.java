@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.aion.base.util.Hex;
+import org.aion.type.api.util.Hex;
 import org.aion.mcf.config.StatsType;
 import org.aion.p2p.INode;
 import org.aion.p2p.IP2pMgr;

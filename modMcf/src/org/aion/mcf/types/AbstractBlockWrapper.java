@@ -1,10 +1,10 @@
 package org.aion.mcf.types;
 
-import static org.aion.base.util.TimeUtils.secondsToMillis;
+import static org.aion.type.api.util.TimeUtils.secondsToMillis;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 import org.aion.rlp.RLP;
 
 /** AbstractBlockWrapper */

@@ -1,7 +1,7 @@
 package org.aion.zero.impl.core;
 
-import static org.aion.base.util.BIUtil.max;
-import static org.aion.base.util.BIUtil.min;
+import static org.aion.type.api.util.BIUtil.max;
+import static org.aion.type.api.util.BIUtil.min;
 
 import java.math.BigInteger;
 import org.aion.mcf.blockchain.IBlockConstants;

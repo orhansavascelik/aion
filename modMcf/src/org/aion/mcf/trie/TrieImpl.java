@@ -1,7 +1,7 @@
 package org.aion.mcf.trie;
 
 import static java.util.Arrays.copyOfRange;
-import static org.aion.base.util.ByteArrayWrapper.wrap;
+import static org.aion.type.api.util.ByteArrayWrapper.wrap;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.rlp.CompactEncoder.binToNibbles;
 import static org.aion.rlp.CompactEncoder.hasTerminator;
@@ -23,9 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
-import org.aion.base.db.IByteArrayKeyValueStore;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueStore;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.trie.scan.CollectFullSetOfNodes;
 import org.aion.mcf.trie.scan.CountNodes;

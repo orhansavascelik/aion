@@ -10,8 +10,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.aion.base.db.PersistenceMethod;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.PersistenceMethod;
+import org.aion.type.api.util.ByteArrayWrapper;
 
 /**
  * Provides the same behavior as {@link MockDB} with the addition that data is read from a file on

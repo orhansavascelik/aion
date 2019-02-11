@@ -3,7 +3,7 @@ package org.aion.mcf.core;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.aion.base.util.Functional;
+import org.aion.type.api.util.Functional;
 import org.aion.mcf.vm.types.DataWord;
 import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.collections4.keyvalue.AbstractKeyValue;

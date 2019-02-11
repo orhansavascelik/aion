@@ -2,8 +2,8 @@ package org.aion.api.server.types;
 
 import java.math.BigInteger;
 import java.util.List;
-import org.aion.base.util.ByteUtil;
-import org.aion.base.util.TypeConverter;
+import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.util.TypeConverter;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.json.JSONArray;

@@ -3,7 +3,7 @@ package org.aion.zero.impl;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.blockchain.TxResponse;
 import org.aion.vm.api.interfaces.Address;

@@ -5,9 +5,9 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import org.aion.base.db.IRepository;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.db.IRepository;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.ImportResult;
@@ -15,7 +15,6 @@ import org.aion.vm.api.interfaces.Address;
 import org.aion.zero.impl.blockchain.ChainConfiguration;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**

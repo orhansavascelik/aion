@@ -1,6 +1,6 @@
 package org.aion.api.server.types;
 
-import org.aion.base.type.IBlockSummary;
+import org.aion.type.api.type.IBlockSummary;
 
 public class FltrBlk extends Fltr {
 

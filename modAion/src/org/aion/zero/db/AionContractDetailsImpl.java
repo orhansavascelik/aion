@@ -1,7 +1,7 @@
 package org.aion.zero.db;
 
-import static org.aion.base.util.ByteArrayWrapper.wrap;
-import static org.aion.base.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.aion.type.api.util.ByteArrayWrapper.wrap;
+import static org.aion.type.api.util.ByteUtil.EMPTY_BYTE_ARRAY;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.crypto.HashUtil.h256;
 
@@ -10,10 +10,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.aion.base.db.IByteArrayKeyValueStore;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IByteArrayKeyValueStore;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.db.AbstractContractDetails;
 import org.aion.mcf.ds.XorDataSource;
 import org.aion.mcf.trie.SecureTrie;

@@ -1,12 +1,12 @@
 package org.aion.equihash;
 
-import static org.aion.base.util.ByteUtil.merge;
-import static org.aion.base.util.ByteUtil.toLEByteArray;
-import static org.aion.base.util.Hex.toHexString;
+import static org.aion.type.api.util.ByteUtil.merge;
+import static org.aion.type.api.util.ByteUtil.toLEByteArray;
+import static org.aion.type.api.util.Hex.toHexString;
 
 import java.math.BigInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import org.aion.base.util.NativeLoader;
+import org.aion.type.api.util.NativeLoader;
 import org.aion.crypto.HashUtil;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;

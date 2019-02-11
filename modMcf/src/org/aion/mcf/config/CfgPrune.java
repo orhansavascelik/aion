@@ -4,7 +4,7 @@ import com.google.common.base.Objects;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import org.aion.base.db.IPruneConfig;
+import org.aion.type.api.db.IPruneConfig;
 
 /**
  * Configuration for data pruning behavior.

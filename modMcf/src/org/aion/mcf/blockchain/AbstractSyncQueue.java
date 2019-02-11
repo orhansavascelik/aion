@@ -7,8 +7,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.base.type.IBlock;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.types.AbstractBlockHeaderWrapper;
 
 /** Abstract SyncQueue Class */

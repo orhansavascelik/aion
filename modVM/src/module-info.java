@@ -1,5 +1,5 @@
 module aion.vm {
-    requires aion.base;
+    requires aion.type.api;
     requires aion.mcf;
     requires transitive slf4j.api;
     requires aion.zero;

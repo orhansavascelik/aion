@@ -1,7 +1,7 @@
 package org.aion.api.server.nrgprice;
 
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
 
 public abstract class NrgPriceAdvisor<BLK extends IBlock, TXN extends ITransaction>
         implements INrgPriceAdvisor<BLK, TXN> {

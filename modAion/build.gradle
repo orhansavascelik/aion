@@ -3,7 +3,7 @@ ext.moduleName = 'aion.zero'
 test.dependsOn copyNativeLibsForModuleTests
 
 dependencies {
-    compile project(':modAionBase')
+    compile project(':type_api')
     compile project(':modRlp')
     compile project(':modCrypto')
     compile project(':modMcf')

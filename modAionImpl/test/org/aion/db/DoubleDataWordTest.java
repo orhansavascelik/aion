@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Properties;
 import java.util.Random;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IPruneConfig;
-import org.aion.base.db.IRepository;
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.db.IRepositoryConfig;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IPruneConfig;
+import org.aion.type.api.db.IRepository;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.db.IRepositoryConfig;
+import org.aion.type.api.type.AionAddress;
 import org.aion.crypto.ECKeyFac;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;

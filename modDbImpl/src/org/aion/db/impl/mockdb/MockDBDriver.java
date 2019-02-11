@@ -3,7 +3,7 @@ package org.aion.db.impl.mockdb;
 import static org.aion.db.impl.DatabaseFactory.Props;
 
 import java.util.Properties;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
 import org.aion.db.impl.IDriver;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;

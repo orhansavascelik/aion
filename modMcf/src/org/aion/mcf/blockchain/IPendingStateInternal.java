@@ -1,8 +1,8 @@
 package org.aion.mcf.blockchain;
 
 import java.util.List;
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
 import org.aion.mcf.types.AbstractTxReceipt;
 
 /**

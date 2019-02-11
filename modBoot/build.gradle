@@ -1,7 +1,7 @@
 ext.moduleName = 'aion.boot'
 
 dependencies {
-    compile project(':modAionBase')
+    compile project(':type_api')
     compile project(':modCrypto')
     compile project(':modApiServer')
     compile project(':modAionImpl')

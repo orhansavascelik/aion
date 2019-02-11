@@ -4,8 +4,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
-import org.aion.base.db.IByteArrayKeyValueStore;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueStore;
 
 /**
  * A data source with archived data that must no be deleted.

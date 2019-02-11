@@ -1,7 +1,7 @@
 module aion.mcf {
+    requires aion.type.api;
     requires aion.util;
     requires aion.crypto;
-    requires aion.base;
     requires aion.log;
     requires java.xml;
     requires aion.rlp;

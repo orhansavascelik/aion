@@ -1,5 +1,5 @@
 module aion.apiserver {
-    requires aion.base;
+    requires aion.type.api;
     requires aion.zero.impl;
     requires aion.log;
     requires aion.p2p;

@@ -1,6 +1,6 @@
 package org.aion.mcf.trie;
 
-import org.aion.base.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
 
 /**
  * Trie interface for the main data structure in Ethereum which is used to store both the account

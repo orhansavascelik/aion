@@ -1,9 +1,9 @@
 package org.aion.mcf.evt;
 
 import java.util.List;
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
-import org.aion.base.type.ITxExecSummary;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.type.ITxExecSummary;
 import org.aion.mcf.types.AbstractBlockSummary;
 import org.aion.mcf.types.AbstractTxReceipt;
 

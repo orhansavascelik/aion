@@ -1,6 +1,6 @@
 package org.aion.db.impl;
 
-import org.aion.base.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
 
 public interface IDriver {
 

@@ -30,7 +30,7 @@ import static org.junit.Assert.assertEquals;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;

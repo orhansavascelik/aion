@@ -1,7 +1,7 @@
 package org.aion.mcf.evt;
 
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
 import org.aion.mcf.blockchain.IPendingStateInternal;
 import org.aion.mcf.types.AbstractBlockSummary;
 import org.aion.mcf.types.AbstractTxReceipt;

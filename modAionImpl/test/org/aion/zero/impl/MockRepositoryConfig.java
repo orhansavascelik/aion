@@ -1,9 +1,9 @@
 package org.aion.zero.impl;
 
 import java.util.Properties;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IPruneConfig;
-import org.aion.base.db.IRepositoryConfig;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IPruneConfig;
+import org.aion.type.api.db.IRepositoryConfig;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
 import org.aion.mcf.config.CfgPrune;

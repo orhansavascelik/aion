@@ -4,10 +4,10 @@ import static org.aion.mcf.vm.Constants.NRG_CREATE_CONTRACT_DEFAULT;
 import static org.aion.mcf.vm.Constants.NRG_TRANSACTION_DEFAULT;
 
 import java.math.BigInteger;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteUtil;
-import org.aion.base.util.TypeConverter;
-import org.aion.base.vm.VirtualMachineSpecs;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.util.TypeConverter;
+import org.aion.type.api.vm.VirtualMachineSpecs;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.vm.api.interfaces.Address;

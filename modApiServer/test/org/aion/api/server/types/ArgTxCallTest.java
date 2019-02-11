@@ -5,7 +5,7 @@ import static org.aion.mcf.vm.Constants.NRG_TRANSACTION_DEFAULT;
 import static org.aion.mcf.vm.Constants.NRG_CREATE_CONTRACT_DEFAULT;
 
 import java.math.BigInteger;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.json.JSONObject;
 import org.junit.Test;
 

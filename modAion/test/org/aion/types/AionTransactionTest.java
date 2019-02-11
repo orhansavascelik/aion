@@ -3,7 +3,7 @@ package org.aion.types;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.api.interfaces.Address;

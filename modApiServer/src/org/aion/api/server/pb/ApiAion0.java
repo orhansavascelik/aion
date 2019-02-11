@@ -1,6 +1,6 @@
 package org.aion.api.server.pb;
 
-import static org.aion.base.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.aion.type.api.util.ByteUtil.EMPTY_BYTE_ARRAY;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
@@ -38,15 +38,15 @@ import org.aion.api.server.types.SyncInfo;
 import org.aion.api.server.types.TxPendingStatus;
 import org.aion.api.server.types.TxRecpt;
 import org.aion.api.server.types.TxRecptLg;
-import org.aion.base.type.AionAddress;
-import org.aion.base.type.Hash256;
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
-import org.aion.base.type.ITxReceipt;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.util.ByteUtil;
-import org.aion.base.util.Hex;
-import org.aion.base.util.TypeConverter;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.type.Hash256;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.type.ITxReceipt;
+import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.util.Hex;
+import org.aion.type.api.util.TypeConverter;
 import org.aion.equihash.EquihashMiner;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IHandler;

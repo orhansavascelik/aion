@@ -2,7 +2,7 @@ package org.aion.zero.impl.sync.msg;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.ITransaction;
 import org.aion.p2p.Ctrl;
 import org.aion.p2p.Msg;
 import org.aion.p2p.Ver;

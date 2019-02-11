@@ -2,8 +2,8 @@ package org.aion.api.server.types;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
-import org.aion.base.type.IBlockSummary;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.IBlockSummary;
+import org.aion.type.api.type.ITransaction;
 
 public abstract class Fltr {
 

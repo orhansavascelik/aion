@@ -2,8 +2,8 @@ package org.aion.mcf.ds;
 
 import java.io.Closeable;
 import java.util.Optional;
-import org.aion.base.db.Flushable;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.Flushable;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
 
 /**
  * Object Datasource.

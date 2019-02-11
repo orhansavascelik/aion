@@ -1,6 +1,6 @@
 package org.aion.precompiled.contracts.ATB;
 
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.crypto.AddressSpecs;
 import org.aion.crypto.HashUtil;
 import org.aion.fastvm.ExecutionContext;

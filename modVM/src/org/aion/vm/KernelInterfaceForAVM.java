@@ -2,9 +2,8 @@ package org.aion.vm;
 
 import java.math.BigInteger;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.vm.VirtualMachineSpecs;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.valid.TxNrgRule;

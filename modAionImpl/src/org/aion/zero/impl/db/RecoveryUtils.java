@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 import org.aion.log.AionLoggerFactory;
 import org.aion.mcf.config.CfgDb;
 import org.aion.mcf.core.ImportResult;

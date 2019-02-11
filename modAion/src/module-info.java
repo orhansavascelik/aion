@@ -1,5 +1,5 @@
 module aion.zero {
-    requires aion.base;
+    requires aion.type.api;
     requires aion.rlp;
     requires aion.crypto;
     requires aion.mcf;

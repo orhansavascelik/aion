@@ -1,7 +1,7 @@
 package org.aion.txpool;
 
 import java.util.Properties;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.ITransaction;
 
 public final class TxPoolModule {
     private static TxPoolModule singleton = null;

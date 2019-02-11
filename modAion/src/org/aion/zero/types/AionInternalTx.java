@@ -1,14 +1,14 @@
 package org.aion.zero.types;
 
-import static org.aion.base.util.ByteUtil.toHexString;
+import static org.aion.type.api.util.ByteUtil.toHexString;
 import static org.apache.commons.lang3.ArrayUtils.getLength;
 import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 import static org.apache.commons.lang3.ArrayUtils.nullToEmpty;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.rlp.RLP;

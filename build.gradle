@@ -330,9 +330,9 @@ clean {
 task ciBuild {
     dependsOn build
     def ciModules = [
+            'type_api',
             'aion_fastvm',
             'modAion',
-            'modAionBase',
             'modAionImpl',
             'modApiServer',
             'modBoot',

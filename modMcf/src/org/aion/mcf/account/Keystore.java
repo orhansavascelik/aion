@@ -22,9 +22,9 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.util.TypeConverter;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.util.TypeConverter;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.log.AionLoggerFactory;
@@ -118,7 +118,7 @@ public class Keystore {
             throw new NullPointerException();
         }
 
-        List<File> files = org.aion.base.io.File.getFiles(PATH);
+        List<File> files = org.aion.type.api.io.File.getFiles(PATH);
         if (files == null) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("No key file been stored in the kernel.");
@@ -171,7 +171,7 @@ public class Keystore {
     }
 
     public static String[] list() {
-        return addAddrs(org.aion.base.io.File.getFiles(PATH)).toArray(new String[0]);
+        return addAddrs(org.aion.type.api.io.File.getFiles(PATH)).toArray(new String[0]);
     }
 
     private static List<String> addAddrs(List<File> files) {
@@ -198,7 +198,7 @@ public class Keystore {
      * @return address represent by String as a List
      */
     public static List<String> accountsSorted() {
-        List<File> files = org.aion.base.io.File.getFiles(PATH);
+        List<File> files = org.aion.type.api.io.File.getFiles(PATH);
         files.sort(COMPARE);
         return addAddrs(files);
     }
@@ -210,7 +210,7 @@ public class Keystore {
 
         ECKey key = null;
         if (_address.startsWith(AION_PREFIX)) {
-            List<File> files = org.aion.base.io.File.getFiles(PATH);
+            List<File> files = org.aion.type.api.io.File.getFiles(PATH);
             for (File file : files) {
                 if (HEX_64.matcher(_address).find() && file.getName().contains(_address)) {
                     try {
@@ -240,7 +240,7 @@ public class Keystore {
 
         boolean flag = false;
         if (_address.startsWith(AION_PREFIX)) {
-            List<File> files = org.aion.base.io.File.getFiles(PATH);
+            List<File> files = org.aion.type.api.io.File.getFiles(PATH);
             for (File file : files) {
                 if (HEX_64.matcher(_address).find() && file.getName().contains(_address)) {
                     flag = true;
@@ -296,7 +296,7 @@ public class Keystore {
      * Test method. Don't use it for the code dev.
      */
     static File getAccountFile(String address, String password) {
-        List<File> files = org.aion.base.io.File.getFiles(PATH);
+        List<File> files = org.aion.type.api.io.File.getFiles(PATH);
         if (files == null) {
             if (LOG.isWarnEnabled()) {
                 LOG.warn("No key file been stored in the kernel.");

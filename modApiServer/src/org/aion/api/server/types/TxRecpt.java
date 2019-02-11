@@ -1,16 +1,14 @@
 package org.aion.api.server.types;
 
-import static org.aion.base.util.TypeConverter.toJsonHex;
+import static org.aion.type.api.util.TypeConverter.toJsonHex;
 
-import org.aion.base.type.AionAddress;
-import org.aion.base.type.IBlock;
-import org.aion.base.type.IBlockHeader;
-import org.aion.base.util.ByteUtil;
-import org.aion.base.util.TypeConverter;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.IBlockHeader;
+import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.util.TypeConverter;
 import org.aion.mcf.core.AbstractTxInfo;
 import org.aion.mcf.types.AbstractTransaction;
 import org.aion.mcf.types.AbstractTxReceipt;
-import org.aion.mcf.vm.types.Log;
 import org.aion.vm.api.interfaces.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.zero.impl.types.AionBlock;

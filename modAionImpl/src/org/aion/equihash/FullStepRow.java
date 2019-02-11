@@ -1,6 +1,6 @@
 package org.aion.equihash;
 
-import static org.aion.base.util.ByteUtil.intToBytes;
+import static org.aion.type.api.util.ByteUtil.intToBytes;
 
 class FullStepRow extends StepRow {
 

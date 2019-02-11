@@ -1,6 +1,6 @@
 package org.aion.equihash;
 
-import org.aion.base.type.ISolution;
+import org.aion.type.api.type.ISolution;
 import org.aion.zero.types.IAionBlock;
 
 /**

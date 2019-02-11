@@ -4,8 +4,8 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.aion.precompiled.contracts.ATB.BridgeTestUtils.dummyContext;
 
 import java.util.List;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.fastvm.ExecutionContext;
 import org.aion.precompiled.contracts.DummyRepo;

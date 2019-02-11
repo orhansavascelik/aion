@@ -1,11 +1,11 @@
 package org.aion.api.server.rpc;
 
-import static org.aion.base.util.TypeConverter.StringHexToBigInteger;
+import static org.aion.type.api.util.TypeConverter.StringHexToBigInteger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.type.AionAddress;
 import org.aion.mcf.account.AccountManager;
 import org.aion.mcf.account.Keystore;
 import org.aion.vm.api.interfaces.Address;

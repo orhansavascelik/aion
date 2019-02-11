@@ -3,7 +3,7 @@ package org.aion.mcf.types;
 import static org.aion.util.bytes.ByteUtil.byteArrayToLong;
 
 import java.math.BigInteger;
-import org.aion.base.type.IBlockIdentifier;
+import org.aion.type.api.type.IBlockIdentifier;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPList;
 import org.aion.util.conversions.Hex;

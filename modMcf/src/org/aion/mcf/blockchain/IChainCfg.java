@@ -1,7 +1,7 @@
 package org.aion.mcf.blockchain;
 
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
 import org.aion.mcf.core.IDifficultyCalculator;
 import org.aion.mcf.core.IRewardsCalculator;
 import org.aion.mcf.valid.BlockHeaderValidator;

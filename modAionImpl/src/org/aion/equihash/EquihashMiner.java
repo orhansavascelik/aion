@@ -1,6 +1,6 @@
 package org.aion.equihash;
 
-import static org.aion.base.util.Hex.toHexString;
+import static org.aion.type.api.util.Hex.toHexString;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import org.aion.base.util.MAF;
+import org.aion.type.api.util.MAF;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IEventMgr;
 import org.aion.evtmgr.IHandler;

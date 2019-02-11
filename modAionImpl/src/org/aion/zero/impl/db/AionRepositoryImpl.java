@@ -1,6 +1,6 @@
 package org.aion.zero.impl.db;
 
-import static org.aion.base.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.aion.type.api.util.ByteUtil.EMPTY_BYTE_ARRAY;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.zero.impl.AionHub.INIT_ERROR_EXIT_CODE;
 
@@ -13,13 +13,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IRepository;
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.db.IRepositoryConfig;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.util.Hex;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IRepository;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.db.IRepositoryConfig;
+import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.util.Hex;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepository;
 import org.aion.mcf.db.ContractDetailsCacheImpl;

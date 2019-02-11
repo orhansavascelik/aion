@@ -1,17 +1,17 @@
 package org.aion.mcf.db;
 
-import static org.aion.base.util.ByteArrayWrapper.wrap;
+import static org.aion.type.api.util.ByteArrayWrapper.wrap;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 import java.util.Set;
-import org.aion.base.db.IByteArrayKeyValueDatabase;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IRepositoryConfig;
-import org.aion.base.type.IBlockHeader;
-import org.aion.base.type.ITransaction;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IRepositoryConfig;
+import org.aion.type.api.type.IBlockHeader;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.trie.JournalPruneDataSource;
 import org.aion.mcf.types.AbstractBlock;
 import org.aion.vm.api.interfaces.Address;

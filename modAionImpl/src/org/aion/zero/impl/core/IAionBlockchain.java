@@ -1,7 +1,7 @@
 package org.aion.zero.impl.core;
 
 import java.util.List;
-import org.aion.base.db.IRepository;
+import org.aion.type.api.db.IRepository;
 import org.aion.mcf.core.IBlockchain;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.types.AionBlock;

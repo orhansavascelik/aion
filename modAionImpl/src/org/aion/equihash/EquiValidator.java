@@ -1,8 +1,8 @@
 package org.aion.equihash;
 
-import static org.aion.base.util.ByteUtil.bytesToInts;
-import static org.aion.base.util.ByteUtil.intToBytesLE;
-import static org.aion.base.util.ByteUtil.merge;
+import static org.aion.type.api.util.ByteUtil.bytesToInts;
+import static org.aion.type.api.util.ByteUtil.intToBytesLE;
+import static org.aion.type.api.util.ByteUtil.merge;
 
 import java.util.Arrays;
 import org.aion.crypto.hash.Blake2b;

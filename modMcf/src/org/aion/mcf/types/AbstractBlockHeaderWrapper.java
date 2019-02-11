@@ -1,7 +1,7 @@
 package org.aion.mcf.types;
 
 import java.util.Arrays;
-import org.aion.base.type.IBlockHeader;
+import org.aion.type.api.type.IBlockHeader;
 import org.aion.rlp.RLP;
 import org.aion.util.conversions.Hex;
 

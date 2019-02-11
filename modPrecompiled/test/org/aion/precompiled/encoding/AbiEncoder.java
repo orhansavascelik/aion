@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.ThreadSafe;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.precompiled.PrecompiledUtilities;
 

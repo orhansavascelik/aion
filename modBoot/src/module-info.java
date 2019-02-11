@@ -13,7 +13,7 @@ module aion.boot {
     uses org.aion.evtmgr.EventMgrModule;
     uses org.aion.log.AionLoggerFactory;
 
-    requires aion.base;
+    requires aion.type.api;
     requires libnzmq;
     requires aion.vm;
 

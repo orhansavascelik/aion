@@ -2,10 +2,10 @@ package org.aion.zero.impl.db;
 
 import java.util.Map;
 import java.util.Properties;
-import org.aion.base.db.DetailsProvider;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IPruneConfig;
-import org.aion.base.db.IRepositoryConfig;
+import org.aion.type.api.db.DetailsProvider;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IPruneConfig;
+import org.aion.type.api.db.IRepositoryConfig;
 import org.aion.mcf.config.CfgDb;
 
 public class RepositoryConfig implements IRepositoryConfig {

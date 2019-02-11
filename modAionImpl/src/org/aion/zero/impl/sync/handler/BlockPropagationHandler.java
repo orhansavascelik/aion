@@ -3,7 +3,7 @@ package org.aion.zero.impl.sync.handler;
 import java.math.BigInteger;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.core.ImportResult;

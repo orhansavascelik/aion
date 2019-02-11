@@ -1,6 +1,6 @@
 package org.aion.zero.impl.valid;
 
-import static org.aion.base.util.BIUtil.isEqual;
+import static org.aion.type.api.util.BIUtil.isEqual;
 
 import java.math.BigInteger;
 import java.util.List;

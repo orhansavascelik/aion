@@ -1,6 +1,6 @@
 package org.aion.mcf.mine;
 
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 
 /**
  * Miner Listener interface.

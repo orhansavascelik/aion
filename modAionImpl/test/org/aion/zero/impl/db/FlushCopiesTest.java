@@ -5,10 +5,10 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import java.math.BigInteger;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.db.IRepository;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.db.IRepository;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;

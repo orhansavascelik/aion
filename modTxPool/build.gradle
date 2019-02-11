@@ -1,6 +1,6 @@
 ext.moduleName = 'aion.txpool'
 
 dependencies {
-    compile project(':modAionBase')
+    compile project(':type_api')
 //    runtime project(':modTxPoolImpl')
 }

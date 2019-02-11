@@ -1,5 +1,5 @@
 rootProject.name = 'aion'
-include 'modAionBase', 'modAion', 'modAionImpl',
+include 'type_api', 'modAion', 'modAionImpl',
     'modUtil',
     'modCrypto',
     'modLogger',

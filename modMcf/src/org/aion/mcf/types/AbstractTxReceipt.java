@@ -4,11 +4,10 @@ import static org.aion.util.bytes.ByteUtil.EMPTY_BYTE_ARRAY;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.aion.base.type.ITransaction;
-import org.aion.base.type.ITxReceipt;
-import org.aion.base.util.Bytesable;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.type.ITxReceipt;
+import org.aion.type.api.util.Bytesable;
 import org.aion.mcf.vm.types.Bloom;
-import org.aion.mcf.vm.types.Log;
 import org.aion.vm.api.interfaces.IExecutionLog;
 
 public abstract class AbstractTxReceipt<TX extends ITransaction>

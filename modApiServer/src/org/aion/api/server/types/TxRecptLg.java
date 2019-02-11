@@ -1,9 +1,8 @@
 package org.aion.api.server.types;
 
-import org.aion.base.type.IBlock;
-import org.aion.base.type.ITransaction;
-import org.aion.base.util.TypeConverter;
-import org.aion.mcf.vm.types.Log;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.util.TypeConverter;
 import org.aion.vm.api.interfaces.IExecutionLog;
 
 public class TxRecptLg {

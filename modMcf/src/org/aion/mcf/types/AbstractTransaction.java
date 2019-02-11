@@ -1,8 +1,8 @@
 package org.aion.mcf.types;
 
 import java.math.BigInteger;
-import org.aion.base.type.ITransaction;
-import org.aion.base.vm.VirtualMachineSpecs;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.vm.VirtualMachineSpecs;
 import org.aion.crypto.ISignature;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;

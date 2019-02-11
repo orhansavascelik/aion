@@ -5,8 +5,8 @@ import static org.aion.mcf.valid.TxNrgRule.isValidNrgTx;
 
 import java.util.Collections;
 import java.util.Map;
-import org.aion.base.type.Hash256;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.type.Hash256;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.crypto.ISignature;
 import org.aion.crypto.SignatureFac;
 import org.aion.log.LogEnum;

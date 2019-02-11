@@ -1,7 +1,7 @@
 package org.aion.mcf.valid;
 
 import java.util.List;
-import org.aion.base.type.IBlockHeader;
+import org.aion.type.api.type.IBlockHeader;
 
 /** Validates whether the timestamp of the current block is > the timestamp of the parent block */
 public class TimeStampRule<BH extends IBlockHeader> extends DependentBlockHeaderRule<BH> {

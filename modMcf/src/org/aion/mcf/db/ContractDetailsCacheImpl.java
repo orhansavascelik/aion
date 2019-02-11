@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.aion.base.db.IByteArrayKeyValueStore;
-import org.aion.base.db.IContractDetails;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IByteArrayKeyValueStore;
+import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.vm.api.interfaces.Address;
 
 /** Contract details cache implementation. */

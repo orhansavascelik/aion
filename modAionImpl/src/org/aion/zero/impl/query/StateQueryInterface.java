@@ -1,7 +1,7 @@
 package org.aion.zero.impl.query;
 
 import java.util.Optional;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.mcf.core.AccountState;
 import org.aion.vm.api.interfaces.Address;
 

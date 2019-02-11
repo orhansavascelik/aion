@@ -1,17 +1,17 @@
 package org.aion.zero.types;
 
-import static org.aion.base.util.ByteUtil.longToBytes;
-import static org.aion.base.util.ByteUtil.merge;
-import static org.aion.base.util.ByteUtil.oneByteToHexString;
-import static org.aion.base.util.ByteUtil.toHexString;
+import static org.aion.type.api.util.ByteUtil.longToBytes;
+import static org.aion.type.api.util.ByteUtil.merge;
+import static org.aion.type.api.util.ByteUtil.oneByteToHexString;
+import static org.aion.type.api.util.ByteUtil.toHexString;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import org.aion.base.type.AionAddress;
-import org.aion.base.type.IPowBlockHeader;
-import org.aion.base.util.ByteUtil;
-import org.aion.base.util.Utils;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.type.IPowBlockHeader;
+import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.util.Utils;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.types.AbstractBlockHeader;
 import org.aion.rlp.RLP;

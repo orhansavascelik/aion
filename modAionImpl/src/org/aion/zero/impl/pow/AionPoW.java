@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import org.aion.base.util.Hex;
+import org.aion.type.api.util.Hex;
 import org.aion.equihash.Solution;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IEventMgr;

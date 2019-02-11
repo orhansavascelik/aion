@@ -8,7 +8,7 @@ import java.io.InputStream;
 import java.math.BigInteger;
 import java.util.List;
 import org.aion.api.server.types.TxRecptLg;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.ImportResult;

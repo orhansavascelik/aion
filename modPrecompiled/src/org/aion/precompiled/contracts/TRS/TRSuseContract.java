@@ -2,8 +2,8 @@ package org.aion.precompiled.contracts.TRS;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.type.AionAddress;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.type.AionAddress;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.IBlockchain;
 import org.aion.mcf.db.IBlockStoreBase;

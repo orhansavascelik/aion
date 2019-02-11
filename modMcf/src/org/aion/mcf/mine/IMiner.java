@@ -1,7 +1,7 @@
 package org.aion.mcf.mine;
 
 import com.google.common.util.concurrent.ListenableFuture;
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 import org.aion.mcf.types.AbstractBlockHeader;
 
 /**

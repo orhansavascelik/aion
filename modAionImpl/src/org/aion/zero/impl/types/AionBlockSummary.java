@@ -3,7 +3,7 @@ package org.aion.zero.impl.types;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import org.aion.base.type.IBlockSummary;
+import org.aion.type.api.type.IBlockSummary;
 import org.aion.mcf.types.AbstractBlockSummary;
 import org.aion.vm.api.interfaces.Address;
 import org.aion.zero.types.AionTransaction;

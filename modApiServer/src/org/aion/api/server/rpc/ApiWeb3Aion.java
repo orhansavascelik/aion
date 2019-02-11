@@ -1,8 +1,8 @@
 package org.aion.api.server.rpc;
 
 import static java.util.stream.Collectors.toList;
-import static org.aion.base.util.ByteUtil.hexStringToBytes;
-import static org.aion.base.util.ByteUtil.toHexString;
+import static org.aion.type.api.util.ByteUtil.hexStringToBytes;
+import static org.aion.type.api.util.ByteUtil.toHexString;
 
 import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -38,15 +38,15 @@ import org.aion.api.server.types.NumericalValue;
 import org.aion.api.server.types.SyncInfo;
 import org.aion.api.server.types.Tx;
 import org.aion.api.server.types.TxRecpt;
-import org.aion.base.db.IRepository;
-import org.aion.base.type.AionAddress;
-import org.aion.base.type.Hash256;
-import org.aion.base.type.ITransaction;
-import org.aion.base.type.ITxReceipt;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.util.ByteUtil;
-import org.aion.base.util.TypeConverter;
-import org.aion.base.util.Utils;
+import org.aion.type.api.db.IRepository;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.type.Hash256;
+import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.type.ITxReceipt;
+import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.util.TypeConverter;
+import org.aion.type.api.util.Utils;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
 import org.aion.evtmgr.IEventMgr;

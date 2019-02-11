@@ -1,6 +1,6 @@
 package org.aion.zero.impl.sync.msg;
 
-import org.aion.base.type.IBlock;
+import org.aion.type.api.type.IBlock;
 import org.aion.p2p.Ctrl;
 import org.aion.p2p.Msg;
 import org.aion.p2p.Ver;

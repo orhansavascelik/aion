@@ -1,10 +1,10 @@
 package org.aion.precompiled.contracts;
 
 import java.math.BigInteger;
-import org.aion.base.db.IRepositoryCache;
-import org.aion.base.type.AionAddress;
-import org.aion.base.util.BIUtil;
-import org.aion.base.util.ByteArrayWrapper;
+import org.aion.type.api.db.IRepositoryCache;
+import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.util.BIUtil;
+import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.crypto.ed25519.Ed25519Signature;
 import org.aion.mcf.core.AccountState;

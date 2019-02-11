@@ -6,8 +6,8 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.aion.base.util.ByteArrayWrapper;
-import org.aion.base.util.ByteUtil;
+import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.junit.Test;
 

@@ -2,8 +2,8 @@ package org.aion.api.server.types;
 
 import static org.aion.api.server.types.Fltr.Type;
 
-import org.aion.base.type.IBlock;
-import org.aion.base.util.TypeConverter;
+import org.aion.type.api.type.IBlock;
+import org.aion.type.api.util.TypeConverter;
 
 @SuppressWarnings("rawtypes")
 public class EvtBlk extends Evt {
