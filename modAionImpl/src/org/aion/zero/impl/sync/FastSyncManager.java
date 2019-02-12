@@ -4,6 +4,7 @@ import static org.aion.p2p.V1Constants.CONTRACT_MISSING_KEYS_LIMIT;
 
 import com.google.common.annotations.VisibleForTesting;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
@@ -44,6 +45,53 @@ public final class FastSyncManager {
     public FastSyncManager(AionBlockchainImpl chain) {
         this.enabled = true;
         this.chain = chain;
+    }
+
+    /** This builder allows creating customized {@link FastSyncManager} objects for unit tests. */
+    @VisibleForTesting
+    static class Builder {
+        private AionBlockchainImpl chain = null;
+        private Collection<ByteArrayWrapper> storage = null;
+        private long pivotNumber = -1;
+
+        public Builder() {}
+
+        public FastSyncManager.Builder withBlockchain(AionBlockchainImpl chain) {
+            this.chain = chain;
+            return this;
+        }
+
+        public FastSyncManager.Builder withRequiredStorage(Collection<ByteArrayWrapper> storage) {
+            this.storage = storage;
+            return this;
+        }
+
+        public FastSyncManager.Builder withPivotNumber(long pivotNumber) {
+            this.pivotNumber = pivotNumber;
+            return this;
+        }
+
+        public FastSyncManager build() {
+            FastSyncManager manager;
+
+            if (chain != null) {
+                manager = new FastSyncManager(this.chain);
+            } else {
+                manager = new FastSyncManager();
+            }
+
+            // adding required storage
+            if (storage != null) {
+                manager.requiredStorage.addAll(storage);
+            }
+
+            // adding pivot number
+            if (pivotNumber >= 0) {
+                manager.pivotNumber = pivotNumber;
+            }
+
+            return manager;
+        }
     }
 
     public void addImportedNode(ByteArrayWrapper key, byte[] value) {
