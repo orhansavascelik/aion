@@ -179,7 +179,7 @@ public class AionHub {
                 cfg.getSync().getCompactEnabled()
                         ? cfg.getSync().getSlowImportTime()
                         : 0, // set to 0 when disabled
-                cfg.getSync().getCompactFrequency()
+                cfg.getSync().getCompactFrequency(),
                 cfg.getSync().isRequestReceipts(),
                 receiptsRetrievalVerifier);
 
