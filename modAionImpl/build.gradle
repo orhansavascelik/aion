@@ -1,4 +1,13 @@
 ext.moduleName = 'aion.zero.impl'
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 test.dependsOn copyNativeLibsForModuleTests
 clean.dependsOn deleteNativeLibs
 
@@ -11,12 +20,16 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':type_api')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:rlp4j:0.3.3'
+    compile 'network.aion:crypto4j:0.3.3'
+    compile 'network.aion:log4j:0.3.3'
+
+
     compile project(':modAion')
-    compile project(':modRlp')
-    compile project(':modCrypto')
     compile project(':modMcf')
-    compile project(':modLogger')
     compile project(':modP2pImpl')
     compile project(':modP2p')
     compile project(':modEvtMgr')
@@ -29,6 +42,7 @@ dependencies {
     compile 'org.json:json:20180813'
     compile 'info.picocli:picocli:3.6.1'
 
+    testCompile 'network.aion:type-api4j:0.3.3'
     testCompile project(path: ':modTxPoolImpl')
     testCompile project(path: ':modDbImpl', configuration: 'testClassesOut')
 

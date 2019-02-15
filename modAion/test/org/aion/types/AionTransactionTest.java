@@ -3,10 +3,10 @@ package org.aion.types;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.types.AionTransaction;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;

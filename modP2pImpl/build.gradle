@@ -1,5 +1,13 @@
 ext.moduleName = 'aion.p2p.impl'
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 sourceSets { 
     test { 
         resources {
@@ -9,9 +17,10 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':modUtil')
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:log4j:0.3.3'
+
     compile project(':modP2p')
-    compile project(':modLogger')
     compile files('../lib/miniupnpc_linux.jar')
     compile 'org.apache.commons:commons-collections4:4.0'
     compile 'org.slf4j:slf4j-api:1.7.25'

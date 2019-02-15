@@ -9,6 +9,10 @@ version = "0.3.3"
 
 repositories {
     maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
 }
 
 

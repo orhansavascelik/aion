@@ -1,10 +1,22 @@
 ext.moduleName = 'aion.zero'
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 test.dependsOn copyNativeLibsForModuleTests
 
 dependencies {
-    compile project(':type_api')
-    compile project(':modRlp')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:rlp4j:0.3.3'
+
+    
     compile project(':modCrypto')
     compile project(':modMcf')
     //compile files('../lib/libJson.jar')
@@ -12,10 +24,11 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
 
-    testCompile project(':modLogger')
-    testCompile project(':modCrypto')
-    testCompile project(':modMcf')
-    testCompile project(':modRlp')
+    testCompile 'network.aion:log4j:0.3.3'
+
+    //testCompile project(':modCrypto')
+    //testCompile project(':modMcf')
+    //testCompile project(':modRlp')
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile group: 'org.apache.commons', name: 'commons-lang3', version: '3.4'

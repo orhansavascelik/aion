@@ -2,15 +2,15 @@ package org.aion.api.server.types;
 
 import static org.aion.api.server.types.Fltr.Type;
 
-import org.aion.type.api.type.IBlock;
-import org.aion.type.api.util.TypeConverter;
+import org.aion.type.api.interfaces.block.Block;
+import org.aion.util.string.StringUtils;
 
 @SuppressWarnings("rawtypes")
 public class EvtBlk extends Evt {
 
-    public final IBlock b;
+    public final Block b;
 
-    public EvtBlk(IBlock b) {
+    public EvtBlk(Block b) {
         this.b = b;
     }
 
@@ -21,6 +21,6 @@ public class EvtBlk extends Evt {
 
     @Override
     public String toJSON() {
-        return TypeConverter.toJsonHex(b.getHash());
+        return StringUtils.toJsonHex(b.getHash());
     }
 }

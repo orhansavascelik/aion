@@ -69458,7 +69458,7 @@ public final class Message {
                     + "\024\022\022\n\016f_getCompilers\020\025\022\025\n\021f_compileSolidi"
                     + "ty\020\026\022\r\n\tf_getWork\020\027\022\020\n\014f_submitWork\020\030\022\035\n"
                     + "\031f_fetchQueuedTransactions\020\031\022\027\n\023f_signed"
-                    + "Transaction\020\032\022\024\n\020f_rawTransaction\020\033\022\021\n\rf"
+                    + "TransactionExtend\020\032\022\024\n\020f_rawTransaction\020\033\022\021\n\rf"
                     + "_estimateNrg\020\034\022\014\n\010f_mining\020\035\022\016\n\nf_hashra"
                     + "te\020\036\022\024\n\020f_getActiveNodes\020\037\022\024\n\020f_getSolcV"
                     + "ersion\020 \022\017\n\013f_isSyncing\020!\022\016\n\nf_syncInfo\020"

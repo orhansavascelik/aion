@@ -20,12 +20,12 @@ import org.aion.api.server.types.ArgTxCall;
 import org.aion.api.server.types.Fltr;
 import org.aion.api.server.types.SyncInfo;
 import org.aion.api.server.types.TxRecpt;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.type.ITransaction;
-import org.aion.type.api.type.ITxReceipt;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.TypeConverter;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.type.api.interfaces.tx.TxReceipt;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IEventMgr;
@@ -34,7 +34,7 @@ import org.aion.evtmgr.impl.es.EventExecuteService;
 import org.aion.evtmgr.impl.evt.EventBlock;
 import org.aion.evtmgr.impl.evt.EventTx;
 import org.aion.mcf.blockchain.TxResponse;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.util.string.StringUtils;
 import org.aion.zero.impl.AionGenesis;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.Version;
@@ -63,7 +63,7 @@ public abstract class ApiAion extends Api {
     // using java.util.concurrent library objects
     protected AtomicLong fltrIndex; // AtomicLong
     protected Map<Long, Fltr> installedFilters; // ConcurrentHashMap
-    protected Map<ByteArrayWrapper, AionTxReceipt> pendingReceipts; // Collections.synchronizedMap
+    protected Map<Wrapper, AionTxReceipt> pendingReceipts; // Collections.synchronizedMap
 
     // 'safe-publishing' idiom
     private volatile double reportedHashrate = 0; // volatile, used only for 'publishing'
@@ -107,11 +107,11 @@ public abstract class ApiAion extends Api {
                     } else if (e.getEventType() == IHandler.TYPE.TX0.getValue()) {
                         if (e.getCallbackType() == EventTx.CALLBACK.PENDINGTXUPDATE0.getValue()) {
                             pendingTxUpdate(
-                                    (ITxReceipt) e.getFuncArgs().get(0),
+                                    (TxReceipt) e.getFuncArgs().get(0),
                                     GETSTATE((int) e.getFuncArgs().get(1)));
                         } else if (e.getCallbackType()
                                 == EventTx.CALLBACK.PENDINGTXRECEIVED0.getValue()) {
-                            for (ITransaction tx : (List<ITransaction>) e.getFuncArgs().get(0)) {
+                            for (TransactionExtend tx : (List<TransactionExtend>) e.getFuncArgs().get(0)) {
                                 pendingTxReceived(tx);
                             }
                         }
@@ -127,9 +127,9 @@ public abstract class ApiAion extends Api {
 
     protected abstract void onBlock(AionBlockSummary cbs);
 
-    protected abstract void pendingTxReceived(ITransaction _tx);
+    protected abstract void pendingTxReceived(TransactionExtend _tx);
 
-    protected abstract void pendingTxUpdate(ITxReceipt _txRcpt, EventTx.STATE _state);
+    protected abstract void pendingTxUpdate(TxReceipt _txRcpt, EventTx.STATE _state);
 
     // General Level
     public byte getApiVersion() {
@@ -142,7 +142,7 @@ public abstract class ApiAion extends Api {
 
     public String getCoinbase() {
         String coinbase = CfgAion.inst().getConsensus().getMinerAddress();
-        return TypeConverter.toJsonHex(coinbase);
+        return StringUtils.toJsonHex(coinbase);
     }
 
     @Override
@@ -507,7 +507,7 @@ public abstract class ApiAion extends Api {
         }
     }
 
-    // Transaction Level
+    // TransactionExtend Level
     public BigInteger getBalance(String _address) {
         return this.ac.getRepository().getBalance(AionAddress.wrap(_address));
     }

@@ -4,9 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.db.PersistenceMethod;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.PersistenceMethod;
+import org.aion.util.conversions.Hex;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.slf4j.Logger;
@@ -16,14 +16,14 @@ import org.slf4j.Logger;
  *
  * @author Alexandra Roatis
  */
-public class TimedDatabase implements IByteArrayKeyValueDatabase {
+public class TimedDatabase implements ByteArrayKeyValueDatabase {
 
     /** Unlocked database. */
-    protected final IByteArrayKeyValueDatabase database;
+    protected final ByteArrayKeyValueDatabase database;
 
     protected static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.DB.name());
 
-    public TimedDatabase(IByteArrayKeyValueDatabase _database) {
+    public TimedDatabase(ByteArrayKeyValueDatabase _database) {
         this.database = _database;
     }
 
@@ -32,7 +32,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         return this.getClass().getSimpleName() + " over " + database.toString();
     }
 
-    // IDatabase functionality
+    // Database functionality
     // -----------------------------------------------------------------------------------------
 
     @Override
@@ -138,7 +138,7 @@ public class TimedDatabase implements IByteArrayKeyValueDatabase {
         return result;
     }
 
-    // IKeyValueStore functionality
+    // KeyValueStore functionality
     // ------------------------------------------------------------------------------------
 
     @Override

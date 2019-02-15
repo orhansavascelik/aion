@@ -1,7 +1,7 @@
 package org.aion.zero.impl.sync;
 
 /**
- * Used for tracking different types of requests made to peers.
+ * Used for tracking different type of requests made to peers.
  *
  * @author Alexandra Roatis
  */

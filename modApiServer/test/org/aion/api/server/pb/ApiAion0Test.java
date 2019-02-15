@@ -15,14 +15,14 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Collections;
 import org.aion.api.server.ApiUtil;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.TypeConverter;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.equihash.EquihashMiner;
 import org.aion.mcf.account.AccountManager;
 import org.aion.mcf.account.Keystore;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.util.string.StringUtils;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.Version;
 import org.aion.zero.impl.blockchain.AionImpl;
 import org.aion.zero.impl.config.CfgAion;
@@ -181,7 +181,7 @@ public class ApiAion0Test {
 
         Message.rsp_minerAddress ma = Message.rsp_minerAddress.parseFrom(stripHeader(rsp));
         assertEquals(
-                ByteString.copyFrom(TypeConverter.StringHexToByteArray(api.getCoinbase())),
+                ByteString.copyFrom(StringUtils.StringHexToByteArray(api.getCoinbase())),
                 ma.getMinerAddr());
 
         rsp = sendRequest(Message.Servs.s_hb_VALUE, Message.Funcs.f_minerAddress_VALUE);
@@ -202,7 +202,7 @@ public class ApiAion0Test {
 
         assertEquals(
                 ByteString.copyFrom(
-                        TypeConverter.StringHexToByteArray((String) api.getAccounts().get(0))),
+                        StringUtils.StringHexToByteArray((String) api.getAccounts().get(0))),
                 accts.getAccout(0));
 
         rsp = sendRequest(Message.Servs.s_hb_VALUE, Message.Funcs.f_accounts_VALUE);

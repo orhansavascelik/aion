@@ -7,13 +7,14 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.core.ImportResult;
+import org.aion.type.api.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.types.AionTransaction;
@@ -175,7 +176,7 @@ public class ConsensusTest {
 
         // Place the transaction in a block alone.
         AionBlock parentBlock = blockchain.getRepository().blockStore.getBestBlock();
-        List<AionTransaction> transactions = Collections.singletonList(deployTransaction);
+        List<Transaction> transactions = Collections.singletonList(deployTransaction);
 
         // Run the transaction.
         AionBlock block = blockchain.createNewBlock(parentBlock, transactions, false);
@@ -240,7 +241,7 @@ public class ConsensusTest {
         byte[] receiptTrieEncoded6 = receipt6.getReceiptTrieEncoded();
         byte[] receiptTrieEncoded7 = receipt7.getReceiptTrieEncoded();
 
-        System.out.println("Transaction: " + receipt.getTransaction());
+        System.out.println("TransactionExtend: " + receipt.getTransaction());
         System.out.println();
         System.out.println("BLOCK RECEIPT ROOT: " + Hex.toHexString(blockReceiptsRoot));
         System.out.println("RECEIPT TRIE ENCODING: " + Hex.toHexString(receiptTrieEncoded));
@@ -251,8 +252,8 @@ public class ConsensusTest {
         System.out.println("STATE ROOT: " + Hex.toHexString(stateRoot));
         System.out.println(
                 "----------------------------------------------------------------------");
-        System.out.println("Transaction (CALL #1): " + receipt1.getTransaction());
-        System.out.println("Transaction (CALL #2): " + receipt2.getTransaction());
+        System.out.println("TransactionExtend (CALL #1): " + receipt1.getTransaction());
+        System.out.println("TransactionExtend (CALL #2): " + receipt2.getTransaction());
         System.out.println();
         System.out.println("BLOCK RECEIPT ROOT: " + Hex.toHexString(blockReceiptsRoot2));
         System.out.println(

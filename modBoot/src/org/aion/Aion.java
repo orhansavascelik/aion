@@ -414,7 +414,7 @@ public class Aion {
     }
 
     private static boolean existZmqSecKeyFile(final Path path) {
-        List<File> files = org.aion.type.api.io.File.getFiles(path);
+        List<File> files = org.aion.util.file.File.getFiles(path);
 
         for (File file : files) {
             if (file.getName().contains("zmqCurveSeckey")) {

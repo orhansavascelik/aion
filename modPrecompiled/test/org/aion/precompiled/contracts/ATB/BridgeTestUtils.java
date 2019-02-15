@@ -1,11 +1,11 @@
 package org.aion.precompiled.contracts.ATB;
 
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.crypto.AddressSpecs;
 import org.aion.crypto.HashUtil;
 import org.aion.fastvm.ExecutionContext;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 
 public class BridgeTestUtils {
     static ExecutionContext dummyContext() {

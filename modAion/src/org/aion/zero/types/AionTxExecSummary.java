@@ -4,7 +4,7 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.unmodifiableList;
 import static java.util.Collections.unmodifiableMap;
-import static org.aion.type.api.util.BIUtil.toBI;
+import static org.aion.util.biginteger.BIUtil.toBI;
 import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 import static org.apache.commons.lang3.ArrayUtils.isNotEmpty;
 
@@ -16,9 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.type.ITxExecSummary;
-import org.aion.type.api.type.ITxReceipt;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.tx.TxReceipt;
+import org.aion.type.api.interfaces.tx.TxExecSummary;
 import org.aion.mcf.core.TxTouchedStorage;
 import org.aion.mcf.db.DetailsDataStore;
 import org.aion.mcf.vm.types.DataWord;
@@ -26,11 +27,10 @@ import org.aion.mcf.vm.types.Log;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPList;
-import org.aion.vm.api.interfaces.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.vm.api.interfaces.InternalTransactionInterface;
 
-public class AionTxExecSummary implements ITxExecSummary {
+public class AionTxExecSummary implements TxExecSummary {
 
     /**
      * The receipt associated with {@link AionTransaction} that indicates the results of the
@@ -341,7 +341,7 @@ public class AionTxExecSummary implements ITxExecSummary {
     }
 
     @Override
-    public Object getBuilder(ITxReceipt receipt) {
+    public Object getBuilder(TxReceipt receipt) {
         return builderFor((AionTxReceipt) receipt);
     }
 

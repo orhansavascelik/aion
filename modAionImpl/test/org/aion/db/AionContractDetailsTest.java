@@ -7,18 +7,19 @@ import static org.junit.Assert.assertTrue;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IPruneConfig;
-import org.aion.type.api.db.IRepositoryConfig;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.PruneConfig;
+import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.type.AionAddress;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
 import org.aion.mcf.config.CfgPrune;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionContractDetailsImpl;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.db.ContractDetailsAion;
@@ -30,20 +31,20 @@ public class AionContractDetailsTest {
     private static final int IN_MEMORY_STORAGE_LIMIT =
             1000000; // CfgAion.inst().getDb().getDetailsInMemoryStorageLimit();
 
-    protected IRepositoryConfig repoConfig =
-            new IRepositoryConfig() {
+    protected RepositoryConfig repoConfig =
+            new RepositoryConfig() {
                 @Override
                 public String getDbPath() {
                     return "";
                 }
 
                 @Override
-                public IPruneConfig getPruneConfig() {
+                public PruneConfig getPruneConfig() {
                     return new CfgPrune(false);
                 }
 
                 @Override
-                public IContractDetails contractDetailsImpl() {
+                public ContractDetails contractDetailsImpl() {
                     return ContractDetailsAion.createForTesting(0, 1000000).getDetails();
                 }
 
@@ -56,8 +57,8 @@ public class AionContractDetailsTest {
                 }
             };
 
-    private static IContractDetails deserialize(
-            byte[] rlp, IByteArrayKeyValueDatabase externalStorage) {
+    private static ContractDetails deserialize(
+            byte[] rlp, ByteArrayKeyValueDatabase externalStorage) {
         AionContractDetailsImpl result = new AionContractDetailsImpl();
         result.setExternalStorageDataSource(externalStorage);
         result.decode(rlp);
@@ -247,7 +248,7 @@ public class AionContractDetailsTest {
         Map<DataWord, DataWord> elements = new HashMap<>();
 
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        IByteArrayKeyValueDatabase externalStorage = repository.getDetailsDatabase();
+        ByteArrayKeyValueDatabase externalStorage = repository.getDetailsDatabase();
 
         AionContractDetailsImpl original = new AionContractDetailsImpl(0, 1000000);
 
@@ -295,7 +296,7 @@ public class AionContractDetailsTest {
         Map<DataWord, DataWord> elements = new HashMap<>();
 
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        IByteArrayKeyValueDatabase externalStorage = repository.getDetailsDatabase();
+        ByteArrayKeyValueDatabase externalStorage = repository.getDetailsDatabase();
 
         AionContractDetailsImpl original = new AionContractDetailsImpl(0, 1000000);
         original.setExternalStorageDataSource(externalStorage);
@@ -313,7 +314,7 @@ public class AionContractDetailsTest {
         original.syncStorage();
         assertTrue(!externalStorage.isEmpty());
 
-        IContractDetails deserialized = deserialize(original.getEncoded(), externalStorage);
+        ContractDetails deserialized = deserialize(original.getEncoded(), externalStorage);
 
         // adds keys for in-memory storage limit overflow
         for (int i = 0; i < 10; i++) {
@@ -337,13 +338,13 @@ public class AionContractDetailsTest {
         }
     }
 
-    private static ByteArrayWrapper wrapValueForPut(DataWord value) {
+    private static Wrapper wrapValueForPut(DataWord value) {
         return (value.isZero())
                 ? new ByteArrayWrapper(value.getData())
                 : new ByteArrayWrapper(value.getNoLeadZeroesData());
     }
 
-    private static ByteArrayWrapper wrapValueFromGet(ByteArrayWrapper value) {
+    private static Wrapper wrapValueFromGet(Wrapper value) {
         return new ByteArrayWrapper(new DataWord(value.getData()).getData());
     }
 }

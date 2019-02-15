@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.log.AionLoggerFactory;
 import org.aion.mcf.core.ImportResult;
 import org.aion.mcf.trie.TrieImpl;
@@ -157,7 +157,7 @@ public class AionHubTest {
 
         // delete some world state root entries from the database
         TrieImpl trie = (TrieImpl) repo.getWorldState();
-        IByteArrayKeyValueDatabase database = repo.getStateDatabase();
+        ByteArrayKeyValueDatabase database = repo.getStateDatabase();
 
         repo.flush();
         for (byte[] key : statesToDelete) {

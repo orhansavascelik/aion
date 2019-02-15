@@ -53,7 +53,7 @@ javadoc {
   doFirst {
     options.addStringOption('-module-path', classpath.asPath)
     options.tags = [ "implNote" ]   
-}
+  }
 }
 
 task javadocJar(type: Jar) {

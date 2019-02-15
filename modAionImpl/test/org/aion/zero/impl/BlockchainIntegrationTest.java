@@ -5,13 +5,13 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.ImportResult;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.blockchain.ChainConfiguration;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
@@ -141,7 +141,7 @@ public class BlockchainIntegrationTest {
         assertThat(connection).isEqualTo(ImportResult.IMPORTED_BEST);
 
         // to be sure, perform some DB tests
-        IRepository repo = bc.getRepository();
+        Repository repo = bc.getRepository();
 
         assertThat(repo.getBalance(receiverAddress)).isEqualTo(BigInteger.valueOf(100));
         assertThat(repo.getBalance(AionAddress.wrap(sender.getAddress())))

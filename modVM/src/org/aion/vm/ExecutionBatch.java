@@ -5,10 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import org.aion.fastvm.ExecutionContext;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.util.bytes.ByteUtil;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.types.AionTransaction;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 import org.apache.commons.lang3.ArrayUtils;
 
 /**
@@ -30,9 +29,9 @@ import org.apache.commons.lang3.ArrayUtils;
 public final class ExecutionBatch {
     private List<AionTransaction> transactions;
     private List<KernelTransactionContext> contexts;
-    private IAionBlock block;
+    private AionBlock block;
 
-    public ExecutionBatch(IAionBlock block, List<AionTransaction> transactions) {
+    public ExecutionBatch(AionBlock block, List<AionTransaction> transactions) {
         if (block == null) {
             throw new NullPointerException("Cannot construct BlockDetails with null block.");
         }
@@ -46,7 +45,7 @@ public final class ExecutionBatch {
     }
 
     private ExecutionBatch(
-            IAionBlock block,
+            AionBlock block,
             List<AionTransaction> transactions,
             List<KernelTransactionContext> contexts) {
         this.block = block;
@@ -75,7 +74,7 @@ public final class ExecutionBatch {
      *
      * @return The block.
      */
-    public IAionBlock getBlock() {
+    public AionBlock getBlock() {
         return this.block;
     }
 
@@ -105,7 +104,7 @@ public final class ExecutionBatch {
     }
 
     private List<KernelTransactionContext> constructTransactionContexts(
-            List<AionTransaction> transactions, IAionBlock block) {
+            List<AionTransaction> transactions, AionBlock block) {
         List<KernelTransactionContext> contexts = new ArrayList<>();
         for (AionTransaction transaction : transactions) {
             contexts.add(constructTransactionContext(transaction, block));
@@ -114,7 +113,7 @@ public final class ExecutionBatch {
     }
 
     private KernelTransactionContext constructTransactionContext(
-            AionTransaction transaction, IAionBlock block) {
+            AionTransaction transaction, AionBlock block) {
         byte[] txHash = transaction.getTransactionHash();
         Address address =
                 transaction.isContractCreationTransaction()

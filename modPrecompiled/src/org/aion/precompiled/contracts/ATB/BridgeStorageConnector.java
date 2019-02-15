@@ -3,16 +3,17 @@ package org.aion.precompiled.contracts.ATB;
 import java.math.BigInteger;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
 import org.aion.precompiled.PrecompiledUtilities;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 
 /**
  * Storage layout mapping as the following:
@@ -66,11 +67,11 @@ public class BridgeStorageConnector {
         }
     }
 
-    private final IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track;
+    private final RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track;
     private final Address contractAddress;
 
     public BridgeStorageConnector(
-            @Nonnull final IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
+            @Nonnull final RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
             @Nonnull final Address contractAddress) {
         this.track = track;
         this.contractAddress = contractAddress;
@@ -212,7 +213,7 @@ public class BridgeStorageConnector {
     // DWORD helpers
 
     private byte[] getWORD(@Nonnull final DataWord key) {
-        ByteArrayWrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
+        Wrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
         // C1
         if (word == null || Arrays.equals(word.getData(), ByteUtil.EMPTY_HALFWORD)) return null;
         return alignBytes(word.getData());
@@ -240,7 +241,7 @@ public class BridgeStorageConnector {
     }
 
     private byte[] getDWORD(@Nonnull final DataWord key) {
-        ByteArrayWrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
+        Wrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
         if (word == null) return null;
 
         if (word.isZero()) return null;

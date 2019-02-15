@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.db.PersistenceMethod;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.PersistenceMethod;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.slf4j.Logger;
@@ -21,7 +21,7 @@ import org.slf4j.Logger;
  * @author Alexandra Roatis
  * @implNote Assumes persistent database. Overwrite method if this is not the case.
  */
-public abstract class AbstractDB implements IByteArrayKeyValueDatabase {
+public abstract class AbstractDB implements ByteArrayKeyValueDatabase {
 
     protected static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.DB.name());
 
@@ -155,7 +155,7 @@ public abstract class AbstractDB implements IByteArrayKeyValueDatabase {
     }
 
     /** Functionality for directly interacting with the heap cache. */
-    public abstract boolean commitCache(Map<ByteArrayWrapper, byte[]> cache);
+    public abstract boolean commitCache(Map<Wrapper, byte[]> cache);
 
     @Override
     public Optional<byte[]> get(byte[] key) {

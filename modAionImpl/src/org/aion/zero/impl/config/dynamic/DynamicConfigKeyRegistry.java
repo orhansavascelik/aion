@@ -29,7 +29,7 @@ import org.apache.commons.lang3.tuple.Pair;
  *
  * <p>It is important to ensure that the getter returns a type that has a properly-defined equals
  * method. Apart from this, there is no restriction, but it is generally a good idea for them to
- * return "atomic" types (i.e. primitives or their object equivalents).
+ * return "atomic" type (i.e. primitives or their object equivalents).
  */
 public class DynamicConfigKeyRegistry {
     private final Map<String, Pair<Function<Cfg, ?>, Optional<IDynamicConfigApplier>>>

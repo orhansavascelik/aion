@@ -4,17 +4,18 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.AionAddress;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.trie.SecureTrie;
 import org.aion.mcf.trie.Trie;
-import org.aion.mcf.types.AbstractBlockHeader;
+import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.ContractFactory;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionContractDetailsImpl;
 import org.aion.zero.exceptions.HeaderStructureException;
 import org.aion.zero.impl.types.AionBlock;
@@ -370,7 +371,7 @@ public class AionGenesis extends AionBlock {
             return worldTrie.getRootHash();
         }
 
-        private static ByteArrayWrapper wrapValueForPut(DataWord value) {
+        private static Wrapper wrapValueForPut(DataWord value) {
             return (value.isZero())
                     ? DataWord.ZERO.toWrapper()
                     : new ByteArrayWrapper(value.getNoLeadZeroesData());

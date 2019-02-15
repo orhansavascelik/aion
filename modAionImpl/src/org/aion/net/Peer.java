@@ -4,7 +4,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
 
 /**
  * Peer is a class intended to represent application specific information about a network node,

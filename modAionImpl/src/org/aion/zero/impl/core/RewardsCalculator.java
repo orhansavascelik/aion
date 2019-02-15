@@ -1,7 +1,7 @@
 package org.aion.zero.impl.core;
 
 import java.math.BigInteger;
-import org.aion.mcf.types.AbstractBlockHeader;
+import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.zero.api.BlockConstants;
 
 /**

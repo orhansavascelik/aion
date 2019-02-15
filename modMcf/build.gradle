@@ -1,15 +1,40 @@
 ext.moduleName = 'aion.mcf'
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
+tasks.withType(JavaCompile) {
+   doFirst {
+      println "Args for for $name are $options.allCompilerArgs"
+   }
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java']
+    }
+    test {
+        java.srcDirs = ['src/test/java']
+    }
+}
+
+
 test.dependsOn copyNativeLibsForModuleTests
 clean.dependsOn deleteNativeLibs
 
 dependencies {
-    compile project(':type_api')
-    compile project(':modUtil')
-    compile project(':modLogger')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:rlp4j:0.3.3'
+    compile 'network.aion:crypto4j:0.3.3'
+    
     compile project(':modP2p')
-    compile project(':modCrypto')
-    compile project(':modRlp')
     compile project(':modDbImpl')
     compile 'com.madgag.spongycastle:prov:1.58.0.0'
     compile 'com.madgag.spongycastle:core:1.58.0.0'

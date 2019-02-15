@@ -10,6 +10,7 @@ version = "0.3.3"
 dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'pl.pragmatists:JUnitParams:1.1.1'
+    testCompile 'com.google.truth:truth:0.42'
     testCompile 'com.madgag.spongycastle:core:1.58.0.0'
 }
 
@@ -31,6 +32,12 @@ task sourcesJar(type: Jar) {
     from sourceSets.main.allSource
 }
 
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+    options.tags = ["implSpec"]
+}
+
 task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
@@ -41,47 +48,47 @@ artifacts {
 }
 
 uploadArchives {
-  repositories {
-    mavenDeployer {
+    repositories {
+        mavenDeployer {
 
-      beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-      repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-        authentication(userName: ossrhUsername, password: ossrhPassword)
-      }
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
 
 //      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
 //        authentication(userName: ossrhUsername, password: ossrhPassword)
 //      }
 
-      pom.project {
-        name 'util4j'
-        packaging 'jar'
-        // optionally artifactId can be defined here 
-        description 'a util module for the aion java kernel.'
-        url 'https://github.com/aionnetwork/aion/tree/master-pre-merge/modUtil'
+            pom.project {
+                name 'util4j'
+                packaging 'jar'
+                // optionally artifactId can be defined here 
+                description 'a util module for the aion java kernel.'
+                url 'https://github.com/aionnetwork/aion/tree/master-pre-merge/modUtil'
 
-        scm {
-          connection 'scm:git:https://github.com/aionnetwork/aion.git'
-          developerConnection 'git:https://github.com/aionnetwork/aion.git'
-          url 'https://github.com/aionnetwork/aion/tree/master'
-        }
+                scm {
+                    connection 'scm:git:https://github.com/aionnetwork/aion.git'
+                    developerConnection 'git:https://github.com/aionnetwork/aion.git'
+                    url 'https://github.com/aionnetwork/aion/tree/master'
+                }
 
-        licenses {
-          license {
-            name 'MIT'
-            url 'https://opensource.org/licenses/MIT'
-          }
-        }
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
 
-        developers {
-          developer {
-            id 'aion foundation dev'
-            name 'aion foundation dev'
-            email 'toengineering@aion.network'
-          }
+                developers {
+                    developer {
+                        id 'aion foundation dev'
+                        name 'aion foundation dev'
+                        email 'toengineering@aion.network'
+                    }
+                }
+            }
         }
-      }
     }
-  }
 }

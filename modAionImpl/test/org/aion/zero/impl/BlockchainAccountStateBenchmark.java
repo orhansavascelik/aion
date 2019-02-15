@@ -9,14 +9,15 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.utils.FileUtils;
 import org.aion.mcf.core.ImportResult;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionTxInfo;
 import org.aion.zero.types.AionTransaction;
@@ -158,7 +159,7 @@ public class BlockchainAccountStateBenchmark {
     private static AionBlock createBundleAndCheck(
             StandaloneBlockchain bc, ECKey key, AionBlock parentBlock) {
         BigInteger accountNonce = bc.getRepository().getNonce(new AionAddress(key.getAddress()));
-        List<AionTransaction> transactions = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
 
         // create 400 transactions per bundle
         // byte[] nonce, Address to, byte[] value, byte[] data, long nrg, long nrgPrice
@@ -254,7 +255,7 @@ public class BlockchainAccountStateBenchmark {
             final AionBlock parentBlock,
             final Address contractAddress) {
         BigInteger accountNonce = bc.getRepository().getNonce(new AionAddress(key.getAddress()));
-        List<AionTransaction> transactions = new ArrayList<>();
+        List<Transaction> transactions = new ArrayList<>();
 
         // command
         ByteBuffer buf = ByteBuffer.allocate(4);

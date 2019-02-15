@@ -1,6 +1,6 @@
 package org.aion.zero.impl.valid;
 
-import static org.aion.type.api.util.BIUtil.isEqual;
+import static org.aion.util.biginteger.BIUtil.isEqual;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -9,14 +9,14 @@ import org.aion.mcf.core.IDifficultyCalculator;
 import org.aion.mcf.valid.GrandParentDependantBlockHeaderRule;
 import org.aion.zero.types.A0BlockHeader;
 import org.aion.zero.types.AionTransaction;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 
 /** Checks block's difficulty against calculated difficulty value */
 public class AionDifficultyRule extends GrandParentDependantBlockHeaderRule<A0BlockHeader> {
 
     private IDifficultyCalculator diffCalc;
 
-    public AionDifficultyRule(IChainCfg<IAionBlock, AionTransaction> configuration) {
+    public AionDifficultyRule(IChainCfg<AionBlock, AionTransaction> configuration) {
         this.diffCalc = configuration.getDifficultyCalculator();
     }
 

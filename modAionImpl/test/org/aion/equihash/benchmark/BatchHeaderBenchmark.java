@@ -7,8 +7,8 @@
 // import org.aion.mcf.valid.BlockHeaderValidator;
 // import org.aion.zero.impl.AionBlockchainImpl;
 // import org.aion.zero.impl.blockchain.ChainConfiguration;
-// import org.aion.zero.impl.types.AionBlock;
-// import org.aion.zero.types.A0BlockHeader;
+// import org.aion.zero.impl.type.AionBlock;
+// import org.aion.zero.type.A0BlockHeader;
 // import org.junit.Test;
 //
 // import java.io.BufferedReader;

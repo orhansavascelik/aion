@@ -3,10 +3,10 @@ package org.aion.zero.impl;
 import static org.junit.Assert.assertEquals;
 
 import java.math.BigInteger;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.blockchain.TxResponse;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.types.AionTransaction;
 import org.junit.Test;

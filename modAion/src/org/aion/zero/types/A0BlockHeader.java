@@ -1,22 +1,22 @@
 package org.aion.zero.types;
 
-import static org.aion.type.api.util.ByteUtil.longToBytes;
-import static org.aion.type.api.util.ByteUtil.merge;
-import static org.aion.type.api.util.ByteUtil.oneByteToHexString;
-import static org.aion.type.api.util.ByteUtil.toHexString;
+import static org.aion.util.bytes.ByteUtil.longToBytes;
+import static org.aion.util.bytes.ByteUtil.merge;
+import static org.aion.util.bytes.ByteUtil.oneByteToHexString;
+import static org.aion.util.bytes.ByteUtil.toHexString;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.type.IPowBlockHeader;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Utils;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.block.PowBlockHeader;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
-import org.aion.mcf.types.AbstractBlockHeader;
+import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPList;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.util.time.TimeUtils;
 import org.aion.zero.exceptions.HeaderStructureException;
 import org.json.JSONObject;
 
@@ -25,7 +25,7 @@ import org.json.JSONObject;
  *
  * @author Ross
  */
-public class A0BlockHeader extends AbstractBlockHeader implements IPowBlockHeader {
+public class A0BlockHeader extends AbstractBlockHeader implements PowBlockHeader {
 
     static final int RPL_BH_VERSION = 0,
             RPL_BH_NUMBER = 1,
@@ -216,7 +216,7 @@ public class A0BlockHeader extends AbstractBlockHeader implements IPowBlockHeade
             byte[] nonce,
             byte[] solution) {
         this.version = version;
-        this.coinbase = (AionAddress) coinbase;
+        this.coinbase = coinbase;
         this.parentHash = parentHash;
         this.logsBloom = logsBloom;
         this.difficulty = difficulty;
@@ -372,7 +372,7 @@ public class A0BlockHeader extends AbstractBlockHeader implements IPowBlockHeade
                 .append("  timestamp=")
                 .append(timestamp)
                 .append(" (")
-                .append(Utils.longToDateTime(timestamp))
+                .append(TimeUtils.longToDateTime(timestamp))
                 .append(")")
                 .append(suffix);
         toStringBuff.append("  nonce=").append(toHexString(nonce)).append(suffix);

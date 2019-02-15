@@ -1,5 +1,15 @@
 ext.moduleName = 'aion.apiserver'
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+    jcenter()
+
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 // compile error in tests right now, so disable them from build
 build.dependsOn.remove("check")
 
@@ -14,16 +24,21 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':type_api')
+
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:rlp4j:0.3.3'
+    compile 'network.aion:crypto4j:0.3.3'
+    compile 'network.aion:log4j:0.3.3'
+
     compile project(':modAion')
     compile project(':modAionImpl')
     compile project(':aion_fastvm')
     compile project(':modMcf')
-    compile project(':modLogger')
     compile project(':modP2p')
     compile project(':modEvtMgr')
     compile project(':modEvtMgrImpl')
-    compile project(':modCrypto')
     compile project(':3rdParty/libnzmq')
     compile 'org.json:json:20180813'
     compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.5.0'

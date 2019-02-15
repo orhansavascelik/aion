@@ -32,10 +32,10 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.crypto.ECKeyFac.ECKeyType;
@@ -48,7 +48,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.vm.contracts.ContractUtils;
@@ -62,7 +62,7 @@ public class Benchmark {
 
     private static AionBlock block = createDummyBlock();
     private static AionRepositoryImpl db = AionRepositoryImpl.inst();
-    private static IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo = db.startTracking();
+    private static RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo = db.startTracking();
 
     private static ECKey key;
     private static Address owner;

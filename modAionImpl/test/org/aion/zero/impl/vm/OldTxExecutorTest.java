@@ -30,9 +30,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKeyFac;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
@@ -45,7 +45,7 @@ import org.aion.solidity.Compiler.Options;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.types.AionBlock;
@@ -110,7 +110,7 @@ public class OldTxExecutorTest {
         AionBlock block = createDummyBlock();
 
         AionRepositoryImpl repo = blockchain.getRepository();
-        IRepositoryCache cache = repo.startTracking();
+        RepositoryCache cache = repo.startTracking();
         cache.addBalance(from, BigInteger.valueOf(100_000).multiply(tx.nrgPrice().value()));
         cache.createAccount(to);
         cache.saveCode(to, Hex.decode(contract));
@@ -158,7 +158,7 @@ public class OldTxExecutorTest {
         AionBlock block = createDummyBlock();
 
         AionRepositoryImpl repoTop = blockchain.getRepository();
-        IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo = repoTop.startTracking();
+        RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo = repoTop.startTracking();
         repo.addBalance(from, BigInteger.valueOf(500_000L).multiply(tx.nrgPrice().value()));
 
         ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(tx));
@@ -208,7 +208,7 @@ public class OldTxExecutorTest {
         AionBlock block = createDummyBlock();
 
         AionRepositoryImpl repoTop = blockchain.getRepository();
-        IRepositoryCache repo = repoTop.startTracking();
+        RepositoryCache repo = repoTop.startTracking();
         repo.addBalance(from, BigInteger.valueOf(100_000).multiply(tx.nrgPrice().value()));
         repo.createAccount(to);
         repo.saveCode(to, Hex.decode(contract));
@@ -253,7 +253,7 @@ public class OldTxExecutorTest {
         AionBlock block = createDummyBlock();
 
         AionRepositoryImpl repoTop = blockchain.getRepository();
-        IRepositoryCache repo = repoTop.startTracking();
+        RepositoryCache repo = repoTop.startTracking();
         repo.addBalance(from, BigInteger.valueOf(1_000_000_000L));
         repo.flush();
 

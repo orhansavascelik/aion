@@ -39,10 +39,11 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IPruneConfig;
-import org.aion.type.api.db.IRepositoryConfig;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.PruneConfig;
+import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.type.ByteArrayWrapper;
 import org.aion.crypto.ECKey;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
@@ -205,7 +206,7 @@ public class TaskImportBlocksTest {
 
         // populate initial input lists
         List<AionBlock> batch = new ArrayList<>();
-        Map<ByteArrayWrapper, Object> imported = new HashMap<>();
+        Map<Wrapper, Object> imported = new HashMap<>();
 
         AionBlock current = chain.getBestBlock();
         while (current.getNumber() > 0) {
@@ -231,16 +232,16 @@ public class TaskImportBlocksTest {
                 builder.withValidatorConfiguration("simple")
                         .withDefaultAccounts(accounts)
                         .withRepoConfig(
-                                new IRepositoryConfig() {
+                                new RepositoryConfig() {
                                     @Override
                                     public String getDbPath() {
                                         return "";
                                     }
 
                                     @Override
-                                    public IPruneConfig getPruneConfig() {
+                                    public PruneConfig getPruneConfig() {
                                         // top pruning without archiving
-                                        return new IPruneConfig() {
+                                        return new PruneConfig() {
                                             @Override
                                             public boolean isEnabled() {
                                                 return true;
@@ -264,7 +265,7 @@ public class TaskImportBlocksTest {
                                     }
 
                                     @Override
-                                    public IContractDetails contractDetailsImpl() {
+                                    public ContractDetails contractDetailsImpl() {
                                         return ContractDetailsAion.createForTesting(0, 1000000)
                                                 .getDetails();
                                     }
@@ -289,9 +290,9 @@ public class TaskImportBlocksTest {
 
         // populate initial input lists
         List<AionBlock> allBlocks = new ArrayList<>();
-        Map<ByteArrayWrapper, Object> allHashes = new HashMap<>();
+        Map<Wrapper, Object> allHashes = new HashMap<>();
         List<AionBlock> unrestrictedBlocks = new ArrayList<>();
-        Map<ByteArrayWrapper, Object> unrestrictedHashes = new HashMap<>();
+        Map<Wrapper, Object> unrestrictedHashes = new HashMap<>();
 
         for (long i = 0; i <= height; i++) {
             AionBlock current = chain.getBlockByNumber(i);

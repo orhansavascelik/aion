@@ -5,15 +5,15 @@ import java.math.BigInteger;
 import java.math.RoundingMode;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.type.IBlock;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.block.Block;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.IBlockchain;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 
 /**
  * The TRSqueryContract is 1 of 3 inter-dependent but separate contracts that together make up the
@@ -48,7 +48,7 @@ public final class TRSqueryContract extends AbstractTRS {
      * @param caller The calling address.
      */
     public TRSqueryContract(
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo,
             Address caller,
             IBlockchain blockchain) {
 
@@ -478,7 +478,7 @@ public final class TRSqueryContract extends AbstractTRS {
      * @param nrg The energy.
      * @return the period the contract is in at time given by block's timestamp.
      */
-    private PrecompiledTransactionResult determinePeriod(Address contract, IBlock block, long nrg) {
+    private PrecompiledTransactionResult determinePeriod(Address contract, Block block, long nrg) {
         // If contract doesn't exist, return an error.
         ByteBuffer output = ByteBuffer.allocate(Integer.BYTES);
 

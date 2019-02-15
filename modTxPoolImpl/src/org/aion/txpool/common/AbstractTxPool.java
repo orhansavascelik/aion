@@ -17,16 +17,17 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.Constant;
-import org.aion.type.api.type.ITransaction;
-import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.Constant;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
 import org.slf4j.Logger;
 import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
-import org.aion.vm.api.interfaces.Address;
 
-public abstract class AbstractTxPool<TX extends ITransaction> {
+public abstract class AbstractTxPool<TX extends TransactionExtend> {
 
     protected static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.TXPOOL.toString());
 
@@ -51,20 +52,20 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
      * transaction data and sort status
      */
     // TODO : should limit size
-    private final Map<ByteArrayWrapper, TXState> mainMap = new ConcurrentHashMap<>();
+    private final Map<Wrapper, TXState> mainMap = new ConcurrentHashMap<>();
     /**
      * timeView : SortedMap<Long, LinkedHashSet<ByteArrayWrapper>> @Long transaction
      * timestamp @LinkedHashSet<ByteArrayWrapper> the hashSet of the transaction hash*
      */
-    private final SortedMap<Long, LinkedHashSet<ByteArrayWrapper>> timeView =
+    private final SortedMap<Long, LinkedHashSet<Wrapper>> timeView =
             Collections.synchronizedSortedMap(new TreeMap<>());
     /**
      * feeView : SortedMap<BigInteger, LinkedHashSet<TxPoolList<ByteArrayWrapper>>> @BigInteger
      * energy cost = energy consumption * energy price @LinkedHashSet<TxPoolList<ByteArrayWrapper>>
      * the TxPoolList of the first transaction hash
      */
-    private final SortedMap<BigInteger, Map<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>>
-            feeView = Collections.synchronizedSortedMap(new TreeMap<>(Collections.reverseOrder()));
+    private final SortedMap<BigInteger, Map<Wrapper, TxDependList<Wrapper>>> feeView =
+            Collections.synchronizedSortedMap(new TreeMap<>(Collections.reverseOrder()));
     /**
      * accountView : Map<ByteArrayWrapper, AccountState> @ByteArrayWrapper account
      * address @AccountState
@@ -92,12 +93,11 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
 
     public abstract List<TX> snapshot();
 
-    protected Map<ByteArrayWrapper, TXState> getMainMap() {
+    protected Map<Wrapper, TXState> getMainMap() {
         return this.mainMap;
     }
 
-    protected SortedMap<BigInteger, Map<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>>
-            getFeeView() {
+    protected SortedMap<BigInteger, Map<Wrapper, TxDependList<Wrapper>>> getFeeView() {
         return this.feeView;
     }
 
@@ -141,12 +141,12 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
 
     protected void sortTxn() {
 
-        Map<Address, Map<BigInteger, SimpleEntry<ByteArrayWrapper, BigInteger>>> accMap =
+        Map<Address, Map<BigInteger, SimpleEntry<Wrapper, BigInteger>>> accMap =
                 new ConcurrentHashMap<>();
-        SortedMap<Long, LinkedHashSet<ByteArrayWrapper>> timeMap =
+        SortedMap<Long, LinkedHashSet<Wrapper>> timeMap =
                 Collections.synchronizedSortedMap(new TreeMap<>());
 
-        Map<ITransaction, Long> updatedTx = new HashMap<>();
+        Map<TX, Long> updatedTx = new HashMap<>();
         this.mainMap
                 .entrySet()
                 .parallelStream()
@@ -157,13 +157,13 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                                 return;
                             }
 
-                            ITransaction tx = ts.getTx();
+                            TX tx = ts.getTx();
 
                             // Gen temp timeMap
                             long timestamp = tx.getTimeStampBI().longValue() / multiplyM;
 
-                            Map<BigInteger, SimpleEntry<ByteArrayWrapper, BigInteger>> nonceMap;
-                            ITransaction replacedTx = null;
+                            Map<BigInteger, SimpleEntry<Wrapper, BigInteger>> nonceMap;
+                            TX replacedTx = null;
                             synchronized (accMap) {
                                 if (accMap.get(tx.getSenderAddress()) != null) {
                                     nonceMap = accMap.get(tx.getSenderAddress());
@@ -224,7 +224,7 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                                 accMap.put(tx.getSenderAddress(), nonceMap);
                             }
 
-                            LinkedHashSet<ByteArrayWrapper> lhs;
+                            LinkedHashSet<Wrapper> lhs;
                             synchronized (timeMap) {
                                 if (timeMap.get(timestamp) != null) {
                                     lhs = timeMap.get(timestamp);
@@ -258,8 +258,8 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                         });
 
         if (!updatedTx.isEmpty()) {
-            for (Map.Entry<ITransaction, Long> en : updatedTx.entrySet()) {
-                ByteArrayWrapper bw = ByteArrayWrapper.wrap(en.getKey().getTransactionHash());
+            for (Map.Entry<TX, Long> en : updatedTx.entrySet()) {
+                Wrapper bw = ByteArrayWrapper.wrap(en.getKey().getTransactionHash());
                 if (this.timeView.get(en.getValue()) != null) {
                     this.timeView.get(en.getValue()).remove(bw);
                 }
@@ -299,7 +299,7 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
         }
     }
 
-    protected SortedMap<Long, LinkedHashSet<ByteArrayWrapper>> getTimeView() {
+    protected SortedMap<Long, LinkedHashSet<Wrapper>> getTimeView() {
         return this.timeView;
     }
 
@@ -379,7 +379,7 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                     BigInteger fee = BigInteger.ZERO;
                     BigInteger totalFee = BigInteger.ZERO;
 
-                    for (Entry<BigInteger, SimpleEntry<ByteArrayWrapper, BigInteger>> en :
+                    for (Entry<BigInteger, SimpleEntry<Wrapper, BigInteger>> en :
                             as.getMap().entrySet()) {
                         if (LOG.isTraceEnabled()) {
                             LOG.trace(
@@ -504,7 +504,7 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
 
     protected void updateFeeMap() {
         for (Entry<Address, List<PoolState>> e : this.poolStateView.entrySet()) {
-            ByteArrayWrapper dependTx = null;
+            Wrapper dependTx = null;
             for (PoolState ps : e.getValue()) {
 
                 if (LOG.isTraceEnabled()) {
@@ -529,14 +529,13 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                     }
                 } else {
 
-                    TxDependList<ByteArrayWrapper> txl = new TxDependList<>();
+                    TxDependList<Wrapper> txl = new TxDependList<>();
                     BigInteger timestamp = BigInteger.ZERO;
                     for (BigInteger i = ps.firstNonce;
                             i.compareTo(ps.firstNonce.add(BigInteger.valueOf(ps.combo))) < 0;
                             i = i.add(BigInteger.ONE)) {
 
-                        ByteArrayWrapper bw =
-                                this.accountView.get(e.getKey()).getMap().get(i).getKey();
+                        Wrapper bw = this.accountView.get(e.getKey()).getMap().get(i).getKey();
                         if (i.equals(ps.firstNonce)) {
                             timestamp = this.mainMap.get(bw).getTx().getTimeStampBI();
                         }
@@ -552,8 +551,7 @@ public abstract class AbstractTxPool<TX extends ITransaction> {
                     }
 
                     if (this.feeView.get(ps.fee) == null) {
-                        Map<ByteArrayWrapper, TxDependList<ByteArrayWrapper>> set =
-                                new LinkedHashMap<>();
+                        Map<Wrapper, TxDependList<Wrapper>> set = new LinkedHashMap<>();
                         set.put(txl.getTxList().get(0), txl);
 
                         if (LOG.isTraceEnabled()) {

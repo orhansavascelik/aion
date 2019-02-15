@@ -341,7 +341,7 @@ public class RLP {
 
     /**
      * Turn Object into its RLP encoded equivalent of a byte-array Support for String, Integer,
-     * BigInteger and Lists of any of these types.
+     * BigInteger and Lists of any of these type.
      *
      * @param input as object or List of objects
      * @return byte[] RLP encoded

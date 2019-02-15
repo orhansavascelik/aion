@@ -11,11 +11,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory.Props;
 import org.aion.log.AionLoggerFactory;
 import org.aion.mcf.db.exception.InvalidFilePathException;
+import org.aion.type.api.interfaces.common.Wrapper;
 import org.aion.util.TestResources;
 import org.aion.zero.impl.types.AionBlock;
 import org.junit.BeforeClass;
@@ -356,7 +357,7 @@ public class PendingBlockStoreTest {
         AionBlock first = blocks.get(0);
         assertThat(blocks.size()).isEqualTo(6);
         assertThat(pb.addBlockRange(blocks)).isEqualTo(6);
-        Map<ByteArrayWrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
+        Map<Wrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
         assertThat(actual.size()).isEqualTo(1);
         assertThat(actual.get(ByteArrayWrapper.wrap(first.getHash()))).isEqualTo(blocks);
 
@@ -452,7 +453,7 @@ public class PendingBlockStoreTest {
         assertThat(pb.getStatusSize()).isEqualTo(0);
 
         // test drop functionality
-        Map<ByteArrayWrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
+        Map<Wrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
         pb.dropPendingQueues(first.getNumber(), actual.keySet(), actual);
 
         // check storage after drop functionality
@@ -497,7 +498,7 @@ public class PendingBlockStoreTest {
         pb.close();
 
         // test drop functionality
-        Map<ByteArrayWrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
+        Map<Wrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
         pb.dropPendingQueues(first.getNumber(), actual.keySet(), actual);
     }
 
@@ -533,8 +534,8 @@ public class PendingBlockStoreTest {
         assertThat(pb.getStatusSize()).isEqualTo(0);
 
         // test drop functionality
-        Map<ByteArrayWrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
-        List<ByteArrayWrapper> queues = new ArrayList<>();
+        Map<Wrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
+        List<Wrapper> queues = new ArrayList<>();
         queues.add(ByteArrayWrapper.wrap(first.getHash()));
         pb.dropPendingQueues(first.getNumber(), queues, actual);
 
@@ -577,10 +578,10 @@ public class PendingBlockStoreTest {
         assertThat(pb.getStatusSize()).isEqualTo(0);
 
         // test drop functionality
-        ByteArrayWrapper queueId = ByteArrayWrapper.wrap(first.getHash());
-        List<ByteArrayWrapper> queues = new ArrayList<>();
+        Wrapper queueId = ByteArrayWrapper.wrap(first.getHash());
+        List<Wrapper> queues = new ArrayList<>();
         queues.add(queueId);
-        Map<ByteArrayWrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
+        Map<Wrapper, List<AionBlock>> actual = pb.loadBlockRange(first.getNumber());
         actual.get(queueId).remove(5);
         pb.dropPendingQueues(first.getNumber(), queues, actual);
 

@@ -15,9 +15,9 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.core.AccountState;
@@ -30,7 +30,7 @@ import org.aion.precompiled.contracts.TRS.AbstractTRS;
 import org.aion.precompiled.contracts.TRS.TRSqueryContract;
 import org.aion.precompiled.contracts.TRS.TRSstateContract;
 import org.aion.precompiled.contracts.TRS.TRSuseContract;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.core.IAionBlockchain;
 import org.aion.zero.impl.types.AionBlock;
@@ -43,7 +43,7 @@ class TRShelpers {
     private IAionBlockchain blockchain = StandaloneBlockchain.inst();
     Address AION =
             AionAddress.wrap("0xa0eeaeabdbc92953b072afbd21f3e3fd8a4a4f5e6a6e22200db746ab75e9a99a");
-    IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo;
+    RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo;
     List<Address> tempAddrs;
     ECKey senderKey;
     long COST = 21000L;
@@ -922,8 +922,8 @@ class TRShelpers {
         return OUT;
     }
 
-    // Returns a new ByteArrayWrapper that wraps data. Here so we can switch types easy if needed.
-    ByteArrayWrapper newDataWordStub(byte[] data) {
+    // Returns a new Wrapper that wraps data. Here so we can switch type easy if needed.
+    Wrapper newDataWordStub(byte[] data) {
         if (data.length == DataWord.BYTES) {
             return new DataWord(data).toWrapper();
         } else if (data.length == DoubleDataWord.BYTES) {

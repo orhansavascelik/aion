@@ -2,7 +2,6 @@ package org.aion.db.impl.mockdb;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -10,8 +9,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import org.aion.type.api.db.PersistenceMethod;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.PersistenceMethod;
 
 /**
  * Provides the same behavior as {@link MockDB} with the addition that data is read from a file on
@@ -48,12 +48,10 @@ public class PersistentMockDB extends MockDB {
 
                 while ((text = reader.readLine()) != null) {
                     String[] line = text.split(":", 2);
-                    ByteArrayWrapper key = ByteArrayWrapper.wrap(convertToByteArray(line[0]));
+                    Wrapper key = ByteArrayWrapper.wrap(convertToByteArray(line[0]));
                     byte[] value = convertToByteArray(line[1]);
                     kv.put(key, value);
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -76,7 +74,7 @@ public class PersistentMockDB extends MockDB {
         }
     }
 
-    private static final byte[] convertToByteArray(String byteArrayString) {
+    private static byte[] convertToByteArray(String byteArrayString) {
         String[] numbers = byteArrayString.substring(1, byteArrayString.length() - 1).split(", ");
         byte[] rawData = new byte[numbers.length];
         for (int i = 0; i < rawData.length; i++) {
@@ -116,15 +114,13 @@ public class PersistentMockDB extends MockDB {
             }
 
             try (FileWriter writer = new FileWriter(dbFile, false)) {
-                for (Map.Entry<ByteArrayWrapper, byte[]> entry : kv.entrySet()) {
+                for (Map.Entry<Wrapper, byte[]> entry : kv.entrySet()) {
                     writer.write(
                             Arrays.toString(entry.getKey().getData())
                                     + ":"
                                     + Arrays.toString(entry.getValue())
                                     + "\n");
                 }
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -2,44 +2,43 @@ package org.aion.zero.impl.blockchain;
 
 import java.math.BigInteger;
 import java.util.List;
-import org.aion.type.api.db.IRepository;
+import org.aion.type.api.interfaces.db.Repository;
 import org.aion.mcf.blockchain.IChainInstancePOW;
 import org.aion.mcf.blockchain.IPowChain;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
 import org.aion.zero.impl.AionHub;
 import org.aion.zero.impl.query.QueryInterface;
-import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.A0BlockHeader;
-import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 
 /** Aion chain interface. */
 public interface IAionChain extends IChainInstancePOW, QueryInterface {
 
-    IPowChain<AionBlock, A0BlockHeader> getBlockchain();
+    IPowChain<org.aion.zero.impl.types.AionBlock, A0BlockHeader> getBlockchain();
 
     void close();
 
-    AionTransaction createTransaction(BigInteger nonce, Address to, BigInteger value, byte[] data);
+    TransactionExtend createTransaction(BigInteger nonce, Address to, BigInteger value, byte[] data);
 
-    void broadcastTransaction(AionTransaction transaction);
+    void broadcastTransaction(TransactionExtend transaction);
 
-    AionTxReceipt callConstant(AionTransaction tx, IAionBlock block);
+    AionTxReceipt callConstant(TransactionExtend tx, AionBlock block);
 
-    IRepository<?, ?> getRepository();
+    Repository<?, ?> getRepository();
 
-    IRepository<?, ?> getPendingState();
+    Repository<?, ?> getPendingState();
 
-    IRepository<?, ?> getSnapshotTo(byte[] root);
+    Repository<?, ?> getSnapshotTo(byte[] root);
 
-    List<AionTransaction> getWireTransactions();
+    List<TransactionExtend> getWireTransactions();
 
-    List<AionTransaction> getPendingStateTransactions();
+    List<TransactionExtend> getPendingStateTransactions();
 
     AionHub getAionHub();
 
     void exitOn(long number);
 
-    long estimateTxNrg(AionTransaction tx, IAionBlock block);
+    long estimateTxNrg(TransactionExtend tx, AionBlock block);
 }

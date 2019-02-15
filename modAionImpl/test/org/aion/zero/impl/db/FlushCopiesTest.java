@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import java.math.BigInteger;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.AionAddress;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.apache.commons.lang3.RandomUtils;
@@ -21,11 +21,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Tests the {@link org.aion.zero.db.AionRepositoryCache#flushCopiesTo(IRepository, boolean)}
+ * Tests the {@link org.aion.zero.db.AionRepositoryCache#flushCopiesTo(Repository, boolean)}
  * method.
  */
 public class FlushCopiesTest {
-    private IRepository repository;
+    private Repository repository;
 
     @Before
     public void setup() {
@@ -88,8 +88,8 @@ public class FlushCopiesTest {
 
         // Create a new account state in the child, flush to the parent without clearing child
         // state.
-        ByteArrayWrapper key = new DataWord(5).toWrapper();
-        ByteArrayWrapper value = new DoubleDataWord(13429765314L).toWrapper();
+        Wrapper key = new DataWord(5).toWrapper();
+        Wrapper value = new DoubleDataWord(13429765314L).toWrapper();
 
         repositoryChild.createAccount(account);
         repositoryChild.setNonce(account, nonce);
@@ -99,8 +99,8 @@ public class FlushCopiesTest {
         repositoryChild.flushCopiesTo(this.repository, false);
 
         // Compare object references.
-        IContractDetails detailsInChild = repositoryChild.getContractDetails(account);
-        IContractDetails detailsInParent = this.repository.getContractDetails(account);
+        ContractDetails detailsInChild = repositoryChild.getContractDetails(account);
+        ContractDetails detailsInParent = this.repository.getContractDetails(account);
 
         // These references must be different.
         assertNotSame(detailsInChild, detailsInParent);
@@ -126,8 +126,8 @@ public class FlushCopiesTest {
 
         // Create a new account state in the child, flush to the parent without clearing child
         // state.
-        ByteArrayWrapper firstKey = new DataWord(5).toWrapper();
-        ByteArrayWrapper firstValue = new DoubleDataWord(13429765314L).toWrapper();
+        Wrapper firstKey = new DataWord(5).toWrapper();
+        Wrapper firstValue = new DoubleDataWord(13429765314L).toWrapper();
 
         firstChild.createAccount(account);
         firstChild.setNonce(account, firstNonce);
@@ -142,8 +142,8 @@ public class FlushCopiesTest {
         AionRepositoryCache secondChild = (AionRepositoryCache) this.repository.startTracking();
 
         BigInteger secondNonce = firstNonce.multiply(BigInteger.TWO);
-        ByteArrayWrapper secondKey = new DoubleDataWord(289356).toWrapper();
-        ByteArrayWrapper secondValue = new DataWord(23674).toWrapper();
+        Wrapper secondKey = new DoubleDataWord(289356).toWrapper();
+        Wrapper secondValue = new DataWord(23674).toWrapper();
 
         secondChild.setNonce(account, secondNonce);
         secondChild.addBalance(account, firstBalance);

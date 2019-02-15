@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.util.Properties;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class LevelDBDriverTest {
                 Props.WRITE_BUFFER_SIZE, String.valueOf(LevelDBConstants.WRITE_BUFFER_SIZE));
         props.setProperty(Props.DB_CACHE_SIZE, String.valueOf(LevelDBConstants.CACHE_SIZE));
 
-        IByteArrayKeyValueDatabase db = DatabaseFactory.connect(props);
+        ByteArrayKeyValueDatabase db = DatabaseFactory.connect(props);
         assertNotNull(db);
     }
 
@@ -46,7 +46,7 @@ public class LevelDBDriverTest {
         props.setProperty(Props.DB_NAME, dbName);
         props.setProperty(Props.DB_PATH, dbPath);
 
-        IByteArrayKeyValueDatabase db = DatabaseFactory.connect(props);
+        ByteArrayKeyValueDatabase db = DatabaseFactory.connect(props);
         assertNull(db);
     }
 

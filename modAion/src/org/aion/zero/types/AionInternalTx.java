@@ -1,19 +1,19 @@
 package org.aion.zero.types;
 
-import static org.aion.type.api.util.ByteUtil.toHexString;
+import static org.aion.util.conversions.Hex.toHexString;
 import static org.apache.commons.lang3.ArrayUtils.getLength;
 import static org.apache.commons.lang3.ArrayUtils.isEmpty;
 import static org.apache.commons.lang3.ArrayUtils.nullToEmpty;
 
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPList;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.vm.api.interfaces.InternalTransactionInterface;
 
 /** aion internal transaction class. */
@@ -40,7 +40,7 @@ public class AionInternalTx extends AionTransaction implements InternalTransacti
             byte[] data,
             String note) {
 
-        // @TODO: pass null to nrg and nrgprice for base class ( Transaction )
+        // @TODO: pass null to nrg and nrgprice for base class ( TransactionExtend )
         // will be safe?
         super(nonce, receiveAddress, nullToEmpty(value), nullToEmpty(data));
 
@@ -112,8 +112,10 @@ public class AionInternalTx extends AionTransaction implements InternalTransacti
     public byte[] getEncoded() {
         if (rlpEncoded == null) {
 
-            byte[] to = (this.getDestinationAddress() == null) ? new byte[0] : this
-                .getDestinationAddress().toBytes();
+            byte[] to =
+                    (this.getDestinationAddress() == null)
+                            ? new byte[0]
+                            : this.getDestinationAddress().toBytes();
             byte[] nonce = getNonce();
             boolean isEmptyNonce = isEmpty(nonce) || (getLength(nonce) == 1 && nonce[0] == 0);
 
@@ -176,7 +178,10 @@ public class AionInternalTx extends AionTransaction implements InternalTransacti
 
     @Override
     public String toString() {
-        String to = (this.getDestinationAddress() == null) ? "" : this.getDestinationAddress().toString();
+        String to =
+                (this.getDestinationAddress() == null)
+                        ? ""
+                        : this.getDestinationAddress().toString();
         return "TransactionData ["
                 + "  parentHash="
                 + toHexString(getParentTransactionHash())

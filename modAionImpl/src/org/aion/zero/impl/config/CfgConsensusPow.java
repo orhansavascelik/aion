@@ -7,7 +7,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.mcf.config.Cfg;
 import org.aion.mcf.config.CfgConsensus;
 

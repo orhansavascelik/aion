@@ -10,14 +10,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import javax.annotation.Nonnull;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ISignature;
 import org.aion.crypto.SignatureFac;
 import org.aion.mcf.vm.types.Log;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.PrecompiledUtilities;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.TransactionSideEffects;
 
 /**
@@ -262,7 +262,7 @@ public class BridgeController {
                 return processError(ErrCode.INVALID_TRANSFER);
 
             /*
-             * Tricky here, we distinguish between two types of failures here:
+             * Tricky here, we distinguish between two type of failures here:
              *
              * 1) A balance failure indicates we've failed to load the bridge with
              * enough currency to execute, this means the whole transaction should

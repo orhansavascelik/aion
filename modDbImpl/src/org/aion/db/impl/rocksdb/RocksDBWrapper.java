@@ -6,8 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.db.impl.AbstractDB;
+import org.aion.type.api.interfaces.common.Wrapper;
 import org.rocksdb.BlockBasedTableConfig;
 import org.rocksdb.CompressionType;
 import org.rocksdb.Options;
@@ -79,7 +79,7 @@ public class RocksDBWrapper extends AbstractDB {
         return bbtc;
     }
 
-    // IDatabase Functionality
+    // Database Functionality
     @Override
     public boolean open() {
         if (isOpen()) {
@@ -386,7 +386,7 @@ public class RocksDBWrapper extends AbstractDB {
     }
 
     @Override
-    public boolean commitCache(Map<ByteArrayWrapper, byte[]> cache) {
+    public boolean commitCache(Map<Wrapper, byte[]> cache) {
         boolean success = false;
 
         check();
@@ -394,7 +394,7 @@ public class RocksDBWrapper extends AbstractDB {
         // try-with-resources will automatically close to batch object
 
         try (WriteBatch batch = new WriteBatch()) {
-            for (Map.Entry<ByteArrayWrapper, byte[]> e : cache.entrySet()) {
+            for (Map.Entry<Wrapper, byte[]> e : cache.entrySet()) {
                 if (e.getValue() == null) {
                     batch.delete(e.getKey().getData());
                 } else {

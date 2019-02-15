@@ -13,7 +13,7 @@ import org.aion.mcf.valid.BlockNumberRule;
 import org.aion.mcf.valid.GrandParentBlockHeaderValidator;
 import org.aion.mcf.valid.ParentBlockHeaderValidator;
 import org.aion.mcf.valid.TimeStampRule;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.api.BlockConstants;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.core.DiffCalc;
@@ -26,8 +26,8 @@ import org.aion.zero.impl.valid.EnergyConsumedRule;
 import org.aion.zero.impl.valid.EnergyLimitRule;
 import org.aion.zero.impl.valid.EquihashSolutionRule;
 import org.aion.zero.types.A0BlockHeader;
+import org.aion.zero.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
-import org.aion.zero.types.IAionBlock;
 
 /**
  * Chain configuration handles the default parameters on a particular chain. Also handles the
@@ -36,7 +36,7 @@ import org.aion.zero.types.IAionBlock;
  *
  * @author yao
  */
-public class ChainConfiguration implements IChainCfg<IAionBlock, AionTransaction> {
+public class ChainConfiguration implements IChainCfg<AionBlock, AionTransaction> {
 
     protected BlockConstants constants;
     protected IMiner<?, ?> miner;

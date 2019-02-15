@@ -1,0 +1,84 @@
+ext.moduleName = 'aion.type.api'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = "network.aion"
+archivesBaseName = "type-api4j"
+version = "0.3.3"
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java']
+    }
+}
+
+signing {
+    sign configurations.archives
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc {
+    source = sourceSets.main.allJava
+    classpath = configurations.compile
+    options.tags = ["implNote", "apiNote"]
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+//      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//        authentication(userName: ossrhUsername, password: ossrhPassword)
+//      }
+
+            pom.project {
+                name 'type-api4j'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'a util module for the aion java kernel.'
+                url 'https://github.com/aionnetwork/aion/tree/master-pre-merge/type_api'
+
+                scm {
+                    connection 'scm:git:https://github.com/aionnetwork/aion.git'
+                    developerConnection 'git:https://github.com/aionnetwork/aion.git'
+                    url 'https://github.com/aionnetwork/aion/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'aion foundation dev'
+                        name 'aion foundation dev'
+                        email 'toengineering@aion.network'
+                    }
+                }
+            }
+        }
+    }
+}

@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.type.ByteArrayWrapper;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.crypto.ed25519.ECKeyEd25519;
@@ -30,7 +32,6 @@ import org.aion.mcf.vm.types.DoubleDataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.type.StatefulPrecompiledContract;
-import org.aion.vm.api.interfaces.Address;
 import org.apache.commons.collections4.map.LRUMap;
 
 /**
@@ -100,7 +101,7 @@ public class AionAuctionContract extends StatefulPrecompiledContract {
      * @param address The callerAddress of the calling account, use AION address for testing
      */
     public AionAuctionContract(
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
             Address address,
             IBlockchain blockchain) {
         super(track);
@@ -527,7 +528,7 @@ public class AionAuctionContract extends StatefulPrecompiledContract {
      */
     private boolean isAuctionDomain(Address domainAddress) {
         DataWord key = new DataWord(blake128(domainAddress.toBytes()));
-        ByteArrayWrapper ret = this.track.getStorageValue(auctionDomainsAddress, key.toWrapper());
+        Wrapper ret = this.track.getStorageValue(auctionDomainsAddress, key.toWrapper());
         return !ret.equals(DoubleDataWord.ZERO.toWrapper());
     }
 
@@ -758,14 +759,14 @@ public class AionAuctionContract extends StatefulPrecompiledContract {
     }
 
     private BigInteger getBigIntegerFromStorage(Address key, String key2) {
-        ByteArrayWrapper data =
+        Wrapper data =
                 this.track.getStorageValue(
                         key, new DataWord(blake128(key2.getBytes())).toWrapper());
         return new BigInteger(data.getData());
     }
 
     private BigInteger getBigIntegerFromStorage(Address key, Address key2) {
-        ByteArrayWrapper data =
+        Wrapper data =
                 this.track.getStorageValue(key, new DataWord(blake128(key2.toBytes())).toWrapper());
         return new BigInteger(data.getData());
     }

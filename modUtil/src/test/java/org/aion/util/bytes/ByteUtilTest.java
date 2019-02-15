@@ -138,7 +138,7 @@ public class ByteUtilTest {
     @SuppressWarnings("unused")
     private Object shortValues() {
 
-        return new Short[]{
+        return new Short[] {
             0, 1, 10, 15, 20, (short) random.nextInt(Integer.MAX_VALUE), (short) Integer.MAX_VALUE
         };
     }

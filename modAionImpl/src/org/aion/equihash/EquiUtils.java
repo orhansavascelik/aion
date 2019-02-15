@@ -1,7 +1,7 @@
 package org.aion.equihash;
 
-import static org.aion.type.api.util.ByteUtil.bytesToInts;
-import static org.aion.type.api.util.ByteUtil.intsToBytes;
+import static org.aion.util.bytes.ByteUtil.bytesToInts;
+import static org.aion.util.bytes.ByteUtil.intsToBytes;
 
 /**
  * This package contains utility functions commonly called across multiple equihash classes.

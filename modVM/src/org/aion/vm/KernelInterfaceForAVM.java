@@ -2,22 +2,23 @@ package org.aion.vm;
 
 import java.math.BigInteger;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.ByteArrayWrapper;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.valid.TxNrgRule;
 import org.aion.mcf.vm.types.KernelInterfaceForFastVM;
 import org.aion.precompiled.ContractFactory;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.KernelInterface;
 
 public class KernelInterfaceForAVM implements KernelInterface {
-    private IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryCache;
+    private RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryCache;
     private boolean allowNonceIncrement, isLocalCall;
 
     public KernelInterfaceForAVM(
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryCache,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryCache,
             boolean allowNonceIncrement,
             boolean isLocalCall) {
 
@@ -50,7 +51,7 @@ public class KernelInterfaceForAVM implements KernelInterface {
         this.repositoryCache.rollback();
     }
 
-    public IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> getRepositoryCache() {
+    public RepositoryCache<AccountState, IBlockStoreBase<?, ?>> getRepositoryCache() {
         return this.repositoryCache;
     }
 
@@ -76,21 +77,21 @@ public class KernelInterfaceForAVM implements KernelInterface {
 
     @Override
     public void putStorage(Address address, byte[] key, byte[] value) {
-        ByteArrayWrapper storageKey = new ByteArrayWrapper(key);
-        ByteArrayWrapper storageValue = new ByteArrayWrapper(value);
+        Wrapper storageKey = new ByteArrayWrapper(key);
+        Wrapper storageValue = new ByteArrayWrapper(value);
         this.repositoryCache.addStorageRow(address, storageKey, storageValue);
     }
 
     @Override
     public void removeStorage(Address address, byte[] key) {
-        ByteArrayWrapper storageKey = new ByteArrayWrapper(key);
+        Wrapper storageKey = new ByteArrayWrapper(key);
         this.repositoryCache.addStorageRow(address, storageKey, ByteArrayWrapper.ZERO);
     }
 
     @Override
     public byte[] getStorage(Address address, byte[] key) {
-        ByteArrayWrapper storageKey = new ByteArrayWrapper(key);
-        ByteArrayWrapper value = this.repositoryCache.getStorageValue(address, storageKey);
+        Wrapper storageKey = new ByteArrayWrapper(key);
+        Wrapper value = this.repositoryCache.getStorageValue(address, storageKey);
         return (value == null) ? null : value.getData();
     }
 

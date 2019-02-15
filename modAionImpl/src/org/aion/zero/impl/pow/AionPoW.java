@@ -10,7 +10,9 @@ import java.util.List;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicLong;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.util.conversions.Hex;
 import org.aion.equihash.Solution;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IEventMgr;
@@ -265,7 +267,7 @@ public class AionPoW {
             AionBlock bestBlock =
                     blockchain.getBlockByNumber(blockchain.getBestBlock().getNumber());
 
-            List<AionTransaction> txs = pendingState.getPendingTransactions();
+            List<Transaction> txs = (List<Transaction>)(List<?>)pendingState.getPendingTransactions();
 
             AionBlock newBlock = blockchain.createNewBlock(bestBlock, txs, false);
 

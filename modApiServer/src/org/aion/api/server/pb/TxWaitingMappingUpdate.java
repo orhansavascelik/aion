@@ -1,20 +1,21 @@
 package org.aion.api.server.pb;
 
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
 import org.aion.zero.types.AionTxReceipt;
 
 public class TxWaitingMappingUpdate {
-    ByteArrayWrapper txHash;
+    Wrapper txHash;
     AionTxReceipt txReceipt;
     int pState;
 
-    public TxWaitingMappingUpdate(ByteArrayWrapper txHashW, int state, AionTxReceipt txReceipt) {
+    public TxWaitingMappingUpdate(Wrapper txHashW, int state, AionTxReceipt txReceipt) {
         this.txHash = txHashW;
         this.pState = state;
         this.txReceipt = txReceipt;
     }
 
-    public ByteArrayWrapper getTxHash() {
+    public Wrapper getTxHash() {
         return txHash;
     }
 
@@ -22,7 +23,7 @@ public class TxWaitingMappingUpdate {
         return txReceipt;
     }
 
-    public ByteArrayWrapper getTxResult() {
+    public Wrapper getTxResult() {
         return ByteArrayWrapper.wrap(txReceipt.getTransactionOutput());
     }
 

@@ -6,7 +6,7 @@
 // import org.aion.equihash.Equihash;
 // import org.aion.equihash.OptimizedEquiValidator;
 // import org.aion.zero.impl.valid.EquihashSolutionRule;
-// import org.aion.zero.types.A0BlockHeader;
+// import org.aion.zero.type.A0BlockHeader;
 // import org.junit.Before;
 // import org.junit.Test;
 // import org.mockito.MockitoAnnotations;

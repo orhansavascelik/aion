@@ -12,10 +12,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ECKeyFac;
 import org.aion.crypto.ISignature;
 import org.aion.crypto.ed25519.ECKeyEd25519;
@@ -23,7 +23,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.type.StatefulPrecompiledContract;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -40,7 +40,7 @@ public class MultiSignatureContractTest {
     private static final long NRG_LIMIT = 100000L;
     private static final long NRG_PRICE = 10000000000L;
     private Address to;
-    private IRepositoryCache repo;
+    private RepositoryCache repo;
     private List<Address> addrsToClean;
 
     @Before
@@ -107,7 +107,7 @@ public class MultiSignatureContractTest {
 
     // This is the constructMsg method provided by MSC class but here you can specify your nonce.
     private static byte[] customMsg(
-            IRepositoryCache repo,
+            RepositoryCache repo,
             BigInteger nonce,
             Address walletId,
             Address to,
@@ -190,7 +190,7 @@ public class MultiSignatureContractTest {
         List<Long> values = new ArrayList<>();
         byte[] metaKey = new byte[DataWord.BYTES];
         metaKey[0] = (byte) 0x80;
-        ByteArrayWrapper metaData =
+        Wrapper metaData =
                 repo.getStorageValue(walletId, new DataWord(metaKey).toWrapper());
         if (metaData == null) {
             fail();
@@ -212,7 +212,7 @@ public class MultiSignatureContractTest {
     private Set<Address> getWalletOwners(Address walletId, long numOwners) {
         Set<Address> owners = new HashSet<>();
         ByteBuffer buffer = ByteBuffer.allocate(Long.BYTES);
-        ByteArrayWrapper portion;
+        Wrapper portion;
 
         for (long i = 0; i < numOwners; i++) {
             byte[] account = new byte[Address.SIZE];

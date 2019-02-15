@@ -23,8 +23,8 @@ allprojects {
     sourceCompatibility = 10
 
     repositories {
-        jcenter()
         maven { url "https://oss.sonatype.org/content/groups/staging" }
+        jcenter()
 
         flatDir {
             dirs './lib'
@@ -254,8 +254,8 @@ build {
 }
 
 task prePack(type:Exec)  {
-    dependsOn ':aion_api:cleanPack' 
-    dependsOn ':aion_api:build'
+    //dependsOn ':aion_api:cleanPack' 
+    //dependsOn ':aion_api:build'
 
     if(findProject(":modGui") != null && gradle.useGui) { 
         dependsOn ':modGui:setupAionRootProject';
@@ -319,7 +319,7 @@ task packDevDocker(type: Exec) {
 }
 
 clean { 
-    dependsOn ':aion_api:clean' 
+    //dependsOn ':aion_api:clean' 
     dependsOn 'cleanJars'
     delete dirPack
     delete file('report')
@@ -349,7 +349,9 @@ task ciBuild {
             'modRlp',
             'modTxPool',
             'modTxPoolImpl',
-            'modVM'
+            'modVM',
+            'type',
+            'modUtil'
     ] 
 
     configure(subprojects.findAll { it.name in ciModules }) {

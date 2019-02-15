@@ -1,23 +1,25 @@
 package org.aion.zero.types;
 
-import static org.aion.type.api.util.ByteUtil.ZERO_BYTE_ARRAY;
+
+import static org.aion.util.bytes.ByteUtil.ZERO_BYTE_ARRAY;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.TimeInstant;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.common.Address;
+
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKey.MissingPrivateKeyException;
 import org.aion.crypto.HashUtil;
 import org.aion.crypto.ISignature;
 import org.aion.crypto.SignatureFac;
-import org.aion.mcf.types.AbstractTransaction;
+import org.aion.mcf.type.AbstractTransaction;
 import org.aion.mcf.vm.Constants;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPList;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.time.TimeInstant;
 
 /** Aion transaction class. */
 public class AionTransaction extends AbstractTransaction {
@@ -287,7 +289,7 @@ public class AionTransaction extends AbstractTransaction {
             return null;
         }
 
-        org.aion.vm.api.interfaces.Address from = this.getSenderAddress();
+        Address from = this.getSenderAddress();
 
         if (from == null) {
             return null;

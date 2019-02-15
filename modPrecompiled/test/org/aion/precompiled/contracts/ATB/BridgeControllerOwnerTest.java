@@ -4,12 +4,12 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.aion.precompiled.contracts.ATB.BridgeTestUtils.dummyContext;
 
 import java.util.List;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.fastvm.ExecutionContext;
 import org.aion.precompiled.contracts.DummyRepo;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.vm.api.interfaces.TransactionSideEffects;
 import org.junit.Before;

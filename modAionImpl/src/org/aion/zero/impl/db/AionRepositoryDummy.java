@@ -6,16 +6,17 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.db.IRepositoryConfig;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.util.conversions.Hex;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.ContractDetailsCacheImpl;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionRepositoryCache;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,10 +24,10 @@ import org.slf4j.LoggerFactory;
 public class AionRepositoryDummy extends AionRepositoryImpl {
 
     private static final Logger logger = LoggerFactory.getLogger("repository");
-    private Map<ByteArrayWrapper, AccountState> worldState = new HashMap<>();
-    private Map<ByteArrayWrapper, IContractDetails> detailsDB = new HashMap<>();
+    private Map<Wrapper, AccountState> worldState = new HashMap<>();
+    private Map<Wrapper, ContractDetails> detailsDB = new HashMap<>();
 
-    public AionRepositoryDummy(IRepositoryConfig cfg) {
+    public AionRepositoryDummy(RepositoryConfig cfg) {
         super(cfg);
     }
 
@@ -46,13 +47,13 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
     }
 
     public void updateBatch(
-            HashMap<ByteArrayWrapper, AccountState> stateCache,
-            HashMap<ByteArrayWrapper, IContractDetails> detailsCache) {
+            HashMap<Wrapper, AccountState> stateCache,
+            HashMap<Wrapper, ContractDetails> detailsCache) {
 
-        for (ByteArrayWrapper hash : stateCache.keySet()) {
+        for (Wrapper hash : stateCache.keySet()) {
 
             AccountState accountState = stateCache.get(hash);
-            IContractDetails contractDetails = detailsCache.get(hash);
+            ContractDetails contractDetails = detailsCache.get(hash);
 
             if (accountState.isDeleted()) {
                 worldState.remove(hash);
@@ -99,17 +100,17 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         throw new UnsupportedOperationException();
     }
 
-    public IRepositoryCache<?, ?> startTracking() {
+    public RepositoryCache<?, ?> startTracking() {
         return new AionRepositoryCache(this);
     }
 
-    public void dumpState(IAionBlock block, long nrgUsed, int txNumber, byte[] txHash) {}
+    public void dumpState(AionBlock block, long nrgUsed, int txNumber, byte[] txHash) {}
 
     public Set<Address> getAccountsKeys() {
         return null;
     }
 
-    public Set<ByteArrayWrapper> getFullAddressSet() {
+    public Set<Wrapper> getFullAddressSet() {
         return worldState.keySet();
     }
 
@@ -121,7 +122,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         }
 
         BigInteger result = account.addToBalance(value);
-        worldState.put(ByteArrayWrapper.wrap(addr.toBytes()), account);
+        worldState.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), account);
 
         return result;
     }
@@ -136,9 +137,9 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         return account.getBalance();
     }
 
-    public ByteArrayWrapper getStorageValue(Address addr, ByteArrayWrapper key) {
-        IContractDetails details = getContractDetails(addr);
-        ByteArrayWrapper value = (details == null) ? null : details.get(key);
+    public Wrapper getStorageValue(Address addr, Wrapper key) {
+        ContractDetails details = getContractDetails(addr);
+        Wrapper value = (details == null) ? null : details.get(key);
 
         if (value != null && value.isZero()) {
             // TODO: remove when integrating the AVM
@@ -155,8 +156,8 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
     }
 
     // never used
-    //    public void addStorageRow(Address addr, ByteArrayWrapper key, ByteArrayWrapper value) {
-    //        IContractDetails details = getContractDetails(addr);
+    //    public void addStorageRow(Address addr, Wrapper key, Wrapper value) {
+    //        ContractDetails details = getContractDetails(addr);
     //
     //        if (details == null) {
     //            createAccount(addr);
@@ -167,7 +168,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
     //    }
 
     public byte[] getCode(Address addr) {
-        IContractDetails details = getContractDetails(addr);
+        ContractDetails details = getContractDetails(addr);
 
         if (details == null) {
             return null;
@@ -177,7 +178,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
     }
 
     public void saveCode(Address addr, byte[] code) {
-        IContractDetails details = getContractDetails(addr);
+        ContractDetails details = getContractDetails(addr);
 
         if (details == null) {
             createAccount(addr);
@@ -185,7 +186,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         }
 
         details.setCode(code);
-        detailsDB.put(ByteArrayWrapper.wrap(addr.toBytes()), details);
+        detailsDB.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), details);
     }
 
     public BigInteger getNonce(Address addr) {
@@ -206,7 +207,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         }
 
         account.incrementNonce();
-        worldState.put(ByteArrayWrapper.wrap(addr.toBytes()), account);
+        worldState.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), account);
 
         return account.getNonce();
     }
@@ -220,7 +221,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         }
 
         account.setNonce(nonce);
-        worldState.put(ByteArrayWrapper.wrap(addr.toBytes()), account);
+        worldState.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), account);
 
         return account.getNonce();
     }
@@ -230,7 +231,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
         detailsDB.remove(ByteArrayWrapper.wrap(addr.toBytes()));
     }
 
-    public IContractDetails getContractDetails(Address addr) {
+    public ContractDetails getContractDetails(Address addr) {
 
         return detailsDB.get(ByteArrayWrapper.wrap(addr.toBytes()));
     }
@@ -241,10 +242,10 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
 
     public AccountState createAccount(Address addr) {
         AccountState accountState = new AccountState();
-        worldState.put(ByteArrayWrapper.wrap(addr.toBytes()), accountState);
+        worldState.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), accountState);
 
-        IContractDetails contractDetails = this.cfg.contractDetailsImpl();
-        detailsDB.put(ByteArrayWrapper.wrap(addr.toBytes()), contractDetails);
+        ContractDetails contractDetails = this.cfg.contractDetailsImpl();
+        detailsDB.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), contractDetails);
 
         return accountState;
     }
@@ -259,11 +260,11 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
 
     public void loadAccount(
             Address addr,
-            HashMap<ByteArrayWrapper, AccountState> cacheAccounts,
-            HashMap<ByteArrayWrapper, IContractDetails> cacheDetails) {
+            HashMap<Wrapper, AccountState> cacheAccounts,
+            HashMap<Wrapper, ContractDetails> cacheDetails) {
 
         AccountState account = getAccountState(addr);
-        IContractDetails details = getContractDetails(addr);
+        ContractDetails details = getContractDetails(addr);
 
         if (account == null) {
             account = new AccountState();
@@ -277,7 +278,7 @@ public class AionRepositoryDummy extends AionRepositoryImpl {
             details = new ContractDetailsCacheImpl(details);
         }
 
-        cacheAccounts.put(ByteArrayWrapper.wrap(addr.toBytes()), account);
-        cacheDetails.put(ByteArrayWrapper.wrap(addr.toBytes()), details);
+        cacheAccounts.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), account);
+        cacheDetails.put((Wrapper) ByteArrayWrapper.wrap(addr.toBytes()), details);
     }
 }

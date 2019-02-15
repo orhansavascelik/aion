@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
 
 public class AccountState {
-    private final SortedMap<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>>
+    private final SortedMap<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>>
             txMap = Collections.synchronizedSortedMap(new TreeMap<>());
     private final AtomicBoolean dirty = new AtomicBoolean(false);
 
     public void updateMap(
-            Map<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>> map) {
+            Map<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>> map) {
         if (map != null && !map.isEmpty()) {
             txMap.putAll(map);
             setDirty();
@@ -26,7 +26,7 @@ public class AccountState {
         dirty.set(true);
     }
 
-    public SortedMap<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>> getMap() {
+    public SortedMap<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>> getMap() {
         return txMap;
     }
 

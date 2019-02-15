@@ -1,0 +1,113 @@
+ext.moduleName = 'aion.type'
+
+apply plugin: 'maven'
+apply plugin: 'signing'
+
+group = "network.aion"
+archivesBaseName = "type4j"
+version = "0.3.3"
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
+dependencies {
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+
+    testCompile 'junit:junit:4.12'
+    testCompile 'pl.pragmatists:JUnitParams:1.1.1'
+}
+
+tasks.withType(JavaCompile) {
+    doFirst {
+        println "Args for for $name are $options.allCompilerArgs"
+    }
+}
+
+sourceSets {
+    main {
+        java.srcDirs = ['src/main/java']
+    }
+
+    test {
+        java.srcDirs = ['src/test/java']
+    }
+
+}
+
+signing {
+    sign configurations.archives
+}
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+javadoc {
+    inputs.property("moduleName", moduleName)
+    doFirst {
+        options.addStringOption('-module-path', classpath.asPath)
+        options.tags = ["implNote"]
+    }
+}
+
+task javadocJar(type: Jar) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+artifacts {
+    archives sourcesJar, javadocJar
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+//      snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+//        authentication(userName: ossrhUsername, password: ossrhPassword)
+//      }
+
+            pom.project {
+                name 'type4j'
+                packaging 'jar'
+                // optionally artifactId can be defined here
+                description 'a type module for the aion java kernel.'
+                url 'https://github.com/aionnetwork/aion/tree/master-pre-merge/type'
+
+                scm {
+                    connection 'scm:git:https://github.com/aionnetwork/aion.git'
+                    url 'https://github.com/aionnetwork/aion/tree/master'
+                }
+
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://opensource.org/licenses/MIT'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'aion foundation dev'
+                        name 'aion foundation dev'
+                        email 'toengineering@aion.network'
+                    }
+                }
+            }
+        }
+    }
+}
+

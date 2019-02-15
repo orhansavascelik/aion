@@ -1,7 +1,7 @@
 package org.aion.zero.impl.db;
 
-import org.aion.type.api.db.DetailsProvider;
-import org.aion.type.api.db.IContractDetails;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.DetailsProvider;
 import org.aion.zero.db.AionContractDetailsImpl;
 
 /**
@@ -54,7 +54,7 @@ public class ContractDetailsAion implements DetailsProvider {
     }
 
     @Override
-    public IContractDetails getDetails() {
+    public ContractDetails getDetails() {
         return new AionContractDetailsImpl(this.prune, this.memStorageLimit);
     }
 }

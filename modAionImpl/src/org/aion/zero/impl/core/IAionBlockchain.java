@@ -1,8 +1,9 @@
 package org.aion.zero.impl.core;
 
 import java.util.List;
-import org.aion.type.api.db.IRepository;
+import org.aion.type.api.interfaces.db.Repository;
 import org.aion.mcf.core.IBlockchain;
+import org.aion.type.api.interfaces.tx.Transaction;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionTxInfo;
@@ -12,13 +13,13 @@ import org.aion.zero.types.AionTxReceipt;
 
 /** aion blockchain interface. */
 public interface IAionBlockchain
-        extends IBlockchain<AionBlock, A0BlockHeader, AionTransaction, AionTxReceipt, AionTxInfo> {
+        extends IBlockchain<AionBlock, A0BlockHeader, Transaction, AionTxReceipt, AionTxInfo> {
 
     AionBlock createNewBlock(
-            AionBlock parent, List<AionTransaction> transactions, boolean waitUntilBlockTime);
+            AionBlock parent, List<Transaction> transactions, boolean waitUntilBlockTime);
 
     BlockContext createNewBlockContext(
-            AionBlock parent, List<AionTransaction> transactions, boolean waitUntilBlockTime);
+            AionBlock parent, List<Transaction> transactions, boolean waitUntilBlockTime);
 
     AionBlock getBestBlock();
 
@@ -29,14 +30,14 @@ public interface IAionBlockchain
      *
      * @return {@code true} if the recovery was successful, {@code false} otherwise
      */
-    boolean recoverWorldState(IRepository repository, AionBlock block);
+    boolean recoverWorldState(Repository repository, AionBlock block);
 
     /**
      * Recovery functionality for recreating the block info in the index database.
      *
      * @return {@code true} if the recovery was successful, {@code false} otherwise
      */
-    boolean recoverIndexEntry(IRepository repository, AionBlock block);
+    boolean recoverIndexEntry(Repository repository, AionBlock block);
 
     /**
      * Heuristic for skipping the call to tryToConnect with very large or very small block number.

@@ -33,10 +33,10 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
@@ -44,16 +44,16 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.vm.api.interfaces.InternalTransactionInterface;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.StandaloneBlockchain.Builder;
 import org.aion.zero.impl.vm.contracts.ContractUtils;
+import org.aion.zero.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxExecSummary;
-import org.aion.zero.types.IAionBlock;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -92,7 +92,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testNoRevert() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "F", "F.sol", BigInteger.ZERO);
         long nrg = 1_000_000;
         long nrgPrice = 1;
@@ -137,7 +137,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testRevertAtBottomLevel() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "F", "F.sol", BigInteger.ZERO);
         long nrg = 1_000_000;
         long nrgPrice = 1;
@@ -178,7 +178,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testRevertAtMidLevel() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "F", "F.sol", BigInteger.ZERO);
         long nrg = 1_000_000;
         long nrgPrice = 1;
@@ -221,7 +221,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testCallcodeStorage() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         BigInteger n = new BigInteger("7638523");
         Address D = deployContract(repo, "D", "D.sol", BigInteger.ZERO);
         Address E = deployContract(repo, "E", "D.sol", BigInteger.ZERO);
@@ -301,7 +301,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testCallcodeActors() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "D", "D.sol", BigInteger.ZERO);
         Address E = deployContract(repo, "E", "D.sol", BigInteger.ZERO);
 
@@ -343,7 +343,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testCallcodeValueTransfer() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "D", "D.sol", BigInteger.ZERO);
         Address E = deployContract(repo, "E", "D.sol", BigInteger.ZERO);
 
@@ -386,7 +386,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testDelegateCallStorage() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "D", "D.sol", BigInteger.ZERO);
         Address E = deployContract(repo, "E", "D.sol", BigInteger.ZERO);
         BigInteger n = new BigInteger("23786523");
@@ -461,7 +461,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testDelegateCallActors() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "D", "D.sol", BigInteger.ZERO);
         Address E = deployContract(repo, "E", "D.sol", BigInteger.ZERO);
         BigInteger n = new BigInteger("23786523");
@@ -500,7 +500,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testDelegateCallValueTransfer() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address D = deployContract(repo, "D", "D.sol", BigInteger.ZERO);
         Address E = deployContract(repo, "E", "D.sol", BigInteger.ZERO);
         BigInteger n = new BigInteger("23786523");
@@ -545,7 +545,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testOpcodesActors() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         Address callerContract = deployContract(repo, "Caller", "Opcodes.sol", BigInteger.ZERO);
         Address calleeContract = deployContract(repo, "Callee", "Opcodes.sol", BigInteger.ZERO);
 
@@ -592,7 +592,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testSuicideRecipientExists() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         BigInteger balance = new BigInteger("32522224");
         Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
         repo.createAccount(recipient);
@@ -639,7 +639,7 @@ public class OpcodeIntegTest {
 
     @Test
     public void testSuicideRecipientNewlyCreated() throws IOException {
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         BigInteger balance = new BigInteger("32522224");
         Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
 
@@ -691,7 +691,7 @@ public class OpcodeIntegTest {
      * Deploys the contract named contractName in the file named contractFilename with value value.
      */
     private Address deployContract(
-            IRepositoryCache repo, String contractName, String contractFilename, BigInteger value)
+            RepositoryCache repo, String contractName, String contractFilename, BigInteger value)
             throws IOException {
 
         byte[] deployCode = ContractUtils.getContractDeployer(contractFilename, contractName);
@@ -715,7 +715,7 @@ public class OpcodeIntegTest {
      * <p>Returns the address of the newly deployed contract.
      */
     private Address deployContract(
-            IRepositoryCache repo,
+            RepositoryCache repo,
             AionTransaction tx,
             String contractName,
             String contractFilename,
@@ -758,7 +758,7 @@ public class OpcodeIntegTest {
      * equal to whatever value was transferred to it when deployed.
      */
     private void checkStateOfNewContract(
-            IRepositoryCache repo,
+            RepositoryCache repo,
             String contractName,
             String contractFilename,
             Address contractAddr,
@@ -777,7 +777,7 @@ public class OpcodeIntegTest {
      * the prior balance minus the tx cost and the value transferred.
      */
     private void checkStateOfDeployer(
-            IRepositoryCache repo,
+            RepositoryCache repo,
             BigInteger priorBalance,
             long nrgUsed,
             long nrgPrice,
@@ -806,7 +806,7 @@ public class OpcodeIntegTest {
     }
 
     private BulkExecutor getNewExecutor(
-            AionTransaction tx, IAionBlock block, IRepositoryCache repo) {
+            AionTransaction tx, AionBlock block, RepositoryCache repo) {
         ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(tx));
         return new BulkExecutor(
                 details, repo, false, true, block.getNrgLimit(), LOGGER_VM, getPostExecutionWork());

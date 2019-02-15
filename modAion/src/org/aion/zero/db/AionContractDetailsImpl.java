@@ -1,7 +1,7 @@
 package org.aion.zero.db;
 
-import static org.aion.type.api.util.ByteArrayWrapper.wrap;
-import static org.aion.type.api.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.aion.type.ByteArrayWrapper.wrap;
+import static org.aion.util.bytes.ByteUtil.EMPTY_BYTE_ARRAY;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.crypto.HashUtil.h256;
 
@@ -10,10 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.aion.type.api.db.IByteArrayKeyValueStore;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.AionAddress;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.type.api.interfaces.db.ContractDetails;
+
 import org.aion.mcf.db.AbstractContractDetails;
 import org.aion.mcf.ds.XorDataSource;
 import org.aion.mcf.trie.SecureTrie;
@@ -21,11 +23,11 @@ import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPItem;
 import org.aion.rlp.RLPList;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 
 public class AionContractDetailsImpl extends AbstractContractDetails {
 
-    private IByteArrayKeyValueStore dataSource;
+    private ByteArrayKeyValueStore dataSource;
 
     private byte[] rlpEncoded;
 
@@ -34,7 +36,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     private SecureTrie storageTrie = new SecureTrie(null);
 
     public boolean externalStorage;
-    private IByteArrayKeyValueStore externalStorageDataSource;
+    private ByteArrayKeyValueStore externalStorageDataSource;
 
     public AionContractDetailsImpl() {}
 
@@ -43,7 +45,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     private AionContractDetailsImpl(
-            Address address, SecureTrie storageTrie, Map<ByteArrayWrapper, byte[]> codes) {
+            Address address, SecureTrie storageTrie, Map<Wrapper, byte[]> codes) {
         this.address = address;
         this.storageTrie = storageTrie;
         setCodes(codes);
@@ -58,7 +60,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     /**
-     * Adds the key-value pair to the database unless value is an ByteArrayWrapper whose underlying
+     * Adds the key-value pair to the database unless value is an Wrapper whose underlying
      * byte array consists only of zeros. In this case, if key already exists in the database it
      * will be deleted.
      *
@@ -66,7 +68,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      * @param value The value.
      */
     @Override
-    public void put(ByteArrayWrapper key, ByteArrayWrapper value) {
+    public void put(Wrapper key, Wrapper value) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
 
@@ -82,7 +84,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     @Override
-    public void delete(ByteArrayWrapper key) {
+    public void delete(Wrapper key) {
         Objects.requireNonNull(key);
 
         storageTrie.delete(key.getData());
@@ -99,7 +101,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      * @return the corresponding value or a zero-byte DataWord if no such value.
      */
     @Override
-    public ByteArrayWrapper get(ByteArrayWrapper key) {
+    public Wrapper get(Wrapper key) {
         byte[] data = storageTrie.get(key.getData());
         return (data == null || data.length == 0)
                 ? null
@@ -248,7 +250,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      *
      * @param dataSource The new dataSource.
      */
-    public void setDataSource(IByteArrayKeyValueStore dataSource) {
+    public void setDataSource(ByteArrayKeyValueStore dataSource) {
         this.dataSource = dataSource;
     }
 
@@ -257,7 +259,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      *
      * @return the external storage data source.
      */
-    private IByteArrayKeyValueStore getExternalStorageDataSource() {
+    private ByteArrayKeyValueStore getExternalStorageDataSource() {
         if (externalStorageDataSource == null) {
             externalStorageDataSource =
                     new XorDataSource(
@@ -271,7 +273,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      *
      * @param dataSource The new data source.
      */
-    public void setExternalStorageDataSource(IByteArrayKeyValueStore dataSource) {
+    public void setExternalStorageDataSource(ByteArrayKeyValueStore dataSource) {
         this.externalStorageDataSource = dataSource;
         this.externalStorage = true;
         this.storageTrie = new SecureTrie(getExternalStorageDataSource());
@@ -285,9 +287,9 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      * @return the specified AionContractDetailsImpl.
      */
     @Override
-    public IContractDetails getSnapshotTo(byte[] hash) {
+    public ContractDetails getSnapshotTo(byte[] hash) {
 
-        IByteArrayKeyValueStore keyValueDataSource = this.storageTrie.getCache().getDb();
+        ByteArrayKeyValueStore keyValueDataSource = this.storageTrie.getCache().getDb();
 
         SecureTrie snapStorage =
                 wrap(hash).equals(wrap(EMPTY_TRIE_HASH))
@@ -343,17 +345,17 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     // TODO: move this method up to the parent class.
-    private Map<ByteArrayWrapper, byte[]> getDeepCopyOfCodes() {
-        Map<ByteArrayWrapper, byte[]> originalCodes = this.getCodes();
+    private Map<Wrapper, byte[]> getDeepCopyOfCodes() {
+        Map<Wrapper, byte[]> originalCodes = this.getCodes();
 
         if (originalCodes == null) {
             return null;
         }
 
-        Map<ByteArrayWrapper, byte[]> copyOfCodes = new HashMap<>();
-        for (Entry<ByteArrayWrapper, byte[]> codeEntry : originalCodes.entrySet()) {
+        Map<Wrapper, byte[]> copyOfCodes = new HashMap<>();
+        for (Entry<Wrapper, byte[]> codeEntry : originalCodes.entrySet()) {
 
-            ByteArrayWrapper keyWrapper = null;
+            Wrapper keyWrapper = null;
             if (codeEntry.getKey() != null) {
                 byte[] keyBytes = codeEntry.getKey().getData();
                 keyWrapper = new ByteArrayWrapper(Arrays.copyOf(keyBytes, keyBytes.length));

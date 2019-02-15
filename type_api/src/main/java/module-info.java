@@ -1,9 +1,9 @@
 module aion.type.api {
-    requires aion.vm.api;
-    exports org.aion.type.api.db;
-    exports org.aion.type.api.io;
-    exports org.aion.type.api.vm;
     exports org.aion.type.api;
-    exports org.aion.type.api.type;
-    exports org.aion.type.api.util;
+    exports org.aion.type.api.interfaces.db;
+    exports org.aion.type.api.interfaces.vm;
+    exports org.aion.type.api.interfaces.common;
+    exports org.aion.type.api.interfaces.functional;
+    exports org.aion.type.api.interfaces.tx;
+    exports org.aion.type.api.interfaces.block;
 }

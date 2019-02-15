@@ -1,11 +1,11 @@
 package org.aion.zero.impl.core;
 
-import static org.aion.type.api.util.BIUtil.max;
-import static org.aion.type.api.util.BIUtil.min;
+import static org.aion.util.biginteger.BIUtil.max;
+import static org.aion.util.biginteger.BIUtil.min;
 
 import java.math.BigInteger;
 import org.aion.mcf.blockchain.IBlockConstants;
-import org.aion.mcf.types.AbstractBlockHeader;
+import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.zero.api.BlockConstants;
 
 public class DiffCalc {

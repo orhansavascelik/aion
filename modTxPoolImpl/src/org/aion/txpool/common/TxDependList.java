@@ -3,7 +3,7 @@ package org.aion.txpool.common;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 
 public class TxDependList<BW> {
     private final List<BW> txList;

@@ -4,7 +4,7 @@ import static org.aion.mcf.valid.TransactionTypeRule.isValidAVMTransactionType;
 import static org.aion.mcf.valid.TransactionTypeRule.isValidFVMTransactionType;
 
 /**
- * Validator for the type field of transactions allowed by the network. The transaction types
+ * Validator for the type field of transactions allowed by the network. The transaction type
  * currently correlate with which virtual machines are enabled. This field mainly impacts contract
  * creation. Contracts created using the default transaction type should be deployed on the FastVM.
  * AVM contracts creations/transactions are declared valid only if the AVM is enabled from the

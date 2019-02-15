@@ -5,15 +5,16 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.Properties;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IPruneConfig;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.db.IRepositoryConfig;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.PruneConfig;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.type.AionAddress;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
@@ -21,7 +22,7 @@ import org.aion.mcf.config.CfgPrune;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionContractDetailsImpl;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -30,20 +31,20 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class AionRepositoryImplTest {
 
-    protected IRepositoryConfig repoConfig =
-            new IRepositoryConfig() {
+    protected RepositoryConfig repoConfig =
+            new RepositoryConfig() {
                 @Override
                 public String getDbPath() {
                     return "";
                 }
 
                 @Override
-                public IPruneConfig getPruneConfig() {
+                public PruneConfig getPruneConfig() {
                     return new CfgPrune(false);
                 }
 
                 @Override
-                public IContractDetails contractDetailsImpl() {
+                public ContractDetails contractDetailsImpl() {
                     return ContractDetailsAion.createForTesting(0, 1000000).getDetails();
                 }
 
@@ -70,7 +71,7 @@ public class AionRepositoryImplTest {
 
         Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
 
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
         track.flush();
 
@@ -84,7 +85,7 @@ public class AionRepositoryImplTest {
     @Test
     public void testAccountAddCodeStorage() {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
 
         Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
@@ -105,7 +106,7 @@ public class AionRepositoryImplTest {
     @Test
     public void testAccountStateUpdateStorageRow() {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
 
         Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
@@ -134,7 +135,7 @@ public class AionRepositoryImplTest {
     @Test
     public void testAccountStateUpdateStorageRowFlush() {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
 
         Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
@@ -152,7 +153,7 @@ public class AionRepositoryImplTest {
         repository.flush();
 
         /** Verify that the account has been flushed */
-        IByteArrayKeyValueDatabase detailsDB = repository.getDetailsDatabase();
+        ByteArrayKeyValueDatabase detailsDB = repository.getDetailsDatabase();
         Optional<byte[]> serializedDetails = detailsDB.get(defaultAccount.toBytes());
 
         assertThat(serializedDetails.isPresent()).isEqualTo(true);
@@ -172,7 +173,7 @@ public class AionRepositoryImplTest {
     @Test
     public void testRepoTrackUpdateStorageRow() {
         final AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        final IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repoTrack =
+        final RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repoTrack =
                 repository.startTracking();
         final Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
         final byte[] key = HashUtil.blake128("hello".getBytes());
@@ -185,7 +186,7 @@ public class AionRepositoryImplTest {
         repoTrack.addStorageRow(
                 defaultAccount, new DataWord(key).toWrapper(), new DataWord(value).toWrapper());
 
-        ByteArrayWrapper retrievedStorageValue =
+        Wrapper retrievedStorageValue =
                 repoTrack.getStorageValue(defaultAccount, new DataWord(key).toWrapper());
         assertThat(retrievedStorageValue).isEqualTo(new DataWord(value).toWrapper());
 
@@ -208,7 +209,7 @@ public class AionRepositoryImplTest {
         byte[] originalRoot = repository.getRoot();
 
         // now create a new account
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
         track.addBalance(FIRST_ACC, BigInteger.ONE);
         track.flush();
 
@@ -251,7 +252,7 @@ public class AionRepositoryImplTest {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
 
         byte[] originalRoot = repository.getRoot();
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
         track.addBalance(FIRST_ACC, BigInteger.ONE);
         track.flush();
         byte[] newRoot = repository.getRoot();
@@ -289,7 +290,7 @@ public class AionRepositoryImplTest {
         final Address DOGE_ACC = AionAddress.wrap("0000000000000000000000000000doge".getBytes());
 
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
         track.addBalance(DOG_ACC, BigInteger.ONE);
         track.addBalance(DOGE_ACC, BigInteger.ONE);
         track.flush();
@@ -320,7 +321,7 @@ public class AionRepositoryImplTest {
         final Address account1 = AionAddress.wrap(value1);
         final Address account2 = AionAddress.wrap(value2);
         final Address account3 = AionAddress.wrap(value3);
-        IRepositoryCache track = repository.startTracking();
+        RepositoryCache track = repository.startTracking();
         track.addBalance(account1, BigInteger.ONE);
         track.addBalance(account2, BigInteger.TWO);
         track.addBalance(account3, BigInteger.TEN);
@@ -328,7 +329,7 @@ public class AionRepositoryImplTest {
         repository.flush();
 
         // get snapshot to root
-        IRepository snapshot = repository.getSnapshotTo(repository.getRoot());
+        Repository snapshot = repository.getSnapshotTo(repository.getRoot());
 
         // check that the same values are retrieved
         assertThat(repository.getBalance(account1)).isEqualTo(snapshot.getBalance(account1));

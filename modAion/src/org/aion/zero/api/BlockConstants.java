@@ -1,10 +1,10 @@
 package org.aion.zero.api;
 
 import java.math.BigInteger;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.mcf.blockchain.IBlockConstants;
-import org.aion.mcf.types.AbstractBlockHeader;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.mcf.type.AbstractBlockHeader;
+import org.aion.type.api.interfaces.common.Address;
 
 public class BlockConstants implements IBlockConstants {
 

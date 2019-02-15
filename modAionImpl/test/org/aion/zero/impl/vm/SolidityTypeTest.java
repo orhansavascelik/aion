@@ -30,10 +30,10 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.vm.types.DataWord;
@@ -53,14 +53,13 @@ import org.aion.solidity.SolidityType.StringType;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.db.AionRepositoryImpl;
-import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.vm.contracts.ContractUtils;
+import org.aion.zero.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
-import org.aion.zero.types.IAionBlock;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.After;
 import org.junit.Before;
@@ -103,7 +102,7 @@ public class SolidityTypeTest {
         return new AionTransaction(txNonce, from, to, value, data, nrg, nrgPrice);
     }
 
-    private IRepositoryCache createRepository(AionTransaction tx) throws IOException {
+    private RepositoryCache createRepository(AionTransaction tx) throws IOException {
         Result r =
                 Compiler.getInstance()
                         .compile(ContractUtils.readContract("SolidityType.sol"), Options.BIN);
@@ -112,7 +111,7 @@ public class SolidityTypeTest {
         String contract = deployer.substring(deployer.indexOf("60506040", 1));
 
         AionRepositoryImpl repo = blockchain.getRepository();
-        IRepositoryCache track = repo.startTracking();
+        RepositoryCache track = repo.startTracking();
         track.addBalance(
                 tx.getSenderAddress(),
                 tx.nrgPrice().value().multiply(BigInteger.valueOf(500_000L)));
@@ -128,8 +127,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("e8dde232"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -146,8 +145,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("6761755c"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -165,8 +164,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("42f45790"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -184,8 +183,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("faa068d1"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -203,8 +202,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("877b277f"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -223,8 +222,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("61cb5a01"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -243,8 +242,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("61cb5a01"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -263,8 +262,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("61cb5a01"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -285,8 +284,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("61cb5a01"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -308,8 +307,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("97e934e2"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -335,8 +334,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("e4bef5c9"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -363,8 +362,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("8c0c5523"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -391,8 +390,8 @@ public class SolidityTypeTest {
         System.out.println(Hex.toHexString(params));
 
         AionTransaction tx = createTransaction(ByteUtil.merge(Hex.decode("97c3b2db"), params));
-        AionBlock block = createDummyBlock();
-        IRepositoryCache repo = createRepository(tx);
+        org.aion.zero.impl.types.AionBlock block = createDummyBlock();
+        RepositoryCache repo = createRepository(tx);
 
         BulkExecutor exec = getNewExecutor(tx, block, repo);
         AionTxReceipt receipt = exec.execute().get(0).getReceipt();
@@ -407,13 +406,13 @@ public class SolidityTypeTest {
     }
 
     private BulkExecutor getNewExecutor(
-            AionTransaction tx, IAionBlock block, IRepositoryCache repo) {
+            AionTransaction tx, AionBlock block, RepositoryCache repo) {
         ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(tx));
         return new BulkExecutor(
                 details, repo, false, true, block.getNrgLimit(), LOGGER_VM, getPostExecutionWork());
     }
 
-    private static AionBlock createDummyBlock() {
+    private static org.aion.zero.impl.types.AionBlock createDummyBlock() {
         byte[] parentHash = new byte[32];
         byte[] coinbase = RandomUtils.nextBytes(Address.SIZE);
         byte[] logsBloom = new byte[0];
@@ -429,7 +428,7 @@ public class SolidityTypeTest {
         byte[] solutions = new byte[0];
 
         // TODO: set a dummy limit of 5000000 for now
-        return new AionBlock(
+        return new org.aion.zero.impl.types.AionBlock(
                 parentHash,
                 AionAddress.wrap(coinbase),
                 logsBloom,

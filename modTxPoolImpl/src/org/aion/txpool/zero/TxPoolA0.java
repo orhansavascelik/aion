@@ -16,18 +16,19 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
-import org.aion.type.api.type.ITransaction;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.TimeInstant;
 import org.aion.txpool.ITxPool;
 import org.aion.txpool.common.AbstractTxPool;
 import org.aion.txpool.common.AccountState;
 import org.aion.txpool.common.TxDependList;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.util.time.TimeInstant;
 import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
-import org.aion.vm.api.interfaces.Address;
 
 @SuppressWarnings("unchecked")
-public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implements ITxPool<TX> {
+public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> implements ITxPool<TX> {
 
     public TxPoolA0() {
         super();
@@ -112,10 +113,10 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
     public List<TX> add(List<TX> txl) {
 
         List<TX> newPendingTx = new ArrayList<>();
-        Map<ByteArrayWrapper, TXState> mainMap = new HashMap<>();
+        Map<Wrapper, TXState> mainMap = new HashMap<>();
         for (TX tx : txl) {
 
-            ByteArrayWrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
+            Wrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
             if (this.getMainMap().get(bw) != null) {
                 if (LOG.isWarnEnabled()) {
                     LOG.warn(
@@ -144,7 +145,7 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                 snapshot();
             }
 
-            AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger> entry =
+            AbstractMap.SimpleEntry<Wrapper, BigInteger> entry =
                     this.getAccView(tx.getSenderAddress()).getMap().get(txNonce);
             if (entry != null) {
                 if (LOG.isTraceEnabled()) {
@@ -188,15 +189,15 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
     @Override
     public List<TX> remove(Map<Address, BigInteger> accNonce) {
 
-        List<ByteArrayWrapper> bwList = new ArrayList<>();
+        List<Wrapper> bwList = new ArrayList<>();
         for (Map.Entry<Address, BigInteger> en1 : accNonce.entrySet()) {
             AccountState as = this.getAccView(en1.getKey());
             lock.writeLock().lock();
-            Iterator<Map.Entry<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>>>
+            Iterator<Map.Entry<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>>>
                     it = as.getMap().entrySet().iterator();
 
             while (it.hasNext()) {
-                Map.Entry<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>> en =
+                Map.Entry<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>> en =
                         it.next();
                 if (en1.getValue().compareTo(en.getKey()) > 0) {
                     bwList.add(en.getValue().getKey());
@@ -222,8 +223,8 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                                             .get(bi)
                                             .entrySet()
                                             .removeIf(
-                                                    byteArrayWrapperTxDependListEntry ->
-                                                            byteArrayWrapperTxDependListEntry
+                                                    WrapperTxDependListEntry ->
+                                                            WrapperTxDependListEntry
                                                                     .getValue()
                                                                     .getAddress()
                                                                     .equals(en1.getKey()));
@@ -242,7 +243,7 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                 .forEach(
                         bw -> {
                             if (this.getMainMap().get(bw) != null) {
-                                ITransaction tx = this.getMainMap().get(bw).getTx().clone();
+                                TX tx = (TX) this.getMainMap().get(bw).getTx().clone();
                                 removedTxl.add((TX) tx);
 
                                 long timestamp = tx.getTimeStampBI().longValue() / multiplyM;
@@ -284,7 +285,7 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
         Set<Address> checkedAddress = Collections.synchronizedSet(new HashSet<>());
 
         for (TX tx : txs) {
-            ByteArrayWrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
+            Wrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
             lock.writeLock().lock();
             try {
                 if (this.getMainMap().remove(bw) == null) {
@@ -332,8 +333,8 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                                                 .get(bi)
                                                 .entrySet()
                                                 .removeIf(
-                                                        byteArrayWrapperTxDependListEntry ->
-                                                                byteArrayWrapperTxDependListEntry
+                                                        WrapperTxDependListEntry ->
+                                                                WrapperTxDependListEntry
                                                                         .getValue()
                                                                         .getAddress()
                                                                         .equals(address));
@@ -401,7 +402,7 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
 
         lock.readLock().lock();
         try {
-            AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger> entry =
+            AbstractMap.SimpleEntry<Wrapper, BigInteger> entry =
                     this.getAccView(from).getMap().get(txNonce);
             return (entry == null ? null : this.getMainMap().get(entry.getKey()).getTx());
         } finally {
@@ -417,7 +418,7 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
 
         List<TX> rtn = new ArrayList<>();
         for (Map.Entry<Address, AccountState> as : this.getFullAcc().entrySet()) {
-            for (Map.Entry<ByteArrayWrapper, BigInteger> txMap : as.getValue().getMap().values()) {
+            for (Map.Entry<Wrapper, BigInteger> txMap : as.getValue().getMap().values()) {
                 if (this.getMainMap().get(txMap.getKey()) == null) {
                     LOG.error("can't find the tx in the mainMap");
                     continue;
@@ -449,19 +450,19 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
         int cnt_txSz = 0;
         long cnt_nrg = 0;
         List<TX> rtn = new ArrayList<>();
-        Set<ByteArrayWrapper> snapshotSet = new HashSet<>();
-        Map<ByteArrayWrapper, Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>> nonPickedTx =
+        Set<Wrapper> snapshotSet = new HashSet<>();
+        Map<Wrapper, Entry<Wrapper, TxDependList<Wrapper>>> nonPickedTx =
                 new HashMap<>();
-        for (Entry<BigInteger, Map<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>> e :
+        for (Entry<BigInteger, Map<Wrapper, TxDependList<Wrapper>>> e :
                 this.getFeeView().entrySet()) {
 
             if (LOG.isTraceEnabled()) {
                 LOG.trace("snapshot  fee[{}]", e.getKey().toString());
             }
 
-            SortedMap<BigInteger, Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>>
+            SortedMap<BigInteger, Entry<Wrapper, TxDependList<Wrapper>>>
                     timeTxDep = Collections.synchronizedSortedMap(new TreeMap<>());
-            for (Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>> pair :
+            for (Entry<Wrapper, TxDependList<Wrapper>> pair :
                     e.getValue().entrySet()) {
                 BigInteger ts = pair.getValue().getTimeStamp();
                 while (timeTxDep.get(ts.add(BigInteger.ONE)) != null) {
@@ -470,14 +471,14 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                 timeTxDep.put(ts, pair);
             }
 
-            for (Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>> pair :
+            for (Entry<Wrapper, TxDependList<Wrapper>> pair :
                     timeTxDep.values()) {
                 // Check the small nonce tx must been picked before put the high nonce tx
-                ByteArrayWrapper dependTx = pair.getValue().getDependTx();
+                Wrapper dependTx = pair.getValue().getDependTx();
                 if (dependTx == null || snapshotSet.contains(dependTx)) {
                     boolean firstTx = true;
-                    for (ByteArrayWrapper bw : pair.getValue().getTxList()) {
-                        ITransaction itx = this.getMainMap().get(bw).getTx();
+                    for (Wrapper bw : pair.getValue().getTxList()) {
+                        TX itx = this.getMainMap().get(bw).getTx();
 
                         cnt_txSz += itx.getEncoded().length;
                         cnt_nrg += itx.getNrgConsume();
@@ -519,12 +520,12 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                         }
                     }
 
-                    ByteArrayWrapper ancestor = pair.getKey();
+                    Wrapper ancestor = pair.getKey();
                     while (nonPickedTx.get(ancestor) != null) {
                         firstTx = true;
-                        for (ByteArrayWrapper bw :
+                        for (Wrapper bw :
                                 nonPickedTx.get(ancestor).getValue().getTxList()) {
-                            ITransaction itx = this.getMainMap().get(bw).getTx();
+                            TX itx = this.getMainMap().get(bw).getTx();
 
                             cnt_txSz += itx.getEncoded().length;
                             cnt_nrg += itx.getNrgConsume();
@@ -606,7 +607,7 @@ public class TxPoolA0<TX extends ITransaction> extends AbstractTxPool<TX> implem
                 .forEach(
                         e -> {
                             if (e.getKey() < ts) {
-                                for (ByteArrayWrapper bw : e.getValue()) {
+                                for (Wrapper bw : e.getValue()) {
                                     txl.add(this.getMainMap().get(bw).getTx());
                                 }
                             }

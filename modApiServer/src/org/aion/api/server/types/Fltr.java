@@ -2,8 +2,8 @@ package org.aion.api.server.types;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
-import org.aion.type.api.type.IBlockSummary;
-import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.interfaces.block.BlockSummary;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
 
 public abstract class Fltr {
 
@@ -70,11 +70,11 @@ public abstract class Fltr {
         if (events.size() < EVTS_MAX) events.add(evt);
     }
 
-    public boolean onBlock(IBlockSummary b) {
+    public boolean onBlock(BlockSummary b) {
         return false;
     }
 
-    public boolean onTransaction(ITransaction tx) {
+    public boolean onTransaction(TransactionExtend tx) {
         return false;
     }
 }

@@ -21,9 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.db.AbstractPowBlockstore;
@@ -33,12 +33,11 @@ import org.aion.mcf.ds.Serializer;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPList;
-import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.A0BlockHeader;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 import org.slf4j.Logger;
 
-public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHeader> {
+public class AionBlockStore extends AbstractPowBlockstore<org.aion.zero.impl.types.AionBlock, A0BlockHeader> {
 
     private static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.DB.name());
     private static final Logger LOG_CONS = AionLoggerFactory.getLogger(LogEnum.CONS.name());
@@ -46,47 +45,47 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     protected ReadWriteLock lock = new ReentrantReadWriteLock();
 
     private DataSourceArray<List<BlockInfo>> index;
-    private ObjectDataSource<AionBlock> blocks;
+    private ObjectDataSource<org.aion.zero.impl.types.AionBlock> blocks;
 
     private boolean checkIntegrity = true;
 
-    private Deque<IAionBlock> branchingBlk = new ArrayDeque<>(),
+    private Deque<AionBlock> branchingBlk = new ArrayDeque<>(),
             preBranchingBlk = new ArrayDeque<>();
     private long branchingLevel;
 
-    public AionBlockStore(IByteArrayKeyValueDatabase index, IByteArrayKeyValueDatabase blocks) {
+    public AionBlockStore(ByteArrayKeyValueDatabase index, ByteArrayKeyValueDatabase blocks) {
         init(index, blocks);
     }
 
     public AionBlockStore(
-            IByteArrayKeyValueDatabase index,
-            IByteArrayKeyValueDatabase blocks,
+            ByteArrayKeyValueDatabase index,
+            ByteArrayKeyValueDatabase blocks,
             boolean checkIntegrity) {
         this(index, blocks);
         this.checkIntegrity = checkIntegrity;
     }
 
-    private void init(IByteArrayKeyValueDatabase index, IByteArrayKeyValueDatabase blocks) {
+    private void init(ByteArrayKeyValueDatabase index, ByteArrayKeyValueDatabase blocks) {
 
         this.index = new DataSourceArray<>(new ObjectDataSource<>(index, BLOCK_INFO_SERIALIZER));
 
         this.blocks =
                 new ObjectDataSource<>(
                         blocks,
-                        new Serializer<AionBlock, byte[]>() {
+                        new Serializer<org.aion.zero.impl.types.AionBlock, byte[]>() {
                             @Override
-                            public byte[] serialize(AionBlock block) {
+                            public byte[] serialize(org.aion.zero.impl.types.AionBlock block) {
                                 return block.getEncoded();
                             }
 
                             @Override
-                            public AionBlock deserialize(byte[] bytes) {
-                                return new AionBlock(bytes);
+                            public org.aion.zero.impl.types.AionBlock deserialize(byte[] bytes) {
+                                return new org.aion.zero.impl.types.AionBlock(bytes);
                             }
                         });
     }
 
-    public AionBlock getBestBlock() {
+    public org.aion.zero.impl.types.AionBlock getBestBlock() {
         lock.readLock().lock();
 
         try {
@@ -95,7 +94,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
                 return null;
             }
 
-            AionBlock bestBlock = getChainBlockByNumber(maxLevel);
+            org.aion.zero.impl.types.AionBlock bestBlock = getChainBlockByNumber(maxLevel);
             if (bestBlock != null) {
                 return bestBlock;
             }
@@ -145,7 +144,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     @Override
-    public void saveBlock(AionBlock block, BigInteger cummDifficulty, boolean mainChain) {
+    public void saveBlock(org.aion.zero.impl.types.AionBlock block, BigInteger cummDifficulty, boolean mainChain) {
         lock.writeLock().lock();
         try {
             addInternalBlock(block, cummDifficulty, mainChain);
@@ -155,7 +154,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     /** @implNote The method calling this method must handle the locking. */
-    private void addInternalBlock(AionBlock block, BigInteger cummDifficulty, boolean mainChain) {
+    private void addInternalBlock(org.aion.zero.impl.types.AionBlock block, BigInteger cummDifficulty, boolean mainChain) {
         long blockNumber = block.getNumber();
         List<BlockInfo> blockInfos =
                 blockNumber >= index.size() ? new ArrayList<>() : index.get(blockNumber);
@@ -182,12 +181,12 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
         index.set(block.getNumber(), blockInfos);
     }
 
-    public List<Map.Entry<AionBlock, Map.Entry<BigInteger, Boolean>>> getBlocksByNumber(
+    public List<Map.Entry<org.aion.zero.impl.types.AionBlock, Map.Entry<BigInteger, Boolean>>> getBlocksByNumber(
             long number) {
         lock.readLock().lock();
 
         try {
-            List<Map.Entry<AionBlock, Map.Entry<BigInteger, Boolean>>> result = new ArrayList<>();
+            List<Map.Entry<org.aion.zero.impl.types.AionBlock, Map.Entry<BigInteger, Boolean>>> result = new ArrayList<>();
 
             if (number >= index.size()) {
                 return result;
@@ -198,7 +197,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
             for (BlockInfo blockInfo : blockInfos) {
 
                 byte[] hash = blockInfo.getHash();
-                AionBlock block = blocks.get(hash);
+                org.aion.zero.impl.types.AionBlock block = blocks.get(hash);
 
                 result.add(
                         Map.entry(
@@ -213,7 +212,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     @Override
-    public AionBlock getChainBlockByNumber(long number) {
+    public org.aion.zero.impl.types.AionBlock getChainBlockByNumber(long number) {
         lock.readLock().lock();
 
         try {
@@ -242,7 +241,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     @SuppressWarnings("Duplicates")
-    public Map.Entry<AionBlock, BigInteger> getChainBlockByNumberWithTotalDifficulty(long number) {
+    public Map.Entry<org.aion.zero.impl.types.AionBlock, BigInteger> getChainBlockByNumberWithTotalDifficulty(long number) {
         lock.readLock().lock();
 
         try {
@@ -267,7 +266,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     @Override
-    public AionBlock getBlockByHash(byte[] hash) {
+    public org.aion.zero.impl.types.AionBlock getBlockByHash(byte[] hash) {
         lock.readLock().lock();
         try {
             return blocks.get(hash);
@@ -286,7 +285,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
         lock.readLock().lock();
 
         try {
-            IAionBlock block = this.getBlockByHash(hash);
+            AionBlock block = this.getBlockByHash(hash);
             if (block == null) {
                 return ZERO;
             }
@@ -354,10 +353,10 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
         lock.readLock().lock();
 
         try {
-            List<AionBlock> blocks = getListBlocksEndWith(hash, number);
+            List<org.aion.zero.impl.types.AionBlock> blocks = getListBlocksEndWith(hash, number);
             List<byte[]> hashes = new ArrayList<>(blocks.size());
 
-            for (IAionBlock b : blocks) {
+            for (AionBlock b : blocks) {
                 hashes.add(b.getHash());
             }
 
@@ -371,10 +370,10 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     public List<A0BlockHeader> getListHeadersEndWith(byte[] hash, long qty) {
         lock.readLock().lock();
         try {
-            List<AionBlock> blocks = getListBlocksEndWith(hash, qty);
+            List<org.aion.zero.impl.types.AionBlock> blocks = getListBlocksEndWith(hash, qty);
             List<A0BlockHeader> headers = new ArrayList<>(blocks.size());
 
-            for (IAionBlock b : blocks) {
+            for (AionBlock b : blocks) {
                 headers.add(b.getHeader());
             }
 
@@ -385,7 +384,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     @Override
-    public List<AionBlock> getListBlocksEndWith(byte[] hash, long qty) {
+    public List<org.aion.zero.impl.types.AionBlock> getListBlocksEndWith(byte[] hash, long qty) {
         lock.readLock().lock();
         try {
             return getListBlocksEndWithInner(hash, qty);
@@ -395,15 +394,15 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     /** @implNote The method calling this method must handle the locking. */
-    private List<AionBlock> getListBlocksEndWithInner(byte[] hash, long qty) {
+    private List<org.aion.zero.impl.types.AionBlock> getListBlocksEndWithInner(byte[] hash, long qty) {
         // locks acquired by calling method
-        AionBlock block = this.blocks.get(hash);
+        org.aion.zero.impl.types.AionBlock block = this.blocks.get(hash);
 
         if (block == null) {
             return new ArrayList<>();
         }
 
-        List<AionBlock> blocks = new ArrayList<>((int) qty);
+        List<org.aion.zero.impl.types.AionBlock> blocks = new ArrayList<>((int) qty);
 
         for (int i = 0; i < qty; ++i) {
             blocks.add(block);
@@ -417,16 +416,16 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     @Override
-    public void reBranch(AionBlock forkBlock) {
+    public void reBranch(org.aion.zero.impl.types.AionBlock forkBlock) {
         lock.writeLock().lock();
 
         try {
-            IAionBlock bestBlock = getBestBlock();
+            AionBlock bestBlock = getBestBlock();
 
             long currentLevel = Math.max(bestBlock.getNumber(), forkBlock.getNumber());
 
             // 1. First ensure that you are one the save level
-            IAionBlock forkLine = forkBlock;
+            AionBlock forkLine = forkBlock;
             if (forkBlock.getNumber() > bestBlock.getNumber()) {
                 branchingLevel = currentLevel;
 
@@ -450,7 +449,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
                 }
             }
 
-            IAionBlock bestLine = bestBlock;
+            AionBlock bestLine = bestBlock;
             if (bestBlock.getNumber() > forkBlock.getNumber()) {
 
                 while (currentLevel > forkBlock.getNumber()) {
@@ -490,13 +489,13 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
 
             LOG_CONS.debug("===== Block details before branch =====");
             while (!preBranchingBlk.isEmpty()) {
-                IAionBlock blk = preBranchingBlk.pop();
+                AionBlock blk = preBranchingBlk.pop();
                 LOG_CONS.debug("blk: {}", blk.toString());
             }
 
             LOG_CONS.debug("===== Block details after branch =====");
             while (!branchingBlk.isEmpty()) {
-                IAionBlock blk = branchingBlk.pop();
+                AionBlock blk = branchingBlk.pop();
                 LOG_CONS.debug("blk: {}", blk.toString());
             }
 
@@ -510,7 +509,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     /** @implNote The method calling this method must handle the locking. */
-    private void loopBackToCommonBlock(IAionBlock bestLine, IAionBlock forkLine) {
+    private void loopBackToCommonBlock(AionBlock bestLine, AionBlock forkLine) {
         long currentLevel = bestLine.getNumber();
 
         if (forkLine.getNumber() != currentLevel) {
@@ -569,7 +568,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
         lock.writeLock().lock();
 
         try {
-            IAionBlock bestBlock = getBestBlock();
+            AionBlock bestBlock = getBestBlock();
 
             long currentLevel = bestBlock.getNumber();
 
@@ -579,7 +578,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
             }
 
             // walk back removing blocks greater than the given level value
-            IAionBlock bestLine = bestBlock;
+            AionBlock bestLine = bestBlock;
             while (currentLevel > previousLevel) {
 
                 // remove all the blocks at that level
@@ -649,7 +648,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
                     }
 
                     // 2. Loop back on each level until common block
-                    IAionBlock forkLine = getBlockByHash(maxTDInfo.getHash());
+                    AionBlock forkLine = getBlockByHash(maxTDInfo.getHash());
                     loopBackToCommonBlock(bestLine, forkLine);
                 }
             }
@@ -663,7 +662,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
         lock.writeLock().lock();
 
         try {
-            IAionBlock block = getBestBlock();
+            AionBlock block = getBestBlock();
             long initialLevel = block.getNumber();
             long level = initialLevel;
 
@@ -705,7 +704,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     /** @implNote The method calling this method must handle the locking. */
-    private void pruneSideChains(IAionBlock block) {
+    private void pruneSideChains(AionBlock block) {
         // current level
         long level = block.getNumber();
         byte[] blockHash = block.getHash();
@@ -760,7 +759,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
         }
     }
 
-    public BigInteger correctIndexEntry(AionBlock block, BigInteger parentTotalDifficulty) {
+    public BigInteger correctIndexEntry(org.aion.zero.impl.types.AionBlock block, BigInteger parentTotalDifficulty) {
         lock.writeLock().lock();
 
         try {
@@ -834,7 +833,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
                                     + "\nBlock on main chain: "
                                     + String.valueOf(bi.isMainChain()).toUpperCase());
                     writer.newLine();
-                    AionBlock blk = getBlockByHash(bi.getHash());
+                    org.aion.zero.impl.types.AionBlock blk = getBlockByHash(bi.getHash());
                     if (blk != null) {
                         writer.append("\nFull block data:\n");
                         writer.append(blk.toString());
@@ -915,11 +914,11 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
     }
 
     /** Sets the block as main chain and all its ancestors. Used by the data recovery methods. */
-    public void correctMainChain(AionBlock block, Logger log) {
+    public void correctMainChain(org.aion.zero.impl.types.AionBlock block, Logger log) {
         lock.writeLock().lock();
 
         try {
-            AionBlock currentBlock = block;
+            org.aion.zero.impl.types.AionBlock currentBlock = block;
             if (currentBlock != null) {
                 List<BlockInfo> infos = getBlockInfoForLevel(currentBlock.getNumber());
                 BlockInfo thisBlockInfo = getBlockInfoForHash(infos, currentBlock.getHash());
@@ -1160,7 +1159,7 @@ public class AionBlockStore extends AbstractPowBlockstore<AionBlock, A0BlockHead
 
             // check each block's total difficulty till genesis
             boolean correct = true;
-            AionBlock block = getBestBlock();
+            org.aion.zero.impl.types.AionBlock block = getBestBlock();
             long start, round, time;
             start = round = System.currentTimeMillis();
             long bestBlockNumber = block.getNumber();

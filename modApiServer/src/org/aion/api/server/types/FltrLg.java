@@ -3,17 +3,17 @@ package org.aion.api.server.types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.aion.type.api.type.IBlock;
-import org.aion.type.api.type.IBlockSummary;
-import org.aion.type.api.type.ITransaction;
+import org.aion.type.api.interfaces.block.Block;
+import org.aion.type.api.interfaces.block.BlockSummary;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
 import org.aion.mcf.vm.types.Bloom;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.zero.impl.core.BloomFilter;
 import org.aion.zero.impl.core.IAionBlockchain;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.impl.types.AionTxInfo;
+import org.aion.zero.types.AionBlock;
 import org.aion.zero.types.AionTxReceipt;
-import org.aion.zero.types.IAionBlock;
 import org.aion.vm.api.interfaces.IBloomFilter;
 
 /** @author chris */
@@ -44,14 +44,14 @@ public final class FltrLg extends Fltr {
     // -------------------------------------------------------------------------------
 
     @Override
-    public boolean onBlock(IBlockSummary bs) {
+    public boolean onBlock(BlockSummary bs) {
         List<AionTxReceipt> receipts = ((AionBlockSummary) bs).getReceipts();
-        IBlock blk = bs.getBlock();
+        Block blk = bs.getBlock();
 
-        if (matchBloom(new Bloom(((IAionBlock) blk).getLogBloom()))) {
+        if (matchBloom(new Bloom(((AionBlock) blk).getLogBloom()))) {
             int txIndex = 0;
             for (AionTxReceipt receipt : receipts) {
-                ITransaction tx = receipt.getTransaction();
+                TransactionExtend tx = receipt.getTransaction();
                 if (matchesContractAddress(tx.getDestinationAddress().toBytes())) {
                     if (matchBloom(receipt.getBloomFilter())) {
                         int logIndex = 0;
@@ -81,10 +81,10 @@ public final class FltrLg extends Fltr {
     // impl.
     // rationale: this way, we only retrieve logs from DB for transactions that the bloom
     // filter gives a positive match for;
-    public boolean onBlock(IAionBlock blk, IAionBlockchain chain) {
+    public boolean onBlock(AionBlock blk, IAionBlockchain chain) {
         if (matchBloom(new Bloom(blk.getLogBloom()))) {
             int txIndex = 0;
-            for (ITransaction txn : blk.getTransactionsList()) {
+            for (TransactionExtend txn : blk.getTransactionsList()) {
                 if (matchesContractAddress(txn.getDestinationAddress().toBytes())) {
                     // now that we know that our filter might match with some logs in this
                     // transaction, go ahead

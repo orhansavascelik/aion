@@ -1,14 +1,14 @@
 package org.aion.api.server.rpc;
 
-import static org.aion.type.api.util.TypeConverter.StringHexToBigInteger;
+import static org.aion.util.string.StringUtils.StringHexToBigInteger;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.AionAddress;
 import org.aion.mcf.account.AccountManager;
 import org.aion.mcf.account.Keystore;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.blockchain.AionImpl;
 import org.aion.zero.impl.blockchain.AionPendingStateImpl;
 import org.json.JSONArray;

@@ -9,9 +9,10 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.crypto.ed25519.Ed25519Signature;
@@ -22,7 +23,6 @@ import org.aion.mcf.vm.types.DoubleDataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.type.StatefulPrecompiledContract;
-import org.aion.vm.api.interfaces.Address;
 import org.apache.commons.collections4.map.LRUMap;
 
 /**
@@ -74,7 +74,7 @@ public class AionNameServiceContract extends StatefulPrecompiledContract {
 
     /** Construct a new ANS Contract */
     public AionNameServiceContract(
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
             Address address,
             Address ownerAddress) { // byte
         super(track);
@@ -303,7 +303,7 @@ public class AionNameServiceContract extends StatefulPrecompiledContract {
      *
      * <p>processes on hashes, domain name, and addresses, converting, concatenating, partitioning
      *
-     * <p>data types: byte[], Address, Dataword, String
+     * <p>data type: byte[], Address, Dataword, String
      */
     private void setUpKeys() {
         byte[] resolverHash1 = blake128(RESOLVER_HASH.getBytes());
@@ -346,9 +346,9 @@ public class AionNameServiceContract extends StatefulPrecompiledContract {
         System.arraycopy(byteKey, 0, key1, 0, 16);
         System.arraycopy(byteKey, 16, key2, 0, 16);
 
-        ByteArrayWrapper data1 =
+        Wrapper data1 =
                 this.track.getStorageValue(this.address, new DataWord(key1).toWrapper());
-        ByteArrayWrapper data2 =
+        Wrapper data2 =
                 this.track.getStorageValue(this.address, new DataWord(key2).toWrapper());
 
         byte[] addr1 = data1.getData();
@@ -441,11 +441,11 @@ public class AionNameServiceContract extends StatefulPrecompiledContract {
     }
 
     private boolean isAvailableDomain(Address domainAddress, Address ownerAddress) {
-        ByteArrayWrapper addrFirstPart =
+        Wrapper addrFirstPart =
                 this.track.getStorageValue(
                         activeDomainsAddress,
                         new DataWord(blake128(domainAddress.toBytes())).toWrapper());
-        ByteArrayWrapper addrSecondPart =
+        Wrapper addrSecondPart =
                 this.track.getStorageValue(
                         activeDomainsAddress,
                         new DataWord(blake128(blake128(domainAddress.toBytes()))).toWrapper());
@@ -514,11 +514,11 @@ public class AionNameServiceContract extends StatefulPrecompiledContract {
 
     private String getDomainNameFromAddress(Address domainAddress) {
         String rawDomainName = "";
-        ByteArrayWrapper nameFirstPartData =
+        Wrapper nameFirstPartData =
                 this.track.getStorageValue(
                         domainAddressNamePair,
                         new DataWord(blake128(domainAddress.toBytes())).toWrapper());
-        ByteArrayWrapper nameSecondPartData =
+        Wrapper nameSecondPartData =
                 this.track.getStorageValue(
                         domainAddressNamePair,
                         new DataWord(blake128(blake128(domainAddress.toBytes()))).toWrapper());
@@ -537,7 +537,7 @@ public class AionNameServiceContract extends StatefulPrecompiledContract {
 
     /** Query Functions */
     private List<ActiveDomainsData> getAllActiveDomains() {
-        ByteArrayWrapper numberOfDomainsTotalData =
+        Wrapper numberOfDomainsTotalData =
                 this.track.getStorageValue(
                         allAddresses,
                         new DataWord(blake128(ALL_ADDR_COUNTER_KEY.getBytes())).toWrapper());

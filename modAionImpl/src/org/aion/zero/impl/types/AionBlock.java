@@ -4,25 +4,26 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.trie.Trie;
 import org.aion.mcf.trie.TrieImpl;
-import org.aion.mcf.types.AbstractBlock;
+import org.aion.mcf.type.AbstractBlock;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPList;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.zero.exceptions.HeaderStructureException;
 import org.aion.zero.types.A0BlockHeader;
 import org.aion.zero.types.AionTransaction;
-import org.aion.zero.types.IAionBlock;
 import org.slf4j.Logger;
 
 /** */
-public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> implements IAionBlock {
+public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> implements
+    org.aion.zero.types.AionBlock {
 
     private static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.CONS.toString());
 
@@ -40,8 +41,8 @@ public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> imp
     // copy constructor
     public AionBlock(AionBlock block) {
         this.header = new A0BlockHeader(block.getHeader());
-        for (AionTransaction tx : block.getTransactionsList()) {
-            this.transactionsList.add(tx.clone());
+        for (TransactionExtend tx : block.getTransactionsList()) {
+            this.transactionsList.add((AionTransaction) tx.clone());
         }
         this.parsed = true;
     }
@@ -328,7 +329,7 @@ public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> imp
 
         if (!getTransactionsList().isEmpty()) {
             toStringBuff.append("Txs [\n");
-            for (AionTransaction tx : getTransactionsList()) {
+            for (TransactionExtend tx : getTransactionsList()) {
                 toStringBuff.append(tx);
                 toStringBuff.append("\n");
             }
@@ -350,7 +351,7 @@ public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> imp
         toStringBuff.append("hash=").append(ByteUtil.toHexString(this.getHash()));
         toStringBuff.append(header.toFlatString());
 
-        for (AionTransaction tx : getTransactionsList()) {
+        for (TransactionExtend tx : getTransactionsList()) {
             toStringBuff.append("\n");
             toStringBuff.append(tx.toString());
         }

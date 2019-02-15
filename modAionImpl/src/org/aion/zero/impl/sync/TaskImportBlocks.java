@@ -23,9 +23,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
 import org.aion.mcf.core.ImportResult;
 import org.aion.p2p.P2pConstant;
+import org.aion.type.api.interfaces.common.Wrapper;
 import org.aion.zero.impl.AionBlockchainImpl;
 import org.aion.zero.impl.db.AionBlockStore;
 import org.aion.zero.impl.sync.PeerState.Mode;
@@ -49,7 +50,7 @@ final class TaskImportBlocks implements Runnable {
 
     private final SyncStats stats;
 
-    private final Map<ByteArrayWrapper, Object> importedBlockHashes;
+    private final Map<Wrapper, Object> importedBlockHashes;
 
     private final Map<Integer, PeerState> peerStates;
 
@@ -68,7 +69,7 @@ final class TaskImportBlocks implements Runnable {
             final AtomicBoolean _start,
             final SyncStats _stats,
             final BlockingQueue<BlocksWrapper> _downloadedBlocks,
-            final Map<ByteArrayWrapper, Object> _importedBlockHashes,
+            final Map<Wrapper, Object> _importedBlockHashes,
             final Map<Integer, PeerState> _peerStates,
             final Logger _log,
             final int _slowImportTime,
@@ -159,7 +160,7 @@ final class TaskImportBlocks implements Runnable {
     static List<AionBlock> filterBatch(
             List<AionBlock> blocks,
             AionBlockchainImpl chain,
-            Map<ByteArrayWrapper, Object> imported) {
+            Map<Wrapper, Object> imported) {
         if (chain.hasPruneRestriction()) {
             // filter out restricted blocks if prune restrictions enabled
             return blocks.stream()
@@ -174,7 +175,7 @@ final class TaskImportBlocks implements Runnable {
         }
     }
 
-    private static boolean isNotImported(AionBlock b, Map<ByteArrayWrapper, Object> imported) {
+    private static boolean isNotImported(AionBlock b, Map<Wrapper, Object> imported) {
         return imported.get(ByteArrayWrapper.wrap(b.getHash())) == null;
     }
 
@@ -631,7 +632,7 @@ final class TaskImportBlocks implements Runnable {
 
         while (level <= last) {
             // get blocks stored for level
-            Map<ByteArrayWrapper, List<AionBlock>> levelFromDisk =
+            Map<Wrapper, List<AionBlock>> levelFromDisk =
                     chain.loadPendingBlocksAtLevel(level);
 
             if (levelFromDisk.isEmpty()) {
@@ -640,9 +641,9 @@ final class TaskImportBlocks implements Runnable {
                 continue;
             }
 
-            List<ByteArrayWrapper> importedQueues = new ArrayList<>(levelFromDisk.keySet());
+            List<Wrapper> importedQueues = new ArrayList<>(levelFromDisk.keySet());
 
-            for (Map.Entry<ByteArrayWrapper, List<AionBlock>> entry : levelFromDisk.entrySet()) {
+            for (Map.Entry<Wrapper, List<AionBlock>> entry : levelFromDisk.entrySet()) {
                 // initialize batch counter
                 batch = 0;
 

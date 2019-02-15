@@ -2,8 +2,18 @@ ext.moduleName = 'aion.precompiled'
 test.dependsOn copyNativeLibsForModuleTests
 clean.dependsOn deleteNativeLibs
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 dependencies {
-    compile project(':type_api')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    
     compile project(':modMcf')
     compile project(':modCrypto')
     compile project(':modAion')
@@ -15,11 +25,12 @@ dependencies {
 
     testCompile project(':modMcf')
     testCompile project(':modEvtMgr')
-    testCompile project(':modRlp')
     testCompile project(':modPrecompiled')
     testCompile project(':modAionImpl')
     testCompile project(':modLogger')
     testCompile project(':modDbImpl')
+    
+    testCompile 'network.aion:rlp4j:0.3.3'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-all:1.3'
     testCompile group: 'com.googlecode.java-diff-utils', name: 'diffutils', version: '1.2'

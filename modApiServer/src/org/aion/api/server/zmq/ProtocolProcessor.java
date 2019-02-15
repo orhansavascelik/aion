@@ -22,8 +22,8 @@ import org.aion.api.server.pb.Message;
 import org.aion.api.server.types.EvtContract;
 import org.aion.api.server.types.Fltr;
 import org.aion.api.server.types.TxPendingStatus;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.config.CfgApiZmq;
@@ -155,7 +155,7 @@ public class ProtocolProcessor implements Runnable {
     }
 
     private void loadCurveKeyPair() {
-        List<File> files = org.aion.type.api.io.File.getFiles(PATH);
+        List<File> files = org.aion.util.file.File.getFiles(PATH);
         String nextLoad = "";
         for (File f : files) {
             if (f.getName().contains("zmqCurvePubkey")) {

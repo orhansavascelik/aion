@@ -2,7 +2,7 @@ package org.aion.precompiled.contracts.ATB;
 
 import java.math.BigInteger;
 import javax.annotation.Nonnull;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.util.bytes.ByteUtil;
 
 public class BridgeDeserializer {
 
@@ -13,7 +13,7 @@ public class BridgeDeserializer {
     private static final int ADDR_SIZE = 32;
 
     /**
-     * Size of a "meta" element for defining lists. There are two types, the first is an offset
+     * Size of a "meta" element for defining lists. There are two type, the first is an offset
      * pointer than points to the location of the list.
      *
      * <p>The second is a length, that depicts the length of the list. In compliance with Solidity

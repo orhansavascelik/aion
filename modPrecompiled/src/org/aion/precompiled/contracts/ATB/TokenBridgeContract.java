@@ -11,15 +11,15 @@ import static org.aion.precompiled.contracts.ATB.BridgeUtilities.orDefaultDword;
 
 import java.math.BigInteger;
 import javax.annotation.Nonnull;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.type.StatefulPrecompiledContract;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.TransactionContext;
 import org.aion.zero.types.AionInternalTx;
 
@@ -30,7 +30,7 @@ public class TokenBridgeContract extends StatefulPrecompiledContract implements 
     // queries
 
     private final TransactionContext context;
-    private final IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track;
+    private final RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track;
 
     private final BridgeStorageConnector connector;
     private final BridgeController controller;
@@ -41,7 +41,7 @@ public class TokenBridgeContract extends StatefulPrecompiledContract implements 
 
     public TokenBridgeContract(
             @Nonnull final TransactionContext context,
-            @Nonnull final IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
+            @Nonnull final RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
             @Nonnull final Address ownerAddress,
             @Nonnull final Address contractAddress) {
         super(track);

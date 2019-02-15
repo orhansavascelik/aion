@@ -5,7 +5,8 @@ import static org.aion.precompiled.contracts.ATB.BridgeUtilities.toSignature;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nonnull;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
 
 enum BridgeFuncSig {
     SIG_CHANGE_OWNER("changeOwner(address)"),
@@ -25,7 +26,7 @@ enum BridgeFuncSig {
     PURE_MEMBER_COUNT("memberCount()"),
     PURE_RELAYER("relayer()");
 
-    private static Map<ByteArrayWrapper, BridgeFuncSig> enumSet = new HashMap<>();
+    private static Map<Wrapper, BridgeFuncSig> enumSet = new HashMap<>();
 
     static {
         for (BridgeFuncSig v : BridgeFuncSig.values()) {
@@ -33,7 +34,7 @@ enum BridgeFuncSig {
         }
     }
 
-    private ByteArrayWrapper sigWrapper;
+    private Wrapper sigWrapper;
     private String signature;
 
     BridgeFuncSig(@Nonnull final String signature) {

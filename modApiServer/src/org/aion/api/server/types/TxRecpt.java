@@ -1,15 +1,15 @@
 package org.aion.api.server.types;
 
-import static org.aion.type.api.util.TypeConverter.toJsonHex;
+import static org.aion.util.string.StringUtils.toJsonHex;
 
-import org.aion.type.api.type.IBlock;
-import org.aion.type.api.type.IBlockHeader;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.TypeConverter;
+import org.aion.type.api.interfaces.block.Block;
+import org.aion.type.api.interfaces.block.BlockHeader;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.mcf.core.AbstractTxInfo;
-import org.aion.mcf.types.AbstractTransaction;
-import org.aion.mcf.types.AbstractTxReceipt;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.mcf.type.AbstractTransaction;
+import org.aion.mcf.type.AbstractTxReceipt;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.util.string.StringUtils;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
@@ -70,10 +70,10 @@ public final class TxRecpt {
 
     public <
                     TX extends AbstractTransaction,
-                    BH extends IBlockHeader,
+                    BH extends BlockHeader,
                     TXR extends AbstractTxReceipt<TX>>
             TxRecpt(
-                    IBlock<TX, BH> block,
+                    Block<TX, BH> block,
                     AbstractTxInfo<TXR, TX> txInfo,
                     long cumulativeNrgUsed,
                     boolean isMainchain) {
@@ -118,7 +118,7 @@ public final class TxRecpt {
         this.to = this.toAddr == null ? null : toJsonHex(this.toAddr.toBytes());
 
         this.txTimeStamp = ByteUtil.byteArrayToLong(receipt.getTransaction().getTimeStamp());
-        this.txValue = TypeConverter.toJsonHex(txInfo.getReceipt().getTransaction().getValue());
+        this.txValue = StringUtils.toJsonHex(txInfo.getReceipt().getTransaction().getValue());
         this.txNonce = ByteUtil.byteArrayToLong(txInfo.getReceipt().getTransaction().getNonce());
         byte[] _txData = txInfo.getReceipt().getTransaction().getData();
         this.txData = _txData == null ? "" : toJsonHex(_txData);

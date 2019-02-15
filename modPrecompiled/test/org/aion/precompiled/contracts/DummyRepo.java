@@ -6,18 +6,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 
-public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> {
+public class DummyRepo implements RepositoryCache<AccountState, IBlockStoreBase<?, ?>> {
     private Map<Address, AccountState> accounts = new HashMap<>();
     private Map<Address, byte[]> contracts = new HashMap<>();
     private Map<Address, Map<String, byte[]>> storage = new HashMap<>();
@@ -25,7 +25,7 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     // Made this alterable for testing since this default value is not always what real
     // implementations
     // do ... and don't want to break tests that rely on this value.
-    public ByteArrayWrapper storageErrorReturn = DoubleDataWord.ZERO.toWrapper();
+    public Wrapper storageErrorReturn = DoubleDataWord.ZERO.toWrapper();
 
     public DummyRepo() {}
 
@@ -85,7 +85,7 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     }
 
     @Override
-    public IContractDetails getContractDetails(Address addr) {
+    public ContractDetails getContractDetails(Address addr) {
         throw new UnsupportedOperationException();
     }
 
@@ -106,25 +106,25 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     }
 
     @Override
-    public Map<ByteArrayWrapper, ByteArrayWrapper> getStorage(
-            Address address, Collection<ByteArrayWrapper> keys) {
+    public Map<Wrapper, Wrapper> getStorage(
+            Address address, Collection<Wrapper> keys) {
         throw new RuntimeException("Not supported");
     }
 
     @Override
-    public void addStorageRow(Address addr, ByteArrayWrapper key, ByteArrayWrapper value) {
+    public void addStorageRow(Address addr, Wrapper key, Wrapper value) {
         Map<String, byte[]> map = storage.computeIfAbsent(addr, k -> new HashMap<>());
         map.put(key.toString(), value.getData());
     }
 
     @Override
-    public void removeStorageRow(Address addr, ByteArrayWrapper key) {
+    public void removeStorageRow(Address addr, Wrapper key) {
         Map<String, byte[]> map = storage.computeIfAbsent(addr, k -> new HashMap<>());
         map.put(key.toString(), null);
     }
 
     @Override
-    public ByteArrayWrapper getStorageValue(Address addr, ByteArrayWrapper key) {
+    public Wrapper getStorageValue(Address addr, Wrapper key) {
         Map<String, byte[]> map = storage.get(addr);
         if (map != null && map.containsKey(key.toString())) {
             byte[] res = map.get(key.toString());
@@ -161,7 +161,7 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     }
 
     @Override
-    public IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> startTracking() {
+    public RepositoryCache<AccountState, IBlockStoreBase<?, ?>> startTracking() {
         return new DummyRepo(this);
     }
 
@@ -169,7 +169,7 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     public void flush() {}
 
     @Override
-    public void flushTo(IRepository repo, boolean clearStateAfterFlush) {}
+    public void flushTo(Repository repo, boolean clearStateAfterFlush) {}
 
     @Override
     public void rollback() {}
@@ -193,7 +193,7 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     @Override
     public void updateBatch(
             Map<Address, AccountState> accountStates,
-            Map<Address, IContractDetails> contractDetailes) {
+            Map<Address, ContractDetails> contractDetailes) {
         throw new UnsupportedOperationException();
     }
 
@@ -206,12 +206,12 @@ public class DummyRepo implements IRepositoryCache<AccountState, IBlockStoreBase
     public void loadAccountState(
             Address addr,
             Map<Address, AccountState> cacheAccounts,
-            Map<Address, IContractDetails> cacheDetails) {
+            Map<Address, ContractDetails> cacheDetails) {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public IRepository<AccountState, IBlockStoreBase<?, ?>> getSnapshotTo(byte[] root) {
+    public Repository<AccountState, IBlockStoreBase<?, ?>> getSnapshotTo(byte[] root) {
         throw new UnsupportedOperationException();
     }
 

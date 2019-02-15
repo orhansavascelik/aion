@@ -7,7 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.util.Properties;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
 import org.junit.Before;
@@ -15,7 +15,7 @@ import org.junit.Test;
 
 public class MockDBDriverTest {
 
-    private static IByteArrayKeyValueDatabase db;
+    private static ByteArrayKeyValueDatabase db;
     private static DBVendor vendor;
     private static MockDBDriver driver;
     private static Properties props;

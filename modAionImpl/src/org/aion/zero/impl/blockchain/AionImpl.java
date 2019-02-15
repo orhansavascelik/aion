@@ -4,11 +4,6 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
 import org.aion.crypto.ECKeyFac;
 import org.aion.equihash.EquihashMiner;
 import org.aion.log.AionLoggerFactory;
@@ -18,18 +13,23 @@ import org.aion.mcf.blockchain.IPowChain;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.ImportResult;
 import org.aion.mcf.mine.IMineRunner;
+import org.aion.type.AionAddress;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.vm.api.interfaces.Address;
 import org.aion.zero.impl.AionHub;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.tx.TxCollector;
-import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.A0BlockHeader;
+import org.aion.zero.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
-import org.aion.zero.types.IAionBlock;
 import org.slf4j.Logger;
 
 public class AionImpl implements IAionChain {
@@ -68,11 +68,11 @@ public class AionImpl implements IAionChain {
     }
 
     @Override
-    public IPowChain<AionBlock, A0BlockHeader> getBlockchain() {
+    public IPowChain<org.aion.zero.impl.types.AionBlock, A0BlockHeader> getBlockchain() {
         return aionHub.getBlockchain();
     }
 
-    public synchronized ImportResult addNewMinedBlock(AionBlock block) {
+    public synchronized ImportResult addNewMinedBlock(org.aion.zero.impl.types.AionBlock block) {
         ImportResult importResult = this.aionHub.getBlockchain().tryToConnect(block);
 
         if (importResult == ImportResult.IMPORTED_BEST) {
@@ -113,29 +113,29 @@ public class AionImpl implements IAionChain {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void broadcastTransaction(AionTransaction transaction) {
+    public void broadcastTransaction(TransactionExtend transaction) {
         transaction.getEncoded();
         collector.submitTx(transaction);
     }
 
-    public void broadcastTransactions(List<AionTransaction> transaction) {
-        for (AionTransaction tx : transaction) {
-            tx.getEncoded();
+    public void broadcastTransactions(List<TransactionExtend> transaction) {
+        for (TransactionExtend tx : transaction) {
+            ((AionTransaction)tx).getEncoded();
         }
         collector.submitTx(transaction);
     }
 
-    public long estimateTxNrg(AionTransaction tx, IAionBlock block) {
+    public long estimateTxNrg(TransactionExtend tx, AionBlock block) {
 
-        if (tx.getSignature() == null) {
-            tx.sign(ECKeyFac.inst().fromPrivate(new byte[64]));
+        if (((AionTransaction)tx).getSignature() == null) {
+            ((AionTransaction)tx).sign(ECKeyFac.inst().fromPrivate(new byte[64]));
         }
 
-        IRepositoryCache repository =
+        RepositoryCache repository =
                 aionHub.getRepository().getSnapshotTo(block.getStateRoot()).startTracking();
 
         try {
-            ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(tx));
+            ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(((AionTransaction)tx)));
             BulkExecutor executor =
                     new BulkExecutor(
                             details,
@@ -153,16 +153,16 @@ public class AionImpl implements IAionChain {
 
     /** TODO: pretty sure we can just use a static key, verify and implement */
     @Override
-    public AionTxReceipt callConstant(AionTransaction tx, IAionBlock block) {
-        if (tx.getSignature() == null) {
-            tx.sign(ECKeyFac.inst().fromPrivate(new byte[64]));
+    public AionTxReceipt callConstant(TransactionExtend tx, AionBlock block) {
+        if (((AionTransaction)tx).getSignature() == null) {
+            ((AionTransaction)tx).sign(ECKeyFac.inst().fromPrivate(new byte[64]));
         }
 
-        IRepositoryCache repository =
+        RepositoryCache repository =
                 aionHub.getRepository().getSnapshotTo(block.getStateRoot()).startTracking();
 
         try {
-            ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(tx));
+            ExecutionBatch details = new ExecutionBatch(block, Collections.singletonList(((AionTransaction)tx)));
             BulkExecutor executor =
                     new BulkExecutor(
                             details,
@@ -189,31 +189,31 @@ public class AionImpl implements IAionChain {
     }
 
     @Override
-    public IRepository getRepository() {
+    public Repository getRepository() {
         return aionHub.getRepository();
     }
 
     @Override
-    public IRepository<?, ?> getPendingState() {
+    public Repository<?, ?> getPendingState() {
         return aionHub.getPendingState().getRepository();
     }
 
     @Override
-    public IRepository<?, ?> getSnapshotTo(byte[] root) {
-        IRepository<?, ?> repository = aionHub.getRepository();
-        IRepository<?, ?> snapshot = repository.getSnapshotTo(root);
+    public Repository<?, ?> getSnapshotTo(byte[] root) {
+        Repository<?, ?> repository = aionHub.getRepository();
+        Repository<?, ?> snapshot = repository.getSnapshotTo(root);
 
         return snapshot;
     }
 
     @Override
-    public List<AionTransaction> getWireTransactions() {
-        return aionHub.getPendingState().getPendingTransactions();
+    public List<TransactionExtend> getWireTransactions() {
+        return (List<TransactionExtend>)(List<?>)aionHub.getPendingState().getPendingTransactions();
     }
 
     @Override
-    public List<AionTransaction> getPendingStateTransactions() {
-        return aionHub.getPendingState().getPendingTransactions();
+    public List<TransactionExtend> getPendingStateTransactions() {
+        return (List<TransactionExtend>)(List<?>)aionHub.getPendingState().getPendingTransactions();
     }
 
     @Override

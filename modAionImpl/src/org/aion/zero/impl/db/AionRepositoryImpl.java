@@ -1,6 +1,6 @@
 package org.aion.zero.impl.db;
 
-import static org.aion.type.api.util.ByteUtil.EMPTY_BYTE_ARRAY;
+import static org.aion.util.bytes.ByteUtil.EMPTY_BYTE_ARRAY;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.zero.impl.AionHub.INIT_ERROR_EXIT_CODE;
 
@@ -13,20 +13,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.db.IRepositoryConfig;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.util.conversions.Hex;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepository;
 import org.aion.mcf.db.ContractDetailsCacheImpl;
 import org.aion.mcf.db.TransactionStore;
 import org.aion.mcf.trie.SecureTrie;
 import org.aion.mcf.trie.Trie;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.types.AionBlock;
@@ -52,7 +52,7 @@ public class AionRepositoryImpl
      */
     protected AionRepositoryImpl() {}
 
-    protected AionRepositoryImpl(IRepositoryConfig repoConfig) {
+    protected AionRepositoryImpl(RepositoryConfig repoConfig) {
         this.cfg = repoConfig;
         init();
     }
@@ -64,7 +64,7 @@ public class AionRepositoryImpl
         // repository singleton instance
         private static final AionRepositoryImpl inst =
                 new AionRepositoryImpl(
-                        new RepositoryConfig(
+                        new org.aion.zero.impl.db.RepositoryConfig(
                                 config.getDatabasePath(),
                                 ContractDetailsAion.getInstance(),
                                 config.getDb()));
@@ -74,7 +74,7 @@ public class AionRepositoryImpl
         return AionRepositoryImplHolder.inst;
     }
 
-    public static AionRepositoryImpl createForTesting(IRepositoryConfig repoConfig) {
+    public static AionRepositoryImpl createForTesting(RepositoryConfig repoConfig) {
         return new AionRepositoryImpl(repoConfig);
     }
 
@@ -117,14 +117,14 @@ public class AionRepositoryImpl
 
     @Override
     public void updateBatch(
-            Map<Address, AccountState> stateCache, Map<Address, IContractDetails> detailsCache) {
+            Map<Address, AccountState> stateCache, Map<Address, ContractDetails> detailsCache) {
         rwLock.writeLock().lock();
 
         try {
             for (Map.Entry<Address, AccountState> entry : stateCache.entrySet()) {
                 Address address = entry.getKey();
                 AccountState accountState = entry.getValue();
-                IContractDetails contractDetails = detailsCache.get(address);
+                ContractDetails contractDetails = detailsCache.get(address);
 
                 if (accountState.isDeleted()) {
                     // TODO-A: batch operations here
@@ -207,7 +207,7 @@ public class AionRepositoryImpl
 
     /** @implNote The method calling this method must handle the locking. */
     private void updateContractDetails(
-            final Address address, final IContractDetails contractDetails) {
+            final Address address, final ContractDetails contractDetails) {
         // locked by calling method
         detailsDS.update(address, contractDetails);
     }
@@ -237,7 +237,7 @@ public class AionRepositoryImpl
             }
 
             if (databaseGroup != null) {
-                for (IByteArrayKeyValueDatabase db : databaseGroup) {
+                for (ByteArrayKeyValueDatabase db : databaseGroup) {
                     if (!db.isAutoCommitEnabled()) {
                         db.commit();
                     }
@@ -292,7 +292,7 @@ public class AionRepositoryImpl
     }
 
     @Override
-    public IRepositoryCache startTracking() {
+    public RepositoryCache startTracking() {
         return new AionRepositoryCache(this);
     }
 
@@ -312,8 +312,8 @@ public class AionRepositoryImpl
     }
 
     @Override
-    public ByteArrayWrapper getStorageValue(Address address, ByteArrayWrapper key) {
-        IContractDetails details = getContractDetails(address);
+    public Wrapper getStorageValue(Address address, Wrapper key) {
+        ContractDetails details = getContractDetails(address);
         return (details == null) ? null : details.get(key);
     }
 
@@ -358,9 +358,9 @@ public class AionRepositoryImpl
     }
 
     @Override
-    public Map<ByteArrayWrapper, ByteArrayWrapper> getStorage(
-            Address address, Collection<ByteArrayWrapper> keys) {
-        IContractDetails details = getContractDetails(address);
+    public Map<Wrapper, Wrapper> getStorage(
+            Address address, Collection<Wrapper> keys) {
+        ContractDetails details = getContractDetails(address);
         return (details == null) ? Collections.emptyMap() : details.getStorage(keys);
     }
 
@@ -374,7 +374,7 @@ public class AionRepositoryImpl
 
         byte[] codeHash = accountState.getCodeHash();
 
-        IContractDetails details = getContractDetails(address);
+        ContractDetails details = getContractDetails(address);
         return (details == null) ? EMPTY_BYTE_ARRAY : details.getCode(codeHash);
     }
 
@@ -393,16 +393,16 @@ public class AionRepositoryImpl
     /**
      * @inheritDoc
      * @implNote Any other method calling this can rely on the fact that the contract details
-     *     returned is a newly created object by {@link IContractDetails#getSnapshotTo(byte[])}.
+     *     returned is a newly created object by {@link ContractDetails#getSnapshotTo(byte[])}.
      *     Since this querying method it locked, the methods calling it <b>may not need to be locked
      *     or synchronized</b>, depending on the specific use case.
      */
     @Override
-    public IContractDetails getContractDetails(Address address) {
+    public ContractDetails getContractDetails(Address address) {
         rwLock.readLock().lock();
 
         try {
-            IContractDetails details;
+            ContractDetails details;
 
             // That part is important cause if we have
             // to sync details storage according the trie root
@@ -477,10 +477,10 @@ public class AionRepositoryImpl
     public void loadAccountState(
             Address address,
             Map<Address, AccountState> cacheAccounts,
-            Map<Address, IContractDetails> cacheDetails) {
+            Map<Address, ContractDetails> cacheDetails) {
 
         AccountState account = getAccountState(address);
-        IContractDetails details = getContractDetails(address);
+        ContractDetails details = getContractDetails(address);
 
         account = (account == null) ? new AccountState() : new AccountState(account);
         details = new ContractDetailsCacheImpl(details);
@@ -566,7 +566,7 @@ public class AionRepositoryImpl
     }
 
     @Override
-    public IRepository getSnapshotTo(byte[] root) {
+    public Repository getSnapshotTo(byte[] root) {
         rwLock.readLock().lock();
 
         try {
@@ -673,7 +673,7 @@ public class AionRepositoryImpl
             try {
                 if (transactionDatabase != null) {
                     transactionDatabase.close();
-                    LOGGEN.info("Transaction database closed.");
+                    LOGGEN.info("TransactionExtend database closed.");
                     transactionDatabase = null;
                 }
             } catch (Exception e) {
@@ -734,11 +734,11 @@ public class AionRepositoryImpl
      *
      * @return
      */
-    public IByteArrayKeyValueDatabase getStateDatabase() {
+    public ByteArrayKeyValueDatabase getStateDatabase() {
         return this.stateDatabase;
     }
 
-    public IByteArrayKeyValueDatabase getStateArchiveDatabase() {
+    public ByteArrayKeyValueDatabase getStateArchiveDatabase() {
         return this.stateArchiveDatabase;
     }
 
@@ -751,17 +751,17 @@ public class AionRepositoryImpl
      *
      * @return
      */
-    public IByteArrayKeyValueDatabase getDetailsDatabase() {
+    public ByteArrayKeyValueDatabase getDetailsDatabase() {
         return this.detailsDatabase;
     }
 
     /** For testing. */
-    public IByteArrayKeyValueDatabase getBlockDatabase() {
+    public ByteArrayKeyValueDatabase getBlockDatabase() {
         return this.blockDatabase;
     }
 
     /** For testing. */
-    public IByteArrayKeyValueDatabase getIndexDatabase() {
+    public ByteArrayKeyValueDatabase getIndexDatabase() {
         return this.indexDatabase;
     }
 
@@ -777,13 +777,13 @@ public class AionRepositoryImpl
     }
 
     /**
-     * Calls {@link IByteArrayKeyValueDatabase#drop()} on all the current databases except for the
+     * Calls {@link ByteArrayKeyValueDatabase#drop()} on all the current databases except for the
      * ones given in the list by name.
      *
      * @param names the names of the databases that should not be dropped
      */
     public void dropDatabasesExcept(List<String> names) {
-        for (IByteArrayKeyValueDatabase db : databaseGroup) {
+        for (ByteArrayKeyValueDatabase db : databaseGroup) {
             if (!names.contains(db.getName().get())) {
                 LOG.warn("Dropping database " + db.toString() + " ...");
                 db.drop();
@@ -797,7 +797,7 @@ public class AionRepositoryImpl
         rwLock.writeLock().lock();
         try {
             if (databaseGroup != null) {
-                for (IByteArrayKeyValueDatabase db : databaseGroup) {
+                for (ByteArrayKeyValueDatabase db : databaseGroup) {
                     db.compact();
                 }
             } else {

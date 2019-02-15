@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Map;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
 import org.aion.db.impl.AbstractDB;
 import org.fusesource.leveldbjni.JniDBFactory;
 import org.iq80.leveldb.CompressionType;
@@ -86,7 +86,7 @@ public class LevelDB extends AbstractDB {
         return options;
     }
 
-    // IDatabase functionality
+    // Database functionality
     // -----------------------------------------------------------------------------------------
 
     @Override
@@ -236,7 +236,7 @@ public class LevelDB extends AbstractDB {
         return count;
     }
 
-    // IKeyValueStore functionality
+    // KeyValueStore functionality
     // ------------------------------------------------------------------------------------
 
     @Override
@@ -421,7 +421,7 @@ public class LevelDB extends AbstractDB {
     // AbstractDB functionality
     // ----------------------------------------------------------------------------------------
 
-    public boolean commitCache(Map<ByteArrayWrapper, byte[]> cache) {
+    public boolean commitCache(Map<Wrapper, byte[]> cache) {
         boolean success = false;
 
         check();
@@ -429,7 +429,7 @@ public class LevelDB extends AbstractDB {
         // try-with-resources will automatically close the batch object
         try (WriteBatch batch = db.createWriteBatch()) {
             // add put and delete operations to batch
-            for (Map.Entry<ByteArrayWrapper, byte[]> e : cache.entrySet()) {
+            for (Map.Entry<Wrapper, byte[]> e : cache.entrySet()) {
                 if (e.getValue() == null) {
                     batch.delete(e.getKey().getData());
                 } else {

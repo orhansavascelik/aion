@@ -6,7 +6,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collection;
-import org.aion.mcf.types.AbstractBlockHeader;
+import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.zero.api.BlockConstants;
 import org.junit.Before;
 import org.junit.Test;

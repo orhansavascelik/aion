@@ -2,7 +2,7 @@ package org.aion.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.aion.type.api.util.NativeLoader;
+import org.aion.util.file.NativeLoader;
 
 public enum NativeLibrary {
     COMMON("common"),

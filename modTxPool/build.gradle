@@ -1,6 +1,15 @@
 ext.moduleName = 'aion.txpool'
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 dependencies {
-    compile project(':type_api')
-//    runtime project(':modTxPoolImpl')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+
 }

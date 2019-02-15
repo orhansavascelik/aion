@@ -3,10 +3,10 @@ package org.aion.vm;
 import java.util.ArrayList;
 import java.util.List;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.ITxExecSummary;
-import org.aion.type.api.vm.VirtualMachineSpecs;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.api.interfaces.tx.TxExecSummary;
+import org.aion.type.api.interfaces.vm.VirtualMachineSpecs;
 import org.aion.fastvm.FastVirtualMachine;
 import org.aion.fastvm.FastVmResultCode;
 import org.aion.fastvm.SideEffects;
@@ -16,7 +16,7 @@ import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.KernelInterfaceForFastVM;
 import org.aion.mcf.vm.types.Log;
 import org.aion.vm.VmFactoryImplementation.VM;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.vm.api.interfaces.KernelInterface;
 import org.aion.vm.api.interfaces.ResultCode;
@@ -55,8 +55,8 @@ import org.slf4j.Logger;
 public class BulkExecutor {
     private static final Object LOCK = new Object();
 
-    private IRepository repository;
-    private IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild;
+    private Repository repository;
+    private RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild;
     private PostExecutionWork postExecutionWork;
     private ExecutionBatch executionBatch;
     private Logger logger;
@@ -84,8 +84,8 @@ public class BulkExecutor {
      */
     public BulkExecutor(
             ExecutionBatch executionBatch,
-            IRepository repository,
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild,
+            Repository repository,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild,
             boolean isLocalCall,
             boolean allowNonceIncrement,
             long blockRemainingEnergy,
@@ -119,7 +119,7 @@ public class BulkExecutor {
      */
     public BulkExecutor(
             ExecutionBatch executionBatch,
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repositoryChild,
             boolean isLocalCall,
             boolean allowNonceIncrement,
             long blockRemainingEnergy,
@@ -320,14 +320,14 @@ public class BulkExecutor {
     }
 
     private void updateRepository(
-            ITxExecSummary summary,
+            TxExecSummary summary,
             AionTransaction tx,
             Address coinbase,
             List<Address> deleteAccounts,
             TransactionResult result) {
 
         if (!isLocalCall && !summary.isRejected()) {
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track =
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track =
                     this.repositoryChild.startTracking();
 
             // Refund energy if transaction was successfully or reverted.
@@ -352,8 +352,8 @@ public class BulkExecutor {
         }
 
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("Transaction receipt: {}", summary.getReceipt());
-            this.logger.debug("Transaction logs: {}", summary.getLogs());
+            this.logger.debug("TransactionExtend receipt: {}", summary.getReceipt());
+            this.logger.debug("TransactionExtend logs: {}", summary.getLogs());
         }
     }
 

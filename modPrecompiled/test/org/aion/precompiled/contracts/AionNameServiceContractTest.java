@@ -10,8 +10,8 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.crypto.HashUtil;
@@ -24,7 +24,7 @@ import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
@@ -85,7 +85,7 @@ public class AionNameServiceContractTest {
     private Address newAddress8 =
             AionAddress.wrap("0000000100000000000000000000000000000000000000000000000010000000");
 
-    private IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo;
+    private RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repo;
     private ECKey defaultKey;
     private ECKey defaultKey2;
     private ECKey k;

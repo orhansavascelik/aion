@@ -1,5 +1,14 @@
 ext.moduleName = 'aion.db.impl'
 
+
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 configurations { 
     testClassesOut
 }
@@ -14,8 +23,11 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':type_api')
-    compile project(':modLogger')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:log4j:0.3.3'
+
     compile 'com.google.guava:guava:25.1-jre'
     compile 'org.slf4j:slf4j-api:1.7.25'
     compile group: 'org.ethereum', name: 'leveldbjni-all', version: '1.18.3'

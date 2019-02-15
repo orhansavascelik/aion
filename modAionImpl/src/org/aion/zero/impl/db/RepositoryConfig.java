@@ -2,16 +2,15 @@ package org.aion.zero.impl.db;
 
 import java.util.Map;
 import java.util.Properties;
-import org.aion.type.api.db.DetailsProvider;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IPruneConfig;
-import org.aion.type.api.db.IRepositoryConfig;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.DetailsProvider;
+import org.aion.type.api.interfaces.db.PruneConfig;
 import org.aion.mcf.config.CfgDb;
 
-public class RepositoryConfig implements IRepositoryConfig {
+public class RepositoryConfig implements org.aion.type.api.interfaces.db.RepositoryConfig {
 
     private final String dbPath;
-    private final IPruneConfig cfgPrune;
+    private final PruneConfig cfgPrune;
     private final DetailsProvider detailsProvider;
     private final Map<String, Properties> cfg;
 
@@ -21,12 +20,12 @@ public class RepositoryConfig implements IRepositoryConfig {
     }
 
     @Override
-    public IPruneConfig getPruneConfig() {
+    public PruneConfig getPruneConfig() {
         return cfgPrune;
     }
 
     @Override
-    public IContractDetails contractDetailsImpl() {
+    public ContractDetails contractDetailsImpl() {
         return this.detailsProvider.getDetails();
     }
 

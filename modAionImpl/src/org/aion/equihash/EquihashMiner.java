@@ -1,6 +1,6 @@
 package org.aion.equihash;
 
-import static org.aion.type.api.util.Hex.toHexString;
+import static org.aion.util.conversions.Hex.toHexString;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.TimerTask;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
-import org.aion.type.api.util.MAF;
+import org.aion.util.others.MAF;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IEventMgr;
 import org.aion.evtmgr.IHandler;
@@ -24,11 +24,10 @@ import org.aion.mcf.mine.AbstractMineRunner;
 import org.aion.zero.impl.blockchain.AionImpl;
 import org.aion.zero.impl.blockchain.IAionChain;
 import org.aion.zero.impl.config.CfgAion;
-import org.aion.zero.impl.types.AionBlock;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 
 /** @author Ross Kitsis (ross@nuco.io) */
-public class EquihashMiner extends AbstractMineRunner<AionBlock> {
+public class EquihashMiner extends AbstractMineRunner<org.aion.zero.impl.types.AionBlock> {
 
     public static final String VERSION = "0.1.0";
 
@@ -63,7 +62,7 @@ public class EquihashMiner extends AbstractMineRunner<AionBlock> {
                 if (e.getEventType() == IHandler.TYPE.CONSENSUS.getValue()
                         && e.getCallbackType()
                                 == EventConsensus.CALLBACK.ON_BLOCK_TEMPLATE.getValue()) {
-                    EquihashMiner.this.onBlockTemplate((AionBlock) e.getFuncArgs().get(0));
+                    EquihashMiner.this.onBlockTemplate((org.aion.zero.impl.types.AionBlock) e.getFuncArgs().get(0));
                 } else if (e.getEventType() == IHandler.TYPE.POISONPILL.getValue()) {
                     go = false;
                 }
@@ -174,7 +173,7 @@ public class EquihashMiner extends AbstractMineRunner<AionBlock> {
 
     /** Keeps mining until the thread is interrupted */
     private void mine() {
-        IAionBlock block;
+        AionBlock block;
         byte[] nonce;
         while (!Thread.currentThread().isInterrupted()) {
             if ((block = miningBlock) == null) {
@@ -202,7 +201,7 @@ public class EquihashMiner extends AbstractMineRunner<AionBlock> {
     }
 
     /** Restart the mining process when a new block template is received. */
-    private void onBlockTemplate(AionBlock block) {
+    private void onBlockTemplate(org.aion.zero.impl.types.AionBlock block) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("onBlockTemplate(): {}", toHexString(block.getHash()));
         }

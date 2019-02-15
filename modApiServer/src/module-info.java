@@ -19,6 +19,8 @@ module aion.apiserver {
     requires com.github.benmanes.caffeine;
     requires com.google.common;
     requires jdk.unsupported;
+    requires aion.type;
+    requires aion.util;
     requires aion.vm.api;
 
     exports org.aion.api.server.pb;

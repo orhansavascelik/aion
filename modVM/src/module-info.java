@@ -10,6 +10,7 @@ module aion.vm {
     requires org.aion.avm.core;
     requires aion.precompiled;
     requires com.google.common;
+    requires aion.type;
 
     exports org.aion.vm;
 }

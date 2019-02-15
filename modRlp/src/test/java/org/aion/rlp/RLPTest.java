@@ -981,14 +981,14 @@ public class RLPTest {
         decodedData = (byte[]) decode(Hex.decode(result13), pos).getDecoded();
         assertTrue(test13.compareTo(new BigInteger(1, decodedData)) == 0);
 
-        // Need to test with different expected value, because decoding doesn't recognize types
+        // Need to test with different expected value, because decoding doesn't recognize type
         Object testObject1 = decode(Hex.decode(result14), pos).getDecoded();
         assertTrue(Objects.deepEquals(expected14, testObject1));
 
         //        Object testObject2 = decode(Hex.decode(result15), pos).getDecoded();
         //        assertTrue(DeepEquals.deepEquals(test15, testObject2));
 
-        // Need to test with different expected value, because decoding doesn't recognize types
+        // Need to test with different expected value, because decoding doesn't recognize type
         Object testObject3 = decode(Hex.decode(result16), pos).getDecoded();
         assertTrue(Objects.deepEquals(expected16, testObject3));
     }

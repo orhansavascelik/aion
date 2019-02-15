@@ -6,13 +6,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.api.db.PersistenceMethod;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.PersistenceMethod;
 import org.aion.db.impl.AbstractDB;
 
 public class MockDB extends AbstractDB {
 
-    protected Map<ByteArrayWrapper, byte[]> kv;
+    protected Map<Wrapper, byte[]> kv;
 
     public MockDB(String name) {
         super(name);
@@ -154,7 +155,7 @@ public class MockDB extends AbstractDB {
         kv.clear();
     }
 
-    public boolean commitCache(Map<ByteArrayWrapper, byte[]> cache) {
+    public boolean commitCache(Map<Wrapper, byte[]> cache) {
         boolean success = false;
 
         try {

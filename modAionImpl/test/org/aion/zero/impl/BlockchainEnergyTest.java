@@ -6,10 +6,11 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.AionAddress;
+import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.mcf.core.ImportResult;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class BlockchainEnergyTest {
 
         // (byte[] nonce, byte[] from, byte[] to, byte[] value, byte[] data, byte[] nrg, byte[]
         // nrgPrice)
-        List<AionTransaction> txs = new ArrayList<>();
+        List<Transaction> txs = new ArrayList<>();
         for (int i = 0; i < amount; i++) {
             // this transaction should send one (1) AION coin from acc[0] to RECEIPT_ADDR
             AionTransaction atx =

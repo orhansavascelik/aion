@@ -3,13 +3,13 @@ package org.aion.zero.impl.types;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.type.IBlockSummary;
-import org.aion.mcf.types.AbstractBlockSummary;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.block.BlockSummary;
+import org.aion.mcf.type.AbstractBlockSummary;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxExecSummary;
 import org.aion.zero.types.AionTxReceipt;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 
 /**
  * Modified to add transactions
@@ -17,11 +17,11 @@ import org.aion.zero.types.IAionBlock;
  * @author yao
  */
 public class AionBlockSummary
-        extends AbstractBlockSummary<IAionBlock, AionTransaction, AionTxReceipt, AionTxExecSummary>
-        implements IBlockSummary {
+        extends AbstractBlockSummary<AionBlock, AionTransaction, AionTxReceipt, AionTxExecSummary>
+        implements BlockSummary {
 
     public AionBlockSummary(
-            IAionBlock block,
+            AionBlock block,
             Map<Address, BigInteger> rewards,
             List<AionTxReceipt> receipts,
             List<AionTxExecSummary> summaries) {

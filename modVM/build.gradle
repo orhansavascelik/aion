@@ -1,10 +1,21 @@
 ext.moduleName = 'aion.vm'
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 dependencies {
-    compile project(':type_api')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:crypto4j:0.3.3'
+
     compile project(':modAion')
     compile project(':modMcf')
-    compile project(':modCrypto')
     compile project(':aion_vm_api')
     compile project(':aion_fastvm')
     compile files('../lib/org-aion-avm-core.jar')

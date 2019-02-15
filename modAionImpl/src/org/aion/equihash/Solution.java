@@ -1,7 +1,6 @@
 package org.aion.equihash;
 
-import org.aion.type.api.type.ISolution;
-import org.aion.zero.types.IAionBlock;
+import org.aion.zero.types.AionBlock;
 
 /**
  * This class encapsulates a valid solution for the given block. This class allows solutions to be
@@ -9,20 +8,20 @@ import org.aion.zero.types.IAionBlock;
  *
  * @author Ross Kitsis (ross@nuco.io)
  */
-public class Solution implements ISolution {
+public class Solution implements org.aion.type.api.interfaces.block.Solution {
 
-    private final IAionBlock block;
+    private final AionBlock block;
     private final byte[] nonce;
     private final byte[] solution;
 
-    public Solution(IAionBlock block, byte[] nonce, byte[] solution) {
+    public Solution(AionBlock block, byte[] nonce, byte[] solution) {
 
         this.block = block;
         this.nonce = nonce;
         this.solution = solution;
     }
 
-    public IAionBlock getBlock() {
+    public AionBlock getBlock() {
         return block;
     }
 

@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.db.PersistenceMethod;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.api.interfaces.db.PersistenceMethod;
 import org.aion.db.generic.DatabaseWithCache;
 import org.aion.db.generic.LockedDatabase;
 import org.aion.db.impl.h2.H2MVMap;
@@ -314,9 +314,9 @@ public class DriverBaseTest {
                 });
     }
 
-    private IByteArrayKeyValueDatabase db;
+    private ByteArrayKeyValueDatabase db;
 
-    private final Constructor<IByteArrayKeyValueDatabase> constructor;
+    private final Constructor<ByteArrayKeyValueDatabase> constructor;
     private final Object[] args;
     private final String dbName;
 
@@ -333,7 +333,7 @@ public class DriverBaseTest {
     public DriverBaseTest(
             String testName,
             boolean[] props,
-            Constructor<IByteArrayKeyValueDatabase> constructor,
+            Constructor<ByteArrayKeyValueDatabase> constructor,
             Object[] args)
             throws InstantiationException, IllegalAccessException, IllegalArgumentException,
                     InvocationTargetException {
@@ -457,7 +457,7 @@ public class DriverBaseTest {
         if (db.getPersistenceMethod() == PersistenceMethod.FILE_BASED
                 && !(db instanceof PersistentMockDB)) {
             // another connection to same DB should fail on open for all persistent KVDBs
-            IByteArrayKeyValueDatabase otherDatabase = this.constructor.newInstance(this.args);
+            ByteArrayKeyValueDatabase otherDatabase = this.constructor.newInstance(this.args);
             assertThat(otherDatabase.open()).isFalse();
 
             // ensuring that new connection did not somehow close old one

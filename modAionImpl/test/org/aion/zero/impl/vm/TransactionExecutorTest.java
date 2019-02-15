@@ -32,9 +32,9 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
@@ -43,7 +43,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.StandaloneBlockchain.Builder;
@@ -104,7 +104,7 @@ public class TransactionExecutorTest {
                 blockchain.createNewBlockContext(
                         blockchain.getBestBlock(), Collections.singletonList(tx), false);
 
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         ExecutionBatch details = new ExecutionBatch(context.block, Collections.singletonList(tx));
         BulkExecutor exec =
                 new BulkExecutor(
@@ -201,7 +201,7 @@ public class TransactionExecutorTest {
         BlockContext context =
                 blockchain.createNewBlockContext(
                         blockchain.getBestBlock(), Collections.singletonList(tx), false);
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
         ExecutionBatch details = new ExecutionBatch(context.block, Collections.singletonList(tx));
         BulkExecutor exec =
                 new BulkExecutor(
@@ -299,7 +299,7 @@ public class TransactionExecutorTest {
         BlockContext context =
                 blockchain.createNewBlockContext(
                         blockchain.getBestBlock(), Collections.singletonList(tx), false);
-        IRepositoryCache repo = blockchain.getRepository().startTracking();
+        RepositoryCache repo = blockchain.getRepository().startTracking();
 
         ExecutionBatch details = new ExecutionBatch(context.block, Collections.singletonList(tx));
         BulkExecutor exec =

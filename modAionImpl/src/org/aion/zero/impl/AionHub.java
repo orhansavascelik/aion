@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.ServiceLoader;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.util.ByteUtil;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.util.bytes.ByteUtil;
 import org.aion.evtmgr.EventMgrModule;
 import org.aion.evtmgr.IEvent;
 import org.aion.evtmgr.IEventMgr;
@@ -246,7 +246,7 @@ public class AionHub {
         }
     }
 
-    public IRepository getRepository() {
+    public Repository getRepository() {
         return repository;
     }
 

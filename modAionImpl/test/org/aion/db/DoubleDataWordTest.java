@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Properties;
 import java.util.Random;
-import org.aion.type.api.db.IContractDetails;
-import org.aion.type.api.db.IPruneConfig;
-import org.aion.type.api.db.IRepository;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.db.IRepositoryConfig;
-import org.aion.type.api.type.AionAddress;
+import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.type.api.interfaces.db.PruneConfig;
+import org.aion.type.api.interfaces.db.Repository;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ECKeyFac;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
@@ -19,7 +19,7 @@ import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.db.ContractDetailsAion;
@@ -29,28 +29,28 @@ import org.junit.Test;
 
 /** Tests the DoubleDataWord class, mainly that it integrates well with the db. */
 public class DoubleDataWordTest {
-    private IRepositoryConfig repoConfig;
-    private IRepository repo;
-    private IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track;
+    private RepositoryConfig repoConfig;
+    private Repository repo;
+    private RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track;
     private Random rand;
     private Address addr;
 
     @Before
     public void setup() {
         this.repoConfig =
-                new IRepositoryConfig() {
+                new RepositoryConfig() {
                     @Override
                     public String getDbPath() {
                         return "";
                     }
 
                     @Override
-                    public IPruneConfig getPruneConfig() {
+                    public PruneConfig getPruneConfig() {
                         return new CfgPrune(false);
                     }
 
                     @Override
-                    public IContractDetails contractDetailsImpl() {
+                    public ContractDetails contractDetailsImpl() {
                         return ContractDetailsAion.createForTesting(0, 1000000).getDetails();
                     }
 

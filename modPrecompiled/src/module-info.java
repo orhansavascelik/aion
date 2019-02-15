@@ -9,6 +9,7 @@ module aion.precompiled {
     requires com.google.common;
     requires aion.vm.api;
     requires aion.util;
+    requires aion.type;
 
     exports org.aion.precompiled;
     exports org.aion.precompiled.type;

@@ -16,9 +16,9 @@ import java.util.List;
 import java.util.Map;
 import org.aion.api.server.types.ArgTxCall;
 import org.aion.api.server.types.SyncInfo;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.type.ITransaction;
-import org.aion.type.api.type.ITxReceipt;
+import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.type.api.interfaces.tx.TxReceipt;
+import org.aion.type.AionAddress;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.evtmgr.impl.evt.EventBlock;
 import org.aion.evtmgr.impl.evt.EventDummy;
@@ -26,7 +26,7 @@ import org.aion.evtmgr.impl.evt.EventTx;
 import org.aion.mcf.account.AccountManager;
 import org.aion.mcf.account.Keystore;
 import org.aion.mcf.blockchain.TxResponse;
-import org.aion.vm.api.interfaces.Address;
+import org.aion.type.api.interfaces.common.Address;
 import org.aion.zero.impl.blockchain.AionImpl;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.db.AionBlockStore;
@@ -54,12 +54,12 @@ public class ApiAionTest {
         }
 
         @Override
-        protected void pendingTxReceived(ITransaction _tx) {
+        protected void pendingTxReceived(TransactionExtend _tx) {
             pendingRcvdFlag = true;
         }
 
         @Override
-        protected void pendingTxUpdate(ITxReceipt _txRcpt, EventTx.STATE _state) {
+        protected void pendingTxUpdate(TxReceipt _txRcpt, EventTx.STATE _state) {
             pendingUpdateFlag = true;
         }
 
@@ -77,7 +77,7 @@ public class ApiAionTest {
         private void addEvents() {
             EventTx pendingRcvd = new EventTx(EventTx.CALLBACK.PENDINGTXRECEIVED0);
             AionTransaction tx = new AionTransaction(null);
-            List l1 = new ArrayList<ITransaction>();
+            List l1 = new ArrayList<TransactionExtend>();
             l1.add(tx);
             l1.add(tx);
             l1.add(tx);

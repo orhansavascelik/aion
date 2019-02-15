@@ -1,10 +1,12 @@
 package org.aion.precompiled.contracts;
 
 import java.math.BigInteger;
-import org.aion.type.api.db.IRepositoryCache;
-import org.aion.type.api.type.AionAddress;
-import org.aion.type.api.util.BIUtil;
-import org.aion.type.api.util.ByteArrayWrapper;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.type.api.interfaces.common.Address;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.type.AionAddress;
+import org.aion.util.biginteger.BIUtil;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.crypto.ed25519.Ed25519Signature;
 import org.aion.mcf.core.AccountState;
@@ -13,7 +15,6 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.type.StatefulPrecompiledContract;
-import org.aion.vm.api.interfaces.Address;
 
 /** A pre-compiled contract for retrieving and updating the total amount of currency. */
 public class TotalCurrencyContract extends StatefulPrecompiledContract {
@@ -31,7 +32,7 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
      * @param ownerAddress
      */
     public TotalCurrencyContract(
-            IRepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
+            RepositoryCache<AccountState, IBlockStoreBase<?, ?>> track,
             Address address,
             Address ownerAddress) {
         super(track);
@@ -96,7 +97,7 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
             return new PrecompiledTransactionResult(PrecompiledResultCode.OUT_OF_NRG, 0);
         }
 
-        ByteArrayWrapper balanceData =
+        Wrapper balanceData =
                 this.track.getStorageValue(this.address, new DataWord(input).toWrapper());
         return new PrecompiledTransactionResult(
                 PrecompiledResultCode.SUCCESS, nrg - COST, balanceData.getData());
@@ -147,7 +148,7 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
         }
 
         // payload processing
-        ByteArrayWrapper totalCurr = this.track.getStorageValue(this.address, chainId.toWrapper());
+        Wrapper totalCurr = this.track.getStorageValue(this.address, chainId.toWrapper());
         BigInteger totalCurrBI =
                 totalCurr == null ? BigInteger.ZERO : BIUtil.toBI(totalCurr.getData());
         BigInteger value = BIUtil.toBI(amount);
@@ -177,7 +178,7 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
         return new PrecompiledTransactionResult(PrecompiledResultCode.SUCCESS, nrg - COST);
     }
 
-    private static ByteArrayWrapper wrapValueForPut(DataWord value) {
+    private static Wrapper wrapValueForPut(DataWord value) {
         return (value.isZero()) ? value.toWrapper() : new ByteArrayWrapper(value.getNoLeadZeroesData());
     }
 }

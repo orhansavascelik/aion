@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.aion.type.api.util.Hex;
+import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.account.Keystore;

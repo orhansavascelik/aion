@@ -9,7 +9,6 @@ import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.junit.Assert;
 import org.junit.Test;

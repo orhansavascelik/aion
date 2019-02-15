@@ -2,15 +2,27 @@ ext.moduleName = 'aion.txpool.impl'
 test.dependsOn copyNativeLibsForModuleTests
 clean.dependsOn deleteNativeLibs
 
+repositories {
+    maven { url "https://oss.sonatype.org/content/groups/staging" }
+
+    flatDir {
+        dirs './lib'
+    }
+}
+
 dependencies {
-    compile project(':type_api')
+    compile 'network.aion:type-api4j:0.3.3'
+    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:util4j:0.3.3'
+    compile 'network.aion:log4j:0.3.3'
+
+
     compile project(':modTxPool')
-    compile project(':modLogger')
     compile 'com.madgag.spongycastle:prov:1.58.0.0'
     compile 'com.madgag.spongycastle:core:1.58.0.0'
 
-    testCompile project(':modCrypto')
-    testCompile project(':modRlp')
+    testCompile 'network.aion:crypto4j:0.3.3'
+    testCompile 'network.aion:rlp4j:0.3.3'
     testCompile project(':modMcf')
     testCompile project(':modAion')
     testCompile 'junit:junit:4.12'

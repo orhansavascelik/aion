@@ -22,11 +22,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.db.Flushable;
-import org.aion.type.api.db.IByteArrayKeyValueDatabase;
-import org.aion.type.api.util.ByteArrayWrapper;
-import org.aion.type.api.util.ByteUtil;
-import org.aion.type.api.util.Hex;
+import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.type.api.interfaces.db.Flushable;
+import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.type.ByteArrayWrapper;
+import org.aion.util.bytes.ByteUtil;
+import org.aion.util.conversions.Hex;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory.Props;
 import org.aion.log.AionLoggerFactory;
@@ -79,13 +80,13 @@ public class PendingBlockStore implements Flushable, Closeable {
      */
     private ObjectDataSource<List<byte[]>> levelSource;
 
-    private IByteArrayKeyValueDatabase levelDatabase;
+    private ByteArrayKeyValueDatabase levelDatabase;
     /** Used to map a queue identifier to a list of consecutive blocks. */
     private ObjectDataSource<List<AionBlock>> queueSource;
 
-    private IByteArrayKeyValueDatabase queueDatabase;
+    private ByteArrayKeyValueDatabase queueDatabase;
     /** Used to maps a block hash to its current queue identifier. */
-    private IByteArrayKeyValueDatabase indexSource;
+    private ByteArrayKeyValueDatabase indexSource;
 
     // tracking the status: with access managed by the `internalLock`
     private Map<ByteArrayWrapper, QueueInfo> status;
@@ -531,7 +532,7 @@ public class PendingBlockStore implements Flushable, Closeable {
         }
     }
 
-    private static int countDatabaseKeys(IByteArrayKeyValueDatabase db) {
+    private static int countDatabaseKeys(ByteArrayKeyValueDatabase db) {
         int size = 0;
         Iterator<byte[]> iterator = db.keys();
         while (iterator.hasNext()) {
@@ -548,7 +549,7 @@ public class PendingBlockStore implements Flushable, Closeable {
      * @return a map of queue identifiers and lists of blocks containing all the separate chain
      *     queues stored at that level.
      */
-    public Map<ByteArrayWrapper, List<AionBlock>> loadBlockRange(long level) {
+    public Map<Wrapper, List<AionBlock>> loadBlockRange(long level) {
         databaseLock.readLock().lock();
 
         try {
@@ -561,7 +562,7 @@ public class PendingBlockStore implements Flushable, Closeable {
 
             // get all the blocks in the given queues
             List<AionBlock> list;
-            Map<ByteArrayWrapper, List<AionBlock>> blocks = new HashMap<>();
+            Map<Wrapper, List<AionBlock>> blocks = new HashMap<>();
             for (byte[] queue : queueHashes) {
                 list = queueSource.get(queue);
                 if (list != null) {
@@ -588,14 +589,14 @@ public class PendingBlockStore implements Flushable, Closeable {
      */
     public void dropPendingQueues(
             long level,
-            Collection<ByteArrayWrapper> queues,
-            Map<ByteArrayWrapper, List<AionBlock>> blocks) {
+            Collection<Wrapper> queues,
+            Map<Wrapper, List<AionBlock>> blocks) {
 
         databaseLock.writeLock().lock();
 
         try {
             // delete imported queues & blocks
-            for (ByteArrayWrapper q : queues) {
+            for (Wrapper q : queues) {
                 // load the queue from disk
                 List<AionBlock> currentQ = queueSource.get(q.getData());
 

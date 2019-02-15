@@ -9,9 +9,9 @@ import org.aion.api.server.pb.Message;
 import org.aion.api.server.pb.TxWaitingMappingUpdate;
 import org.aion.api.server.types.Fltr;
 import org.aion.api.server.types.TxPendingStatus;
-import org.aion.type.api.util.ByteArrayWrapper;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
+import org.aion.type.api.interfaces.common.Wrapper;
 import org.slf4j.Logger;
 
 public class HdlrZmq implements IHdlr {
@@ -55,7 +55,7 @@ public class HdlrZmq implements IHdlr {
             // TODO Auto-generated catch block
             LOGGER.error("zmq takeTxWait failed! ", e);
         }
-        Map.Entry<ByteArrayWrapper, ByteArrayWrapper> entry = null;
+        Map.Entry<Wrapper, Wrapper> entry = null;
         if (txWait != null) {
             entry = this.api.getMsgIdMapping().get(txWait.getTxHash());
         }
