@@ -4,7 +4,7 @@ from collections import deque
 import time
 
 NUM_HISTORICAL_ENTRIES = 3
-QUERY_TIME_SECONDS = 1
+QUERY_TIME_SECONDS = 15
 
 seed_height = -1
 
@@ -26,7 +26,7 @@ def verify_sync_progress(height_history, web3_monitor_nodes):
                 web3_monitor_nodes.remove(node)
 
                 del height_history[node]
-            elif history[0] <= history[NUM_HISTORICAL_ENTRIES - 1]:
+            elif history[0] == history[NUM_HISTORICAL_ENTRIES - 1]:
                 print("Detected node stuck during sync")
                 sys.exit(1)
 
