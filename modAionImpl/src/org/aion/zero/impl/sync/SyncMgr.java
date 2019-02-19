@@ -155,7 +155,7 @@ public class SyncMgr {
             final int _slowImportTime,
             final int _compactFrequency, 
             final boolean requestReceipts,
-            final ReceiptsRetrievalVerifier rrv) {
+            final ReceiptsRetrievalVerifier rrv /* temporary -- remove when fast sync work verified */) {
         p2pMgr = _p2pMgr;
         chain = _chain;
         evtMgr = _evtMgr;
@@ -190,9 +190,7 @@ public class SyncMgr {
                                 peerStates,
                                 log,
                                 _slowImportTime,
-                                _compactFrequency,
-                                requestReceipts,
-                                rrv),
+                                _compactFrequency),
                         "sync-ib");
         syncIb.start();
         syncGs = new Thread(new TaskGetStatus(start, p2pMgr, stats, log), "sync-gs");
