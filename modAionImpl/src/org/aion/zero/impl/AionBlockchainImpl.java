@@ -1905,12 +1905,13 @@ public class AionBlockchainImpl implements IAionBlockchain {
     /**
      * Get all the contracts stored locally.
      *
+     * <p>TODO: consider if it is worth making the returned type Iterator of Address
+     *
      * @return an {@link Iterator} containing all the known contract addresses deployed on the
      *     blockchain
      */
-    public Iterator<Address> getContracts() {
-        // TODO: implement
-        return null;
+    public Iterator<byte[]> getContracts() {
+        return repository.getContracts();
     }
 
     /**
@@ -1919,7 +1920,6 @@ public class AionBlockchainImpl implements IAionBlockchain {
      * @return the block number at which the given contract was created
      */
     public ContractInformation getIndexedContractInformation(Address contract) {
-        // TODO: implement
-        return null;
+        return repository.getIndexedContractInformation(contract);
     }
 }
