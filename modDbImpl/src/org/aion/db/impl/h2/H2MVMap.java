@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.db.impl.AbstractDB;
 import org.h2.mvstore.FileStore;
 import org.h2.mvstore.MVMap;
@@ -298,14 +298,14 @@ public class H2MVMap extends AbstractDB {
     // AbstractDB functionality
     // ----------------------------------------------------------------------------------------
 
-    public boolean commitCache(Map<Wrapper, byte[]> cache) {
+    public boolean commitCache(Map<ByteArrayWrapper, byte[]> cache) {
         boolean success = false;
 
         try {
             check();
 
             // doesn't actually have functionality for batch operations
-            for (Entry<Wrapper, byte[]> e : cache.entrySet()) {
+            for (Entry<ByteArrayWrapper, byte[]> e : cache.entrySet()) {
                 if (e.getValue() == null) {
                     map.remove(e.getKey().getData());
                 } else {

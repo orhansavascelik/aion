@@ -1,6 +1,4 @@
 module aion.mcf {
-    requires aion.type.api;
-    requires aion.type;
     requires aion.util;
     requires aion.rlp;
     requires aion.crypto;

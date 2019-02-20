@@ -8,9 +8,9 @@ import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 
 import java.math.BigInteger;
 import java.util.Objects;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.block.PowBlockHeader;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
+import org.aion.interfaces.block.PowBlockHeader;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.type.AbstractBlockHeader;
@@ -86,8 +86,8 @@ public class A0BlockHeader extends AbstractBlockHeader implements PowBlockHeader
         byte[] data = rlpHeader.get(RPL_BH_COINBASE).getRLPData();
         this.coinbase =
                 (data == null)
-                        ? AionAddress.EMPTY_ADDRESS()
-                        : AionAddress.wrap(rlpHeader.get(RPL_BH_COINBASE).getRLPData());
+                        ? Address.EMPTY_ADDRESS()
+                        : Address.wrap(rlpHeader.get(RPL_BH_COINBASE).getRLPData());
 
         // StateRoot
         this.stateRoot = rlpHeader.get(RPL_BH_STATEROOT).getRLPData();
@@ -499,7 +499,7 @@ public class A0BlockHeader extends AbstractBlockHeader implements PowBlockHeader
         builder.withParentHash(rlpHeader.get(RPL_BH_PARENTHASH).getRLPData());
 
         // Coinbase (miner)
-        builder.withCoinbase(new AionAddress(rlpHeader.get(RPL_BH_COINBASE).getRLPData()));
+        builder.withCoinbase(new Address(rlpHeader.get(RPL_BH_COINBASE).getRLPData()));
 
         // State root
         builder.withStateRoot(rlpHeader.get(RPL_BH_STATEROOT).getRLPData());
@@ -559,7 +559,7 @@ public class A0BlockHeader extends AbstractBlockHeader implements PowBlockHeader
          * Some constants for fallbacks, these are not rigorously defined this;
          * TODO: define these with explanations in the future
          */
-        protected Address EMPTY_ADDRESS = AionAddress.EMPTY_ADDRESS();
+        protected Address EMPTY_ADDRESS = Address.EMPTY_ADDRESS();
 
         protected byte version;
         protected byte[] parentHash;
@@ -864,7 +864,7 @@ public class A0BlockHeader extends AbstractBlockHeader implements PowBlockHeader
 
             this.version = this.version == 0 ? 1 : this.version;
             this.parentHash = this.parentHash == null ? HashUtil.EMPTY_DATA_HASH : this.parentHash;
-            this.coinbase = this.coinbase == null ? AionAddress.ZERO_ADDRESS() : this.coinbase;
+            this.coinbase = this.coinbase == null ? Address.ZERO_ADDRESS() : this.coinbase;
             this.stateRoot = this.stateRoot == null ? HashUtil.EMPTY_TRIE_HASH : this.stateRoot;
             this.txTrieRoot = this.txTrieRoot == null ? HashUtil.EMPTY_TRIE_HASH : this.txTrieRoot;
             this.receiptTrieRoot =

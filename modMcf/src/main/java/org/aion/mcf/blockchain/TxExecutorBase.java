@@ -1,7 +1,7 @@
 package org.aion.mcf.blockchain;
 
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.block.Block;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.block.Block;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.db.IBlockStoreBase;
@@ -9,7 +9,7 @@ import org.aion.mcf.type.AbstractTransaction;
 import org.aion.mcf.type.AbstractTxReceipt;
 import org.slf4j.Logger;
 
-/** TransactionExtend executor base class. */
+/** Transaction executor base class. */
 public abstract class TxExecutorBase<
         BLK extends Block<?, ?>,
         TX extends AbstractTransaction,

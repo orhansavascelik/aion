@@ -1,16 +1,16 @@
 package org.aion.mcf.blockchain;
 
 import java.math.BigInteger;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 
 /**
- * Abstract Pending TransactionExtend Class.
+ * Abstract Pending Transaction Class.
  *
  * @param <TX>
  */
-public abstract class AbstractPendingTx<TX extends TransactionExtend> {
+public abstract class AbstractPendingTx<TX extends Transaction> {
 
     protected TX transaction;
 

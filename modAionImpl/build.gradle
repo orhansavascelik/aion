@@ -20,8 +20,7 @@ sourceSets {
 }
 
 dependencies {
-    compile 'network.aion:type-api4j:0.3.3'
-    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:vm-api4j:0.3.3'
     compile 'network.aion:util4j:0.3.3'
     compile 'network.aion:rlp4j:0.3.3'
     compile 'network.aion:crypto4j:0.3.3'
@@ -42,7 +41,6 @@ dependencies {
     compile 'org.json:json:20180813'
     compile 'info.picocli:picocli:3.6.1'
 
-    testCompile 'network.aion:type-api4j:0.3.3'
     testCompile project(path: ':modTxPoolImpl')
     testCompile project(path: ':modDbImpl', configuration: 'testClassesOut')
 

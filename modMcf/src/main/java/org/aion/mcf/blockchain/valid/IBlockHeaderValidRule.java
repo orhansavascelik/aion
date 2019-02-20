@@ -1,7 +1,7 @@
 package org.aion.mcf.blockchain.valid;
 
 import java.util.List;
-import org.aion.type.api.interfaces.block.BlockHeader;
+import org.aion.interfaces.block.BlockHeader;
 
 /**
  * Block header validation rules.

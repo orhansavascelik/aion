@@ -5,15 +5,15 @@ import static org.junit.Assert.assertEquals;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.ContractFactory;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -32,7 +32,7 @@ public class TotalCurrencyContractTest {
     public void setup() {
         repo = new DummyRepo();
         ownerKey = ECKeyFac.inst().create();
-        tcc = new TotalCurrencyContract(repo, ADDR, AionAddress.wrap(ownerKey.getAddress()));
+        tcc = new TotalCurrencyContract(repo, ADDR, Address.wrap(ownerKey.getAddress()));
     }
 
     @After
@@ -117,7 +117,7 @@ public class TotalCurrencyContractTest {
         assertEquals(PrecompiledResultCode.SUCCESS, res.getResultCode());
         assertEquals(0L, res.getEnergyRemaining());
 
-        tcc = new TotalCurrencyContract(repo, ADDR, AionAddress.wrap(ownerKey.getAddress()));
+        tcc = new TotalCurrencyContract(repo, ADDR, Address.wrap(ownerKey.getAddress()));
         input = new byte[] {(byte) 0x0};
         res = tcc.execute(input, COST);
 
@@ -186,7 +186,7 @@ public class TotalCurrencyContractTest {
                 new TotalCurrencyContract(
                         repo,
                         ADDR,
-                        AionAddress.wrap(ECKeyFac.inst().create().getAddress())); // diff owner.
+                        Address.wrap(ECKeyFac.inst().create().getAddress())); // diff owner.
 
         byte[] input = constructUpdateInput((byte) 0x0, (byte) 0x0);
         PrecompiledTransactionResult res = contract.execute(input, COST);

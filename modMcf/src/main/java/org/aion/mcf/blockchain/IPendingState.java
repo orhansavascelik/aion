@@ -2,10 +2,9 @@ package org.aion.mcf.blockchain;
 
 import java.math.BigInteger;
 import java.util.List;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.tx.Transaction;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.tx.Transaction;
 
 public interface IPendingState<TX extends Transaction> {
 

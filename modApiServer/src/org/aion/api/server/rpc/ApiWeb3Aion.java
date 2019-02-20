@@ -38,13 +38,13 @@ import org.aion.api.server.types.NumericalValue;
 import org.aion.api.server.types.SyncInfo;
 import org.aion.api.server.types.Tx;
 import org.aion.api.server.types.TxRecpt;
-import org.aion.type.Hash256;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.tx.TxReceipt;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.Hash256;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.tx.Transaction;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.TxReceipt;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
@@ -66,7 +66,7 @@ import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.ImportResult;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.p2p.INode;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.util.string.StringUtils;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.zero.impl.AionBlockchainImpl;
@@ -104,7 +104,7 @@ public class ApiWeb3Aion extends ApiAion {
     private final int STRATUM_BLKTIME_INCLUDED_COUNT = 32;
     private final int STRATUM_CACHE_TIME_SECONDS = 15;
     // TODO: Verify if need to use a concurrent map; locking may allow for use of a simple map
-    private HashMap<Wrapper, AionBlock> templateMap;
+    private HashMap<ByteArrayWrapper, AionBlock> templateMap;
     private ReadWriteLock templateMapLock;
     private IEventMgr evtMgr;
     // doesn't need to be protected for concurrent access, since only one write in the constructor.
@@ -137,7 +137,7 @@ public class ApiWeb3Aion extends ApiAion {
         }
     }
 
-    protected void pendingTxReceived(TransactionExtend _tx) {
+    protected void pendingTxReceived(Transaction _tx) {
         if (isFilterEnabled) {
             // not absolutely neccessary to do eviction on installedFilters here, since we're doing
             // it already
@@ -166,7 +166,7 @@ public class ApiWeb3Aion extends ApiAion {
         // TODO: re-enable this when we upgrade our web3 client
         /*
         if (isFilterEnabled) {
-            Wrapper txHashW = new ByteArrayWrapper(((AionTxReceipt) _txRcpt).getTransaction().getHash());
+            ByteArrayWrapper txHashW = new ByteArrayWrapper(((AionTxReceipt) _txRcpt).getTransaction().getHash());
             if (_state.isPending() || _state == EventTx.STATE.DROPPED0) {
                 pendingReceipts.put(txHashW, (AionTxReceipt) _txRcpt);
             } else {
@@ -176,7 +176,7 @@ public class ApiWeb3Aion extends ApiAion {
         */
     }
 
-    private final LoadingCache<Wrapper, AionBlock> blockCache;
+    private final LoadingCache<ByteArrayWrapper, AionBlock> blockCache;
     private static final int BLOCK_CACHE_SIZE = 1000;
 
     public ApiWeb3Aion(final IAionChain _ac) {
@@ -231,7 +231,7 @@ public class ApiWeb3Aion extends ApiAion {
                         .maximumSize(BLOCK_CACHE_SIZE)
                         .build(
                                 new CacheLoader<>() {
-                                    public AionBlock load(Wrapper blockHash) {
+                                    public AionBlock load(ByteArrayWrapper blockHash) {
                                         LOG.debug(
                                                 "<rpc-server blockCache miss for "
                                                         + blockHash.toString()
@@ -247,7 +247,7 @@ public class ApiWeb3Aion extends ApiAion {
                         .build(
                                 new CacheLoader<>() {
                                     public MinerStatsView load(String key) { // no checked exception
-                                        Address miner = new AionAddress(key);
+                                        Address miner = new Address(key);
                                         return new MinerStatsView(
                                                         STRATUM_RECENT_BLK_COUNT, miner.toBytes())
                                                 .update();
@@ -401,7 +401,7 @@ public class ApiWeb3Aion extends ApiAion {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid parameters");
         }
 
-        Address address = new AionAddress(_address);
+        Address address = new Address(_address);
 
         String bnOrId = "latest";
         if (!JSONObject.NULL.equals(_bnOrId)) {
@@ -440,7 +440,7 @@ public class ApiWeb3Aion extends ApiAion {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid parameters");
         }
 
-        Address address = new AionAddress(_address);
+        Address address = new Address(_address);
 
         String bnOrId = "latest";
         if (!JSONObject.NULL.equals(_bnOrId)) {
@@ -470,7 +470,7 @@ public class ApiWeb3Aion extends ApiAion {
                             + "State may have been pruned; please check your db pruning settings in the configuration file.");
         }
 
-        Wrapper storageValue = repo.getStorageValue(address, key.toWrapper());
+        ByteArrayWrapper storageValue = repo.getStorageValue(address, key.toWrapper());
         if (storageValue != null) {
             return new RpcMsg(StringUtils.toJsonHex(storageValue.getData()));
         } else {
@@ -491,7 +491,7 @@ public class ApiWeb3Aion extends ApiAion {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid parameters");
         }
 
-        Address address = new AionAddress(_address);
+        Address address = new Address(_address);
 
         String bnOrId = "latest";
         if (!JSONObject.NULL.equals(_bnOrId)) {
@@ -578,7 +578,7 @@ public class ApiWeb3Aion extends ApiAion {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid parameters");
         }
 
-        Address address = new AionAddress(_address);
+        Address address = new Address(_address);
 
         String bnOrId = "latest";
         if (!JSONObject.NULL.equals(_bnOrId)) {
@@ -614,7 +614,7 @@ public class ApiWeb3Aion extends ApiAion {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid parameters");
         }
 
-        Address address = AionAddress.wrap(_address);
+        Address address = Address.wrap(_address);
         ECKey key = getAccountKey(address.toString());
         if (key == null) {
             return new RpcMsg(null, RpcError.NOT_ALLOWED, "Account not unlocked.");
@@ -672,7 +672,7 @@ public class ApiWeb3Aion extends ApiAion {
             obj.put("tx", txObj);
             return new RpcMsg(obj);
         } else {
-            if (LOG.isDebugEnabled()) LOG.debug("TransactionExtend signing failed");
+            if (LOG.isDebugEnabled()) LOG.debug("Transaction signing failed");
             return new RpcMsg(null, RpcError.INTERNAL_ERROR, "Error in signing the transaction.");
         }
     }
@@ -1284,7 +1284,7 @@ public class ApiWeb3Aion extends ApiAion {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid parameters");
         }
 
-        return new RpcMsg(lockAccount(AionAddress.wrap(_account), _password));
+        return new RpcMsg(lockAccount(Address.wrap(_account), _password));
     }
 
     public RpcMsg personal_newAccount(Object _params) {
@@ -1392,7 +1392,7 @@ public class ApiWeb3Aion extends ApiAion {
 
     public RpcMsg priv_getPendingTransactions(Object _params) {
         boolean fullTx = ((JSONArray) _params).optBoolean(0, false);
-        List<AionTransaction> transactions = this.ac.getPendingStateTransactions();
+        List<Transaction> transactions = this.ac.getPendingStateTransactions();
 
         JSONArray arr = new JSONArray();
         for (int i = 0; i < transactions.size(); i++) {
@@ -1788,7 +1788,7 @@ public class ApiWeb3Aion extends ApiAion {
         Address address;
 
         try {
-            address = new AionAddress(_address);
+            address = new Address(_address);
         } catch (Exception e) {
             return new RpcMsg(null, RpcError.INVALID_PARAMS, "Invalid address provided.");
         }
@@ -2292,7 +2292,7 @@ public class ApiWeb3Aion extends ApiAion {
 
     /**
      * This function runs as fast as is possible with the on-disk data model Use this to retrieve
-     * the TransactionExtend Receipt if you know the block hash already
+     * the Transaction Receipt if you know the block hash already
      */
     public RpcMsg ops_getTransactionReceiptByTransactionAndBlockHash(Object _params) {
         String _transactionHash;
@@ -2408,7 +2408,7 @@ public class ApiWeb3Aion extends ApiAion {
         }
 
         BlockContext bestBlock = getBlockTemplate();
-        Wrapper key = new ByteArrayWrapper(bestBlock.block.getHeader().getMineHash());
+        ByteArrayWrapper key = new ByteArrayWrapper(bestBlock.block.getHeader().getMineHash());
 
         // Read template map; if block already contained chain has not moved forward, simply return
         // the same block.
@@ -2523,7 +2523,7 @@ public class ApiWeb3Aion extends ApiAion {
             try {
                 templateMapLock.writeLock().lock();
 
-                Wrapper key = new ByteArrayWrapper(hexStringToBytes((String) hdrHash));
+                ByteArrayWrapper key = new ByteArrayWrapper(hexStringToBytes((String) hdrHash));
 
                 // Grab copy of best block
                 AionBlock bestBlock = templateMap.get(key);

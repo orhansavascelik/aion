@@ -4,9 +4,9 @@ import static org.aion.util.bytes.ByteUtil.EMPTY_BYTE_ARRAY;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.aion.type.api.interfaces.tx.Transaction;
-import org.aion.type.api.interfaces.tx.TxReceipt;
-import org.aion.type.api.interfaces.common.Bytesable;
+import org.aion.interfaces.Bytesable;
+import org.aion.interfaces.tx.Transaction;
+import org.aion.interfaces.tx.TxReceipt;
 import org.aion.mcf.vm.types.Bloom;
 import org.aion.vm.api.interfaces.IExecutionLog;
 
@@ -91,7 +91,7 @@ public abstract class AbstractTxReceipt<TX extends Transaction>
     public TX getTransaction() {
         if (transaction == null) {
             throw new NullPointerException(
-                    "TransactionExtend is not initialized. Use TransactionInfo and BlockStore to setup TransactionExtend instance");
+                    "Transaction is not initialized. Use TransactionInfo and BlockStore to setup Transaction instance");
         }
         return transaction;
     }

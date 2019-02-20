@@ -10,10 +10,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.PersistenceMethod;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.PersistenceMethod;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.db.impl.AbstractDB;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
@@ -33,10 +32,10 @@ public class DatabaseWithCache implements ByteArrayKeyValueDatabase {
     /** Underlying database implementation. */
     protected AbstractDB database;
     /** Underlying cache implementation that will be instantiated by default as a LRU cache. */
-    private LoadingCache<Wrapper, Optional<byte[]>> loadingCache = null;
+    private LoadingCache<ByteArrayWrapper, Optional<byte[]>> loadingCache = null;
 
     /** Keeps track of the entries that have been modified. */
-    private Map<Wrapper, byte[]> dirtyEntries = null;
+    private Map<ByteArrayWrapper, byte[]> dirtyEntries = null;
 
     /** The underlying cache max size, will default to DEFAULT_JAVA_CACHE_SIZE at first. */
     private long maxSize;
@@ -94,9 +93,9 @@ public class DatabaseWithCache implements ByteArrayKeyValueDatabase {
         // Utilize CacheBuilder and pass in the parameters to create the cache.
         this.loadingCache =
                 builder.build(
-                        new CacheLoader<Wrapper, Optional<byte[]>>() {
+                        new CacheLoader<ByteArrayWrapper, Optional<byte[]>>() {
                             @Override
-                            public Optional<byte[]> load(Wrapper keyToLoad) {
+                            public Optional<byte[]> load(ByteArrayWrapper keyToLoad) {
                                 // It is safe to say keyToLoad is not null or the data is null.
                                 // Load from the data source.
                                 return database.get(keyToLoad.getData());
@@ -399,7 +398,7 @@ public class DatabaseWithCache implements ByteArrayKeyValueDatabase {
         AbstractDB.check(v);
         check();
 
-        Wrapper key = ByteArrayWrapper.wrap(k);
+        ByteArrayWrapper key = ByteArrayWrapper.wrap(k);
 
         this.loadingCache.put(key, Optional.of(v));
         // keeping track of dirty data
@@ -413,7 +412,7 @@ public class DatabaseWithCache implements ByteArrayKeyValueDatabase {
         AbstractDB.check(k);
         check();
 
-        Wrapper key = ByteArrayWrapper.wrap(k);
+        ByteArrayWrapper key = ByteArrayWrapper.wrap(k);
 
         this.loadingCache.put(key, Optional.empty());
         // keeping track of dirty data
@@ -434,7 +433,7 @@ public class DatabaseWithCache implements ByteArrayKeyValueDatabase {
         check();
 
         for (Map.Entry<byte[], byte[]> entry : inputMap.entrySet()) {
-            Wrapper key = ByteArrayWrapper.wrap(entry.getKey());
+            ByteArrayWrapper key = ByteArrayWrapper.wrap(entry.getKey());
             byte[] value = entry.getValue();
 
             this.loadingCache.put(key, Optional.of(value));
@@ -453,7 +452,7 @@ public class DatabaseWithCache implements ByteArrayKeyValueDatabase {
         check();
 
         for (byte[] k : keys) {
-            Wrapper key = ByteArrayWrapper.wrap(k);
+            ByteArrayWrapper key = ByteArrayWrapper.wrap(k);
 
             this.loadingCache.put(key, Optional.empty());
             // keeping track of dirty data

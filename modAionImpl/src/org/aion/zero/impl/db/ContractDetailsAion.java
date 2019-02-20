@@ -1,7 +1,7 @@
 package org.aion.zero.impl.db;
 
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.DetailsProvider;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.DetailsProvider;
 import org.aion.zero.db.AionContractDetailsImpl;
 
 /**

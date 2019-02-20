@@ -3,15 +3,15 @@ package org.aion.txpool;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.tx.Transaction;
+import org.aion.types.Address;
 
 /**
  * Aion pending state should be the only user of transaction pool.
  *
  * @param <TX>
  */
-public interface ITxPool<TX extends TransactionExtend> {
+public interface ITxPool<TX extends Transaction> {
 
     String PROP_TX_TIMEOUT = "tx-timeout";
     String PROP_BLOCK_SIZE_LIMIT = "blk-size-limit";

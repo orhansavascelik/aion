@@ -1,11 +1,10 @@
 module aion.txpool.impl {
     requires aion.log;
     requires slf4j.api;
-    requires aion.type.api;
-    requires aion.type;
     requires aion.txpool;
     requires aion.util;
     requires core;
+    requires aion.vm.api;
 
     provides org.aion.txpool.ITxPool with
             org.aion.txpool.zero.TxPoolA0;

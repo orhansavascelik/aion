@@ -34,8 +34,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
@@ -47,7 +47,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.vm.api.interfaces.ResultCode;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.StandaloneBlockchain;
@@ -81,7 +81,7 @@ public class ContractIntegTest {
                 (new Builder()).withValidatorConfiguration("simple").withDefaultAccounts().build();
         blockchain = bundle.bc;
         deployerKey = bundle.privateKeys.get(0);
-        deployer = new AionAddress(deployerKey.getAddress());
+        deployer = new Address(deployerKey.getAddress());
         deployerBalance = Builder.DEFAULT_BALANCE;
         deployerNonce = BigInteger.ZERO;
     }
@@ -547,7 +547,7 @@ public class ContractIntegTest {
         BigInteger deployerBalance = repo.getBalance(deployer);
 
         // Create a new account to be our fund recipient.
-        Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
+        Address recipient = new Address(RandomUtils.nextBytes(Address.SIZE));
         repo.createAccount(recipient);
 
         // Contract has 2^13 coins, let's withdraw them.
@@ -598,7 +598,7 @@ public class ContractIntegTest {
         BigInteger deployerBalance = repo.getBalance(deployer);
 
         // Create a new account to be our fund recipient.
-        Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
+        Address recipient = new Address(RandomUtils.nextBytes(Address.SIZE));
 
         // Contract has 2^13 coins, let's withdraw them.
         byte[] input = ByteUtil.merge(Hex.decode("8c50612c"), recipient.toBytes());
@@ -659,7 +659,7 @@ public class ContractIntegTest {
         nonce = nonce.add(BigInteger.ONE);
         Address callerContract =
                 deployContract(repo, tx, contractName, null, value, nrg, nrgPrice, nonce);
-        Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
+        Address recipient = new Address(RandomUtils.nextBytes(Address.SIZE));
         deployerBalance = repo.getBalance(deployer);
         deployerNonce = repo.getNonce(deployer);
 
@@ -809,7 +809,7 @@ public class ContractIntegTest {
         //        AionTransaction tx =
         //                new AionTransaction(
         //                        nonce.toByteArray(),
-        //                        AionAddress.wrap(ContractFactoryMock.CALL_ME),
+        //                        Address.wrap(ContractFactoryMock.CALL_ME),
         //                        value.toByteArray(),
         //                        tagToSend.getBytes(),
         //                        nrg,
@@ -908,7 +908,7 @@ public class ContractIntegTest {
         //        byte[] input =
         //                ByteUtil.merge(
         //                        Hex.decode("783efb98"),
-        //                        AionAddress.wrap(ContractFactoryMock.CALL_ME).toBytes());
+        //                        Address.wrap(ContractFactoryMock.CALL_ME).toBytes());
         //        input = ByteUtil.merge(input, msg.getBytes());
         //
         //        tx =

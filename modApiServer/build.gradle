@@ -24,9 +24,7 @@ sourceSets {
 }
 
 dependencies {
-
-    compile 'network.aion:type-api4j:0.3.3'
-    compile 'network.aion:type4j:0.3.3'
+    compile 'network.aion:vm-api4j:0.3.3'    
     compile 'network.aion:util4j:0.3.3'
     compile 'network.aion:rlp4j:0.3.3'
     compile 'network.aion:crypto4j:0.3.3'

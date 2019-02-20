@@ -1,6 +1,6 @@
 package org.aion.mcf.trie.scan;
 
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.rlp.Value;
 
 /** @author Alexandra Roatis */

@@ -1,5 +1,5 @@
 module aion.zero {
-    requires aion.type.api;
+
     requires aion.rlp;
     requires aion.crypto;
     requires aion.mcf;
@@ -8,7 +8,6 @@ module aion.zero {
     requires commons.lang3;
     requires aion.vm.api;
     requires aion.util;
-    requires aion.type;
 
     exports org.aion.zero.api;
     exports org.aion.zero.db;

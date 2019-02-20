@@ -39,7 +39,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.vm.api.interfaces.InternalTransactionInterface;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.StandaloneBlockchain;

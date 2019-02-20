@@ -3,11 +3,10 @@ package org.aion.mcf.core;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.tx.Transaction;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.block.Block;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.mcf.blockchain.IPowChain;
 import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.mcf.type.AbstractBlockSummary;
@@ -73,7 +72,7 @@ public interface IBlockchain<
      *     It may also contain several entries if there are multiple ranges starting at the given
      *     level due to the storage of different chains.
      */
-    Map<Wrapper, List<BLK>> loadPendingBlocksAtLevel(long level);
+    Map<ByteArrayWrapper, List<BLK>> loadPendingBlocksAtLevel(long level);
 
     /**
      * Returns a number greater or equal to the given {@code current} number representing the base
@@ -95,7 +94,7 @@ public interface IBlockchain<
      *     the ranges have been expanded, only the relevant blocks get deleted)
      */
     void dropImported(
-            long level, List<Wrapper> ranges, Map<Wrapper, List<BLK>> blocks);
+            long level, List<ByteArrayWrapper> ranges, Map<ByteArrayWrapper, List<BLK>> blocks);
 
     void setBestBlock(BLK block);
 

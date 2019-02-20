@@ -1,6 +1,6 @@
 package org.aion.mcf.db;
 
-import static org.aion.type.ByteArrayWrapper.wrap;
+import static org.aion.types.ByteArrayWrapper.wrap;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -8,24 +8,24 @@ import java.util.Optional;
 import java.util.Set;
 import org.aion.mcf.trie.JournalPruneDataSource;
 import org.aion.mcf.type.AbstractBlock;
-import org.aion.type.api.interfaces.block.BlockHeader;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.block.BlockHeader;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.RepositoryConfig;
+import org.aion.interfaces.tx.Transaction;
 
 /** Detail data storage , */
 public class DetailsDataStore<
-        BLK extends AbstractBlock<BH, ? extends TransactionExtend>, BH extends BlockHeader> {
+        BLK extends AbstractBlock<BH, ? extends Transaction>, BH extends BlockHeader> {
 
     private JournalPruneDataSource storageDSPrune;
     private RepositoryConfig repoConfig;
 
     private ByteArrayKeyValueDatabase detailsSrc;
     private ByteArrayKeyValueDatabase storageSrc;
-    private Set<Wrapper> removes = new HashSet<>();
+    private Set<ByteArrayWrapper> removes = new HashSet<>();
 
     public DetailsDataStore() {}
 
@@ -54,7 +54,7 @@ public class DetailsDataStore<
      */
     public synchronized ContractDetails get(byte[] key) {
 
-        Wrapper wrappedKey = wrap(key);
+        ByteArrayWrapper wrappedKey = wrap(key);
         Optional<byte[]> rawDetails = detailsSrc.get(key);
 
         // If it doesn't exist in cache or database.
@@ -78,7 +78,7 @@ public class DetailsDataStore<
     public synchronized void update(Address key, ContractDetails contractDetails) {
 
         contractDetails.setAddress(key);
-        Wrapper wrappedKey = wrap(key.toBytes());
+        ByteArrayWrapper wrappedKey = wrap(key.toBytes());
 
         // Put into cache.
         byte[] rawDetails = contractDetails == null ? null : contractDetails.getEncoded();
@@ -91,7 +91,7 @@ public class DetailsDataStore<
     }
 
     public synchronized void remove(byte[] key) {
-        Wrapper wrappedKey = wrap(key);
+        ByteArrayWrapper wrappedKey = wrap(key);
         detailsSrc.delete(key);
 
         removes.add(wrappedKey);
@@ -153,7 +153,7 @@ public class DetailsDataStore<
         return storageDSPrune;
     }
 
-    public synchronized Iterator<Wrapper> keys() {
+    public synchronized Iterator<ByteArrayWrapper> keys() {
         return new DetailsIteratorWrapper(detailsSrc.keys());
     }
 
@@ -163,7 +163,7 @@ public class DetailsDataStore<
      *
      * @author Alexandra Roatis
      */
-    private class DetailsIteratorWrapper implements Iterator<Wrapper> {
+    private class DetailsIteratorWrapper implements Iterator<ByteArrayWrapper> {
         private Iterator<byte[]> sourceIterator;
 
         /**
@@ -180,7 +180,7 @@ public class DetailsDataStore<
         }
 
         @Override
-        public Wrapper next() {
+        public ByteArrayWrapper next() {
             return wrap(sourceIterator.next());
         }
     }

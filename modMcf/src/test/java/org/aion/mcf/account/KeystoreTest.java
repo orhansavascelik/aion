@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -131,11 +131,11 @@ public class KeystoreTest {
         assertEquals(addr.substring(2), ByteUtil.toHexString(key.getAddress()));
 
         Map<Address, String> arg = new HashMap<>();
-        arg.put(AionAddress.wrap(addr), password);
+        arg.put(Address.wrap(addr), password);
 
-        Map<Address, Wrapper> export = Keystore.exportAccount(arg);
+        Map<Address, ByteArrayWrapper> export = Keystore.exportAccount(arg);
 
-        assertTrue(export.containsKey(AionAddress.wrap(addr)));
+        assertTrue(export.containsKey(Address.wrap(addr)));
         assertTrue(export.containsValue(ByteArrayWrapper.wrap(key.getPrivKeyBytes())));
         filesToRemove.add(addr);
     }
@@ -150,16 +150,16 @@ public class KeystoreTest {
         assertEquals(addr.substring(2), ByteUtil.toHexString(key.getAddress()));
 
         Map<Address, String> arg = new HashMap<>();
-        arg.put(AionAddress.wrap(addr), password);
+        arg.put(Address.wrap(addr), password);
 
-        Map<Address, Wrapper> export = Keystore.backupAccount(arg);
+        Map<Address, ByteArrayWrapper> export = Keystore.backupAccount(arg);
 
         assertNotNull(export);
 
         File f = Keystore.getAccountFile(addr.substring(2), password);
         assertNotNull(f);
 
-        assertTrue(export.containsKey(AionAddress.wrap(addr)));
+        assertTrue(export.containsKey(Address.wrap(addr)));
         try {
             assertTrue(export.containsValue(ByteArrayWrapper.wrap(Files.readAllBytes(f.toPath()))));
         } catch (IOException e) {

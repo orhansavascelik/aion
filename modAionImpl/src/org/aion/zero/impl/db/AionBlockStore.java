@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.log.AionLoggerFactory;

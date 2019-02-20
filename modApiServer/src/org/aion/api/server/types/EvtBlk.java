@@ -2,7 +2,7 @@ package org.aion.api.server.types;
 
 import static org.aion.api.server.types.Fltr.Type;
 
-import org.aion.type.api.interfaces.block.Block;
+import org.aion.interfaces.block.Block;
 import org.aion.util.string.StringUtils;
 
 @SuppressWarnings("rawtypes")

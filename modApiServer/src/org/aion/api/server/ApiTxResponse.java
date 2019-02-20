@@ -1,7 +1,7 @@
 package org.aion.api.server;
 
 import org.aion.mcf.blockchain.TxResponse;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 public class ApiTxResponse {
 
@@ -41,7 +41,7 @@ public class ApiTxResponse {
     public String getMessage() {
         switch (rsp) {
             case SUCCESS:
-                return "TransactionExtend sent successfully";
+                return "Transaction sent successfully";
             case INVALID_TX:
                 return "Invalid transaction object";
             case INVALID_TX_NRG_PRICE:
@@ -51,25 +51,25 @@ public class ApiTxResponse {
             case INVALID_ACCOUNT:
                 return "Account not found, or not unlocked";
             case ALREADY_CACHED:
-                return "TransactionExtend is already in the cache";
+                return "Transaction is already in the cache";
             case CACHED_NONCE:
-                return "TransactionExtend cached due to large nonce";
+                return "Transaction cached due to large nonce";
             case CACHED_POOLMAX:
-                return "TransactionExtend cached because the pool is full";
+                return "Transaction cached because the pool is full";
             case REPAID:
-                return "TransactionExtend successfully repaid";
+                return "Transaction successfully repaid";
             case ALREADY_SEALED:
-                return "TransactionExtend has already been sealed in the repo";
+                return "Transaction has already been sealed in the repo";
             case REPAYTX_POOL_EXCEPTION:
                 return "Repaid transaction wasn't found in the pool";
             case REPAYTX_LOWPRICE:
                 return "Repaid transaction needs to have a higher energy price";
             case DROPPED:
-                return "TransactionExtend dropped";
+                return "Transaction dropped";
             case EXCEPTION:
                 return ex.getMessage();
             default:
-                return "TransactionExtend status unknown";
+                return "Transaction status unknown";
         }
     }
 

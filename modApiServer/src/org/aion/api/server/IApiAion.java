@@ -5,7 +5,7 @@ import java.util.concurrent.BlockingQueue;
 import org.aion.api.server.pb.TxWaitingMappingUpdate;
 import org.aion.api.server.types.Fltr;
 import org.aion.api.server.types.TxPendingStatus;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.zero.types.AionTxReceipt;
 
 public interface IApiAion {
@@ -14,7 +14,7 @@ public interface IApiAion {
 
     Map<Long, Fltr> getFilter();
 
-    Map<Wrapper, AionTxReceipt> getPendingReceipts();
+    Map<ByteArrayWrapper, AionTxReceipt> getPendingReceipts();
 
     BlockingQueue<TxPendingStatus> getPendingStatus();
 
@@ -29,7 +29,7 @@ public interface IApiAion {
 
     byte[] process(byte[] request, byte[] socketId);
 
-    Map<Wrapper, Map.Entry<Wrapper, Wrapper>> getMsgIdMapping();
+    Map<ByteArrayWrapper, Map.Entry<ByteArrayWrapper, ByteArrayWrapper>> getMsgIdMapping();
 
     void shutDown();
 

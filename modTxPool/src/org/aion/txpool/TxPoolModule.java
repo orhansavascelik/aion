@@ -1,20 +1,20 @@
 package org.aion.txpool;
 
 import java.util.Properties;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.tx.Transaction;
 
 public final class TxPoolModule {
     private static TxPoolModule singleton = null;
     public static final String MODULENAME = "module_name";
 
-    private static ITxPool<TransactionExtend> TXPOOL;
+    private static ITxPool<Transaction> TXPOOL;
 
     @SuppressWarnings("unchecked")
     private TxPoolModule(Properties config) throws Exception {
         String moduleName = (String) config.get(MODULENAME);
         if (moduleName != null) {
             TXPOOL =
-                    (ITxPool<TransactionExtend>)
+                    (ITxPool<Transaction>)
                             getClass()
                                     .getClassLoader()
                                     .loadClass(moduleName)

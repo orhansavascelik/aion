@@ -11,7 +11,7 @@ import java.util.Map.Entry;
 import java.util.NoSuchElementException;
 import org.aion.api.server.types.CompiContrInfo;
 import org.aion.api.server.types.CompiledContr;
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.crypto.ECKey;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
@@ -21,7 +21,7 @@ import org.aion.mcf.type.AbstractBlock;
 import org.aion.solidity.Abi;
 import org.aion.solidity.CompilationResult;
 import org.aion.solidity.Compiler;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.util.string.StringUtils;
 import org.aion.zero.impl.blockchain.AionPendingStateImpl;
 import org.slf4j.Logger;
@@ -60,7 +60,7 @@ public abstract class Api<B extends AbstractBlock<?, ?>> {
 
     public boolean unlockAccount(
             final String _address, final String _password, final int _duration) {
-        return this.ACCOUNT_MANAGER.unlockAccount(AionAddress.wrap(_address), _password, _duration);
+        return this.ACCOUNT_MANAGER.unlockAccount(Address.wrap(_address), _password, _duration);
     }
 
     public boolean unlockAccount(
@@ -77,7 +77,7 @@ public abstract class Api<B extends AbstractBlock<?, ?>> {
     }
 
     public ECKey getAccountKey(final String _address) {
-        return ACCOUNT_MANAGER.getKey(AionAddress.wrap(_address));
+        return ACCOUNT_MANAGER.getKey(Address.wrap(_address));
     }
 
     @SuppressWarnings("rawtypes")

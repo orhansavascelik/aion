@@ -1,15 +1,15 @@
 package org.aion.precompiled.contracts.ATB;
 
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.crypto.AddressSpecs;
 import org.aion.crypto.HashUtil;
 import org.aion.fastvm.ExecutionContext;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 public class BridgeTestUtils {
     static ExecutionContext dummyContext() {
-        return context(AionAddress.ZERO_ADDRESS(), AionAddress.ZERO_ADDRESS(), new byte[0]);
+        return context(Address.ZERO_ADDRESS(), Address.ZERO_ADDRESS(), new byte[0]);
     }
 
     static ExecutionContext context(Address from, Address to, byte[] txData) {
@@ -25,7 +25,7 @@ public class BridgeTestUtils {
         final int flag = 0;
         final int kind = 0;
         final Address blockCoinbase =
-                new AionAddress(
+                new Address(
                         AddressSpecs.computeA0Address(HashUtil.h256("coinbase".getBytes())));
         long blockNumber = 0;
         long blockTimestamp = 0;

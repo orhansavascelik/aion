@@ -1,5 +1,5 @@
 module aion.apiserver {
-    requires aion.type.api;
+
     requires aion.zero.impl;
     requires aion.log;
     requires aion.p2p;
@@ -19,7 +19,7 @@ module aion.apiserver {
     requires com.github.benmanes.caffeine;
     requires com.google.common;
     requires jdk.unsupported;
-    requires aion.type;
+
     requires aion.util;
     requires aion.vm.api;
 

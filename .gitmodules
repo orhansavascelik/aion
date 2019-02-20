@@ -1,15 +1,15 @@
 [submodule "aion_fastvm"]
     path = aion_fastvm
     url = https://github.com/aionnetwork/aion_fastvm
-    branch = re-architect
+    branch = re-architecting-1
 [submodule "aion_api"]
-    path = aion_api
-    url = https://github.com/aionnetwork/aion_api
-    branch = re-architect
+        path = aion_api
+        url = https://github.com/aionnetwork/aion_api.git
 [submodule "aion_gui"]
 	path = aion_gui
 	url = https://github.com/aionnetwork/aion_gui
+        branch = re-architect1
 [submodule "aion_vm_api"]
 	path = aion_vm_api
 	url = https://github.com/aionnetwork/vm_api.git
-	branch = dev
+	branch = jay-rearchi

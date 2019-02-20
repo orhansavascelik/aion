@@ -10,9 +10,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 import org.aion.p2p.IP2pMgr;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.zero.impl.sync.msg.BroadcastTx;
-import org.aion.zero.types.AionTransaction;
 import org.slf4j.Logger;
 
 /**
@@ -37,7 +36,7 @@ public class TxCollector {
 
     private AtomicInteger queueSizeBytes = new AtomicInteger();
     private AtomicLong lastBroadcast = new AtomicLong(System.currentTimeMillis());
-    private LinkedBlockingQueue<TransactionExtend> transactionQueue;
+    private LinkedBlockingQueue<Transaction> transactionQueue;
 
     private ReentrantLock broadcastLock = new ReentrantLock();
     private Logger LOG;
@@ -62,9 +61,9 @@ public class TxCollector {
     /*
      * Submit a batch list of tx
      */
-    public void submitTx(List<TransactionExtend> txs) {
+    public void submitTx(List<Transaction> txs) {
         // addAll potentially dangerous for blocking queue, add manually
-        for (TransactionExtend tx : txs) {
+        for (Transaction tx : txs) {
             try {
                 transactionQueue.offer(tx, offerTimeout, TimeUnit.MILLISECONDS);
                 if (queueSizeBytes.addAndGet(tx.getEncoded().length) >= this.maxTxBufferSize)
@@ -79,7 +78,7 @@ public class TxCollector {
     /*
      * Submit a single Tx
      */
-    public void submitTx(TransactionExtend tx) {
+    public void submitTx(Transaction tx) {
         try {
             transactionQueue.offer(tx, offerTimeout, TimeUnit.MILLISECONDS);
             if (queueSizeBytes.addAndGet(tx.getEncoded().length) >= this.maxTxBufferSize)
@@ -92,7 +91,7 @@ public class TxCollector {
 
     private void broadcastTx() {
 
-        List<TransactionExtend> transactions;
+        List<Transaction> transactions;
         broadcastLock.lock();
         try {
 
@@ -104,7 +103,7 @@ public class TxCollector {
             transactionQueue.drainTo(transactions);
 
             // Reduce counter
-            for (TransactionExtend a : transactions) {
+            for (Transaction a : transactions) {
                 queueSizeBytes.addAndGet(a.getEncoded().length * -1);
             }
         } finally {

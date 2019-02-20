@@ -3,9 +3,7 @@ package org.aion.mcf.vm.types;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.vm.DataWord;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 
@@ -14,7 +12,7 @@ import org.aion.util.conversions.Hex;
  * DoubleDataWord is 256 bits. Its intended use is strictly within pre-compiled contracts, which
  * often have need of 32-byte storage keys.
  */
-public class DoubleDataWord implements Comparable<DoubleDataWord>, DataWord {
+public class DoubleDataWord implements Comparable<DoubleDataWord>, org.aion.interfaces.vm.DataWord {
     public static final BigInteger MAX_VALUE =
             BigInteger.valueOf(2).pow(256).subtract(BigInteger.ONE);
 
@@ -74,7 +72,7 @@ public class DoubleDataWord implements Comparable<DoubleDataWord>, DataWord {
     }
 
     /** Constructs a new DoubleDataWord from wrapper. */
-    public DoubleDataWord(Wrapper wrapper) {
+    public DoubleDataWord(ByteArrayWrapper wrapper) {
         this(wrapper.getData());
     }
 
@@ -115,7 +113,7 @@ public class DoubleDataWord implements Comparable<DoubleDataWord>, DataWord {
     }
 
     @Override
-    public DataWord copy() {
+    public org.aion.interfaces.vm.DataWord copy() {
         byte[] bs = new byte[BYTES];
         System.arraycopy(data, 0, bs, 0, BYTES);
         return new DoubleDataWord(bs);
@@ -163,7 +161,7 @@ public class DoubleDataWord implements Comparable<DoubleDataWord>, DataWord {
     }
 
     @Override
-    public Wrapper toWrapper() {
+    public ByteArrayWrapper toWrapper() {
         return ByteArrayWrapper.wrap(data);
     }
 }

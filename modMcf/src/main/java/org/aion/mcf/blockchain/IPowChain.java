@@ -1,9 +1,9 @@
 package org.aion.mcf.blockchain;
 
 import java.math.BigInteger;
-import org.aion.type.api.interfaces.common.Hash;
-import org.aion.type.api.interfaces.block.Block;
+import org.aion.interfaces.block.Block;
 import org.aion.mcf.type.AbstractBlockHeader;
+import org.aion.types.Hash256;
 
 /**
  * proof of work chain interface.
@@ -19,5 +19,5 @@ public interface IPowChain<BLK extends Block, BH extends AbstractBlockHeader>
 
     void setTotalDifficulty(BigInteger totalDifficulty);
 
-    BigInteger getTotalDifficultyByHash(Hash hash);
+    BigInteger getTotalDifficultyByHash(Hash256 hash);
 }

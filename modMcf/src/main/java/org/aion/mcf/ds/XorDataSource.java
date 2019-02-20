@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
 import org.aion.util.bytes.ByteUtil;
 
 public class XorDataSource implements ByteArrayKeyValueStore {
@@ -79,7 +79,7 @@ public class XorDataSource implements ByteArrayKeyValueStore {
         source.putBatch(converted);
     }
 
-    public void updateBatch(Map<Wrapper, byte[]> rows, boolean erasure) {
+    public void updateBatch(Map<ByteArrayWrapper, byte[]> rows, boolean erasure) {
         // not supported
         throw new UnsupportedOperationException(
                 "ByteArrayWrapper map not supported in XorDataSource.updateBatch yet");

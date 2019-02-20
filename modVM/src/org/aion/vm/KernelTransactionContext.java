@@ -6,11 +6,9 @@ import java.nio.ByteOrder;
 import org.aion.avm.core.NodeEnvironment;
 import org.aion.fastvm.SideEffects;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.Transaction;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
-import org.aion.type.api.interfaces.vm.DataWord;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.Transaction;
+import org.aion.interfaces.vm.DataWord;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.vm.api.interfaces.TransactionContext;
 import org.aion.vm.api.interfaces.TransactionSideEffects;
@@ -171,9 +169,9 @@ public class KernelTransactionContext implements TransactionContext {
 
     @Override
     public Address getContractAddress() {
-        byte[] rawBytes = ((TransactionExtend)this.transaction).getContractAddress().toBytes();
+        byte[] rawBytes = this.transaction.getContractAddress().toBytes();
         rawBytes[0] = NodeEnvironment.CONTRACT_PREFIX;
-        return AionAddress.wrap(rawBytes);
+        return Address.wrap(rawBytes);
     }
 
     /** @return the origination address, which is the sender of original transaction. */

@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Properties;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.db.utils.FileUtils;
 import org.aion.log.AionLoggerFactory;
 import org.junit.AfterClass;

@@ -8,32 +8,31 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-import org.aion.type.Hash256;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Hash;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.PruneConfig;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.crypto.HashUtil;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.PruneConfig;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.db.RepositoryConfig;
 import org.aion.mcf.config.CfgPrune;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.ImportResult;
 import org.aion.mcf.valid.BlockHeaderValidator;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.ContractFactory;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.Hash256;
 import org.aion.zero.exceptions.HeaderStructureException;
 import org.aion.zero.impl.blockchain.ChainConfiguration;
 import org.aion.zero.impl.core.energy.AbstractEnergyStrategyLimit;
 import org.aion.zero.impl.core.energy.TargetStrategy;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.db.ContractDetailsAion;
+import org.aion.zero.impl.db.RepositoryConfigImpl;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.impl.valid.AionExtraDataRule;
@@ -227,7 +226,7 @@ public class StandaloneBlockchain extends AionBlockchainImpl {
                             ? new A0BCConfig() {
                                 @Override
                                 public Address getCoinbase() {
-                                    return AionAddress.ZERO_ADDRESS();
+                                    return Address.ZERO_ADDRESS();
                                 }
 
                                 @Override
@@ -242,7 +241,7 @@ public class StandaloneBlockchain extends AionBlockchainImpl {
 
                                 @Override
                                 public Address getMinerCoinbase() {
-                                    return AionAddress.ZERO_ADDRESS();
+                                    return Address.ZERO_ADDRESS();
                                 }
 
                                 @Override
@@ -310,7 +309,7 @@ public class StandaloneBlockchain extends AionBlockchainImpl {
 
             AionGenesis.Builder genesisBuilder = new AionGenesis.Builder();
             for (Map.Entry<ByteArrayWrapper, AccountState> acc : this.initialState.entrySet()) {
-                genesisBuilder.addPreminedAccount(AionAddress.wrap(acc.getKey()), acc.getValue());
+                genesisBuilder.addPreminedAccount(Address.wrap(acc.getKey()), acc.getValue());
             }
 
             AionGenesis genesis;
@@ -369,7 +368,7 @@ public class StandaloneBlockchain extends AionBlockchainImpl {
 
         assert (tdPublic.equals(tdForHash));
         assert (tdPublic.equals(tdCached));
-        assert (tdForHash.equals(getTotalDifficultyByHash((Hash)new Hash256(bestBlockHash))));
+        assert (tdForHash.equals(getTotalDifficultyByHash(new Hash256(bestBlockHash))));
     }
 
     @Override

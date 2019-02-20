@@ -2,12 +2,13 @@ package org.aion.zero.impl.db;
 
 import java.util.Map;
 import java.util.Properties;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.DetailsProvider;
-import org.aion.type.api.interfaces.db.PruneConfig;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.DetailsProvider;
+import org.aion.interfaces.db.PruneConfig;
+import org.aion.interfaces.db.RepositoryConfig;
 import org.aion.mcf.config.CfgDb;
 
-public class RepositoryConfig implements org.aion.type.api.interfaces.db.RepositoryConfig {
+public class RepositoryConfigImpl implements RepositoryConfig {
 
     private final String dbPath;
     private final PruneConfig cfgPrune;
@@ -38,7 +39,7 @@ public class RepositoryConfig implements org.aion.type.api.interfaces.db.Reposit
         return new Properties(prop);
     }
 
-    public RepositoryConfig(
+    public RepositoryConfigImpl(
             final String dbPath, final DetailsProvider detailsProvider, final CfgDb cfgDb) {
         this.dbPath = dbPath;
         this.detailsProvider = detailsProvider;

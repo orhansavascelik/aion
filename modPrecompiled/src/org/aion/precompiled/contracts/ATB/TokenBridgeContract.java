@@ -11,15 +11,15 @@ import static org.aion.precompiled.contracts.ATB.BridgeUtilities.orDefaultDword;
 
 import java.math.BigInteger;
 import javax.annotation.Nonnull;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.type.StatefulPrecompiledContract;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.vm.api.interfaces.TransactionContext;
 import org.aion.zero.types.AionInternalTx;
 
@@ -244,7 +244,7 @@ public class TokenBridgeContract extends StatefulPrecompiledContract implements 
 
     private boolean isFromAddress(byte[] address) {
         if (address == null) return false;
-        return this.context.getSenderAddress().equals(AionAddress.wrap(address));
+        return this.context.getSenderAddress().equals(Address.wrap(address));
     }
 
     /**
@@ -267,7 +267,7 @@ public class TokenBridgeContract extends StatefulPrecompiledContract implements 
 
         // assemble an internal transaction
         Address from = this.contractAddress;
-        Address recipient = new AionAddress(to);
+        Address recipient = new Address(to);
         BigInteger nonce = this.track.getNonce(from);
         DataWord valueToSend = new DataWord(value);
         byte[] dataToSend = new byte[0];

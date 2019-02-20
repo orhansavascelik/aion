@@ -13,7 +13,7 @@ import org.aion.mcf.valid.BlockNumberRule;
 import org.aion.mcf.valid.GrandParentBlockHeaderValidator;
 import org.aion.mcf.valid.ParentBlockHeaderValidator;
 import org.aion.mcf.valid.TimeStampRule;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.api.BlockConstants;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.core.DiffCalc;

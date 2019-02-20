@@ -5,16 +5,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.types.Address;
 
 /** Contract details cache implementation. */
 public class ContractDetailsCacheImpl extends AbstractContractDetails {
 
-    private Map<Wrapper, Wrapper> storage = new HashMap<>();
+    private Map<ByteArrayWrapper, ByteArrayWrapper> storage = new HashMap<>();
 
     public ContractDetails origContract;
 
@@ -48,7 +48,7 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
      * @param value The value.
      */
     @Override
-    public void put(Wrapper key, Wrapper value) {
+    public void put(ByteArrayWrapper key, ByteArrayWrapper value) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
 
@@ -57,7 +57,7 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
     }
 
     @Override
-    public void delete(Wrapper key) {
+    public void delete(ByteArrayWrapper key) {
         Objects.requireNonNull(key);
 
         storage.put(key, null);
@@ -71,8 +71,8 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
      * @return the associated value or null.
      */
     @Override
-    public Wrapper get(Wrapper key) {
-        Wrapper value;
+    public ByteArrayWrapper get(ByteArrayWrapper key) {
+        ByteArrayWrapper value;
 
         // go to parent if not locally stored
         if (!storage.containsKey(key)) {
@@ -166,8 +166,8 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
             return;
         }
 
-        for (Wrapper key : storage.keySet()) {
-            Wrapper value = storage.get(key);
+        for (ByteArrayWrapper key : storage.keySet()) {
+            ByteArrayWrapper value = storage.get(key);
             if (value != null) {
                 origContract.put(key, storage.get(key));
             } else {
@@ -234,17 +234,17 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
         return contractDetailsCacheCopy;
     }
 
-    private Map<Wrapper, byte[]> getDeepCopyOfCodes() {
-        Map<Wrapper, byte[]> originalCodes = this.getCodes();
+    private Map<ByteArrayWrapper, byte[]> getDeepCopyOfCodes() {
+        Map<ByteArrayWrapper, byte[]> originalCodes = this.getCodes();
 
         if (originalCodes == null) {
             return null;
         }
 
-        Map<Wrapper, byte[]> copyOfCodes = new HashMap<>();
-        for (Entry<Wrapper, byte[]> codeEntry : originalCodes.entrySet()) {
+        Map<ByteArrayWrapper, byte[]> copyOfCodes = new HashMap<>();
+        for (Entry<ByteArrayWrapper, byte[]> codeEntry : originalCodes.entrySet()) {
 
-            Wrapper keyWrapper = null;
+            ByteArrayWrapper keyWrapper = null;
             if (codeEntry.getKey() != null) {
                 byte[] keyBytes = codeEntry.getKey().getData();
                 keyWrapper = new ByteArrayWrapper(Arrays.copyOf(keyBytes, keyBytes.length));
@@ -259,15 +259,15 @@ public class ContractDetailsCacheImpl extends AbstractContractDetails {
         return copyOfCodes;
     }
 
-    private Map<Wrapper, Wrapper> getDeepCopyOfStorage() {
+    private Map<ByteArrayWrapper, ByteArrayWrapper> getDeepCopyOfStorage() {
         if (this.storage == null) {
             return null;
         }
 
-        Map<Wrapper, Wrapper> storageCopy = new HashMap<>();
-        for (Entry<Wrapper, Wrapper> storageEntry : this.storage.entrySet()) {
-            Wrapper keyWrapper = null;
-            Wrapper valueWrapper = null;
+        Map<ByteArrayWrapper, ByteArrayWrapper> storageCopy = new HashMap<>();
+        for (Entry<ByteArrayWrapper, ByteArrayWrapper> storageEntry : this.storage.entrySet()) {
+            ByteArrayWrapper keyWrapper = null;
+            ByteArrayWrapper valueWrapper = null;
 
             if (storageEntry.getKey() != null) {
                 byte[] keyBytes = storageEntry.getKey().getData();

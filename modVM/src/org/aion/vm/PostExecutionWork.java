@@ -1,7 +1,7 @@
 package org.aion.vm;
 
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.zero.types.AionTransaction;

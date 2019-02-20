@@ -48,14 +48,14 @@ import org.aion.evtmgr.impl.evt.EventTx;
 import org.aion.mcf.account.Keystore;
 import org.aion.p2p.INode;
 import org.aion.solidity.Abi;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.Hash256;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
-import org.aion.type.api.interfaces.tx.TxReceipt;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.Hash256;
+import org.aion.interfaces.block.Block;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.tx.Transaction;
+import org.aion.interfaces.tx.TxReceipt;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.util.string.StringUtils;
@@ -83,7 +83,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
 
     private BlockingQueue<TxPendingStatus> pendingStatus;
     private BlockingQueue<TxWaitingMappingUpdate> txWait;
-    private Map<Wrapper, Map.Entry<Wrapper, Wrapper>> msgIdMapping;
+    private Map<ByteArrayWrapper, Map.Entry<ByteArrayWrapper, ByteArrayWrapper>> msgIdMapping;
 
     public static boolean heartBeatMsg(byte[] msg) {
         if (msg == null || msg.length != JAVAAPI_REQHEADER_LEN) {
@@ -178,7 +178,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
         }
     }
 
-    protected void pendingTxReceived(TransactionExtend _tx) {
+    protected void pendingTxReceived(Transaction _tx) {
         installedFilters
                 .values()
                 .forEach(
@@ -190,7 +190,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
     }
 
     protected void pendingTxUpdate(TxReceipt _txRcpt, EventTx.STATE _state) {
-        Wrapper txHashW =
+        ByteArrayWrapper txHashW =
                 ByteArrayWrapper.wrap(
                         ((AionTxReceipt) _txRcpt).getTransaction().getTransactionHash());
 
@@ -255,7 +255,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
 
     private boolean isFilterEnabled;
 
-    private Map<Wrapper, AionBlockSummary> explorerBlockCache;
+    private Map<ByteArrayWrapper, AionBlockSummary> explorerBlockCache;
 
     private void cacheBlock(AionBlockSummary cbs) {
         // put the block summary in the cache
@@ -430,7 +430,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
 
                         ArgTxCall params =
                                 new ArgTxCall(
-                                        AionAddress.wrap(req.getFrom().toByteArray()),
+                                        Address.wrap(req.getFrom().toByteArray()),
                                         null,
                                         Hex.decode(new String(bytes).substring(2)),
                                         BigInteger.ZERO,
@@ -532,7 +532,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                         Message.req_unlockAccount req = Message.req_unlockAccount.parseFrom(data);
                         result =
                                 this.unlockAccount(
-                                        AionAddress.wrap(req.getAccount().toByteArray()),
+                                        Address.wrap(req.getAccount().toByteArray()),
                                         req.getPassword(),
                                         req.getDuration());
                     } catch (InvalidProtocolBufferException e) {
@@ -546,7 +546,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                     return ApiUtil.combineRetMsg(retHeader, (byte) (result ? 0x01 : 0x00));
                 }
 
-                // TransactionExtend Module
+                // Transaction Module
             case Message.Funcs.f_getBalance_VALUE:
                 {
                     if (service != Message.Servs.s_chain_VALUE) {
@@ -559,7 +559,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                     try {
                         Message.req_getBalance req = Message.req_getBalance.parseFrom(data);
 
-                        Address addr = AionAddress.wrap(req.getAddress().toByteArray());
+                        Address addr = Address.wrap(req.getAddress().toByteArray());
 
                         balance = this.getBalance(addr);
                     } catch (InvalidProtocolBufferException e) {
@@ -590,7 +590,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                     try {
                         Message.req_getNonce req = Message.req_getNonce.parseFrom(data);
 
-                        Address addr = AionAddress.wrap(req.getAddress().toByteArray());
+                        Address addr = Address.wrap(req.getAddress().toByteArray());
 
                         nonce = this.getNonce(addr);
                     } catch (InvalidProtocolBufferException e) {
@@ -722,8 +722,8 @@ public class ApiAion0 extends ApiAion implements IApiAion {
 
                         ArgTxCall params =
                                 new ArgTxCall(
-                                        AionAddress.wrap(req.getFrom().toByteArray()),
-                                        AionAddress.wrap(req.getTo().toByteArray()),
+                                        Address.wrap(req.getFrom().toByteArray()),
+                                        Address.wrap(req.getTo().toByteArray()),
                                         req.getData().toByteArray(),
                                         new BigInteger(req.getNonce().toByteArray()),
                                         new BigInteger(req.getValue().toByteArray()),
@@ -751,7 +751,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                     Message.req_getCode req;
                     try {
                         req = Message.req_getCode.parseFrom(data);
-                        Address to = AionAddress.wrap(req.getAddress().toByteArray());
+                        Address to = Address.wrap(req.getAddress().toByteArray());
 
                         byte[] code = this.getCode(to);
                         if (code == null) {
@@ -802,7 +802,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                                             .newBuilder()
                                             .setAddress(
                                                     ByteString.copyFrom(
-                                                            AionAddress.wrap(log.address)
+                                                            Address.wrap(log.address)
                                                                     .toBytes()))
                                             .setData(
                                                     ByteString.copyFrom(
@@ -872,8 +872,8 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                     try {
                         req = Message.req_call.parseFrom(data);
 
-                        Address from = AionAddress.wrap(req.getFrom().toByteArray());
-                        Address to = AionAddress.wrap(req.getTo().toByteArray());
+                        Address from = Address.wrap(req.getFrom().toByteArray());
+                        Address to = Address.wrap(req.getTo().toByteArray());
 
                         BigInteger value = new BigInteger(req.getValue().toByteArray());
                         byte[] d = req.getData().toByteArray();
@@ -1088,7 +1088,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                     try {
                         req = Message.req_getTransactionCount.parseFrom(data);
                         long blkNr = req.getBlocknumber();
-                        Address addr = AionAddress.wrap(req.getAddress().toByteArray());
+                        Address addr = Address.wrap(req.getAddress().toByteArray());
 
                         if (blkNr < -1) {
                             return ApiUtil.toReturnHeader(
@@ -1375,7 +1375,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                                 pKeyList.add(ByteString.copyFrom(pKey));
                             }
 
-                            addressList.add(ByteString.copyFrom(AionAddress.wrap(addr).toBytes()));
+                            addressList.add(ByteString.copyFrom(Address.wrap(addr).toBytes()));
                         }
 
                         Message.rsp_accountCreate rsp =
@@ -1415,7 +1415,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                         Message.req_accountlock req = Message.req_accountlock.parseFrom(data);
                         result =
                                 this.lockAccount(
-                                        AionAddress.wrap(req.getAccount().toByteArray()),
+                                        Address.wrap(req.getAccount().toByteArray()),
                                         req.getPassword());
                     } catch (InvalidProtocolBufferException e) {
                         LOG.error("ApiAion0.process.lockAccount exception: [{}]", e.getMessage());
@@ -1468,8 +1468,8 @@ public class ApiAion0 extends ApiAion implements IApiAion {
 
                         ArgTxCall params =
                                 new ArgTxCall(
-                                        AionAddress.wrap(req.getFrom().toByteArray()),
-                                        AionAddress.wrap(req.getTo().toByteArray()),
+                                        Address.wrap(req.getFrom().toByteArray()),
+                                        Address.wrap(req.getTo().toByteArray()),
                                         req.getData().toByteArray(),
                                         BigInteger.ZERO,
                                         new BigInteger(req.getValue().toByteArray()),
@@ -1516,11 +1516,11 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                             i < req.getKeyFileList().size() && i < ACCOUNT_CREATE_LIMIT;
                             i++) {
                         addrMap.put(
-                                AionAddress.wrap(req.getKeyFile(i).getAddress().toByteArray()),
+                                Address.wrap(req.getKeyFile(i).getAddress().toByteArray()),
                                 req.getKeyFile(i).getPassword());
                     }
 
-                    Map<Address, Wrapper> res =
+                    Map<Address, ByteArrayWrapper> res =
                             ((short) request[2] == Message.Funcs.f_exportAccounts_VALUE)
                                     ? Keystore.exportAccount(addrMap)
                                     : Keystore.backupAccount(addrMap);
@@ -1887,7 +1887,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                                     LOG.debug("BlockSqlByRange: cache HIT for #: " + b.getNumber());
                                 }
 
-                                Map<Wrapper, AionTxReceipt> receipts = new HashMap<>();
+                                Map<ByteArrayWrapper, AionTxReceipt> receipts = new HashMap<>();
                                 for (AionTxReceipt r : bs.getReceipts()) {
                                     receipts.put(
                                             new ByteArrayWrapper(
@@ -2120,7 +2120,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                                                     + b.getNumber());
                                 }
 
-                                Map<Wrapper, AionTxReceipt> receipts = new HashMap<>();
+                                Map<ByteArrayWrapper, AionTxReceipt> receipts = new HashMap<>();
                                 for (AionTxReceipt r : bs.getReceipts()) {
                                     receipts.put(
                                             new ByteArrayWrapper(
@@ -2366,7 +2366,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
                                                 a -> {
                                                     BigInteger b =
                                                             this.getBalance(
-                                                                    AionAddress.wrap(
+                                                                    Address.wrap(
                                                                             a.toByteArray()));
 
                                                     Message.t_AccountDetail.Builder builder =
@@ -2422,7 +2422,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
     }
 
     @Override
-    public Map<Wrapper, Entry<Wrapper, Wrapper>> getMsgIdMapping() {
+    public Map<ByteArrayWrapper, Entry<ByteArrayWrapper, ByteArrayWrapper>> getMsgIdMapping() {
         return this.msgIdMapping;
     }
 
@@ -3010,7 +3010,7 @@ public class ApiAion0 extends ApiAion implements IApiAion {
     }
 
     @Override
-    public Map<Wrapper, AionTxReceipt> getPendingReceipts() {
+    public Map<ByteArrayWrapper, AionTxReceipt> getPendingReceipts() {
         return this.pendingReceipts;
     }
 

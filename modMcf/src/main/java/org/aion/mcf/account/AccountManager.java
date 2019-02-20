@@ -9,7 +9,7 @@ import java.util.Optional;
 import org.aion.crypto.ECKey;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.slf4j.Logger;
 
 /** Account Manger Class */

@@ -8,10 +8,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.Flushable;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.Flushable;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.mcf.core.AbstractTxInfo;
 import org.aion.mcf.ds.ObjectDataSource;
 import org.aion.mcf.ds.Serializer;
@@ -24,7 +24,7 @@ public class TransactionStore<
                 TXR extends AbstractTxReceipt<TX>,
                 INFO extends AbstractTxInfo<TXR, TX>>
         implements Flushable, Closeable {
-    private final LRUMap<Wrapper, Object> lastSavedTxHash = new LRUMap<>(5000);
+    private final LRUMap<ByteArrayWrapper, Object> lastSavedTxHash = new LRUMap<>(5000);
     private final ObjectDataSource<List<INFO>> source;
 
     private final ReadWriteLock lock = new ReentrantReadWriteLock();

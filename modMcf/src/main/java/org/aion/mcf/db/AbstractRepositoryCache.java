@@ -9,14 +9,14 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.core.AccountState;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.slf4j.Logger;
 
 /**
@@ -300,7 +300,7 @@ public abstract class AbstractRepositoryCache<BSB extends IBlockStoreBase<?, ?>>
     }
 
     @Override
-    public void addStorageRow(Address address, Wrapper key, Wrapper value) {
+    public void addStorageRow(Address address, ByteArrayWrapper key, ByteArrayWrapper value) {
         lockDetails.writeLock().lock();
         try {
             getContractDetails(address).put(key, value);
@@ -310,7 +310,7 @@ public abstract class AbstractRepositoryCache<BSB extends IBlockStoreBase<?, ?>>
     }
 
     @Override
-    public void removeStorageRow(Address address, Wrapper key) {
+    public void removeStorageRow(Address address, ByteArrayWrapper key) {
         lockDetails.writeLock().lock();
         try {
             getContractDetails(address).delete(key);
@@ -320,13 +320,13 @@ public abstract class AbstractRepositoryCache<BSB extends IBlockStoreBase<?, ?>>
     }
 
     @Override
-    public Wrapper getStorageValue(Address address, Wrapper key) {
+    public ByteArrayWrapper getStorageValue(Address address, ByteArrayWrapper key) {
         return getContractDetails(address).get(key);
     }
 
     @Override
-    public Map<Wrapper, Wrapper> getStorage(
-            Address address, Collection<Wrapper> keys) {
+    public Map<ByteArrayWrapper, ByteArrayWrapper> getStorage(
+            Address address, Collection<ByteArrayWrapper> keys) {
         ContractDetails details = getContractDetails(address);
         return (details == null) ? Collections.emptyMap() : details.getStorage(keys);
     }

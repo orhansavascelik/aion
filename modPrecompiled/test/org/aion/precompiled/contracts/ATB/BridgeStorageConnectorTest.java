@@ -2,18 +2,18 @@ package org.aion.precompiled.contracts.ATB;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.precompiled.contracts.DummyRepo;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.junit.Before;
 import org.junit.Test;
 
 public class BridgeStorageConnectorTest {
     private BridgeStorageConnector connector;
-    private static final Address contractAddress = AionAddress.ZERO_ADDRESS();
+    private static final Address contractAddress = Address.ZERO_ADDRESS();
 
     @Before
     public void beforeEach() {

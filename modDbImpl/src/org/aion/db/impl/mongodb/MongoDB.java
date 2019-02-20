@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.PersistenceMethod;
+import org.aion.interfaces.db.PersistenceMethod;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.db.impl.AbstractDB;
 import org.bson.BsonBinary;
 import org.bson.BsonDocument;
@@ -81,7 +81,7 @@ public class MongoDB extends AbstractDB {
          * @param value the value to write. Null indicates we should delete this key
          * @return this
          */
-        public WriteBatch addEdit(Wrapper key, byte[] value) {
+        public WriteBatch addEdit(ByteArrayWrapper key, byte[] value) {
             return addEdit(key.getData(), value);
         }
 
@@ -105,8 +105,8 @@ public class MongoDB extends AbstractDB {
          * @param kvPairs The collection of key value pairs we want to write in
          * @return this
          */
-        public WriteBatch addEditsWrapper(Map<Wrapper, byte[]> kvPairs) {
-            for (Wrapper key : kvPairs.keySet()) {
+        public WriteBatch addEditsWrapper(Map<ByteArrayWrapper, byte[]> kvPairs) {
+            for (ByteArrayWrapper key : kvPairs.keySet()) {
                 addEdit(key, kvPairs.get(key));
             }
 
@@ -141,7 +141,7 @@ public class MongoDB extends AbstractDB {
         }
     }
 
-    /** Wrapper class holding the result of writing a batch */
+    /** ByteArrayWrapper class holding the result of writing a batch */
     private static class WriteBatchResult {
 
         /** Total number of updates which were committed */
@@ -326,9 +326,9 @@ public class MongoDB extends AbstractDB {
     }
 
     @Override
-    public boolean commitCache(Map<Wrapper, byte[]> cache) {
+    public boolean commitCache(Map<ByteArrayWrapper, byte[]> cache) {
         check();
-        check(cache.keySet().stream().map(Wrapper::getData).collect(Collectors.toList()));
+        check(cache.keySet().stream().map(ByteArrayWrapper::getData).collect(Collectors.toList()));
 
         WriteBatch edits = new WriteBatch().addEditsWrapper(cache);
         WriteBatchResult result = doBulkWrite(edits);

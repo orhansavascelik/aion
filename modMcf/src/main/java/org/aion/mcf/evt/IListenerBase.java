@@ -1,7 +1,7 @@
 package org.aion.mcf.evt;
 
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.mcf.blockchain.IPendingStateInternal;
 import org.aion.mcf.type.AbstractBlockSummary;
 import org.aion.mcf.type.AbstractTxReceipt;
@@ -9,13 +9,13 @@ import org.aion.mcf.type.AbstractTxReceipt;
 /** Listener base interface. */
 public interface IListenerBase<
         BLK extends Block<?, ?>,
-        TX extends TransactionExtend,
+        TX extends Transaction,
         TXR extends AbstractTxReceipt<?>,
         BS extends AbstractBlockSummary<?, ?, ?, ?>> {
 
     enum PendingTransactionState {
         /**
-         * TransactionExtend may be dropped due to: - Invalid transaction (invalid nonce, low nrg price,
+         * Transaction may be dropped due to: - Invalid transaction (invalid nonce, low nrg price,
          * insufficient account funds, invalid signature) - Timeout (when pending transaction is not
          * included to any block for last [transaction.outdated.threshold] blocks This is the final
          * state

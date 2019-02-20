@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.p2p.Ctrl;
 import org.aion.p2p.Handler;

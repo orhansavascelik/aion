@@ -2,8 +2,8 @@ package org.aion.zero.types;
 
 import java.math.BigInteger;
 import java.util.List;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.interfaces.block.Block;
+import org.aion.types.Address;
 
 /** aion block interface. */
 public interface AionBlock extends Block<AionTransaction, A0BlockHeader> {

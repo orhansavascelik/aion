@@ -39,11 +39,11 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.PruneConfig;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.PruneConfig;
+import org.aion.interfaces.db.RepositoryConfig;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.crypto.ECKey;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
@@ -206,7 +206,7 @@ public class TaskImportBlocksTest {
 
         // populate initial input lists
         List<AionBlock> batch = new ArrayList<>();
-        Map<Wrapper, Object> imported = new HashMap<>();
+        Map<ByteArrayWrapper, Object> imported = new HashMap<>();
 
         AionBlock current = chain.getBestBlock();
         while (current.getNumber() > 0) {
@@ -290,9 +290,9 @@ public class TaskImportBlocksTest {
 
         // populate initial input lists
         List<AionBlock> allBlocks = new ArrayList<>();
-        Map<Wrapper, Object> allHashes = new HashMap<>();
+        Map<ByteArrayWrapper, Object> allHashes = new HashMap<>();
         List<AionBlock> unrestrictedBlocks = new ArrayList<>();
-        Map<Wrapper, Object> unrestrictedHashes = new HashMap<>();
+        Map<ByteArrayWrapper, Object> unrestrictedHashes = new HashMap<>();
 
         for (long i = 0; i <= height; i++) {
             AionBlock current = chain.getBlockByNumber(i);

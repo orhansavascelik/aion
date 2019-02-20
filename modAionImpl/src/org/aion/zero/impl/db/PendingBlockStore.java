@@ -22,10 +22,10 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.Flushable;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.Flushable;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.db.impl.DBVendor;
@@ -549,7 +549,7 @@ public class PendingBlockStore implements Flushable, Closeable {
      * @return a map of queue identifiers and lists of blocks containing all the separate chain
      *     queues stored at that level.
      */
-    public Map<Wrapper, List<AionBlock>> loadBlockRange(long level) {
+    public Map<ByteArrayWrapper, List<AionBlock>> loadBlockRange(long level) {
         databaseLock.readLock().lock();
 
         try {
@@ -562,7 +562,7 @@ public class PendingBlockStore implements Flushable, Closeable {
 
             // get all the blocks in the given queues
             List<AionBlock> list;
-            Map<Wrapper, List<AionBlock>> blocks = new HashMap<>();
+            Map<ByteArrayWrapper, List<AionBlock>> blocks = new HashMap<>();
             for (byte[] queue : queueHashes) {
                 list = queueSource.get(queue);
                 if (list != null) {
@@ -589,14 +589,14 @@ public class PendingBlockStore implements Flushable, Closeable {
      */
     public void dropPendingQueues(
             long level,
-            Collection<Wrapper> queues,
-            Map<Wrapper, List<AionBlock>> blocks) {
+            Collection<ByteArrayWrapper> queues,
+            Map<ByteArrayWrapper, List<AionBlock>> blocks) {
 
         databaseLock.writeLock().lock();
 
         try {
             // delete imported queues & blocks
-            for (Wrapper q : queues) {
+            for (ByteArrayWrapper q : queues) {
                 // load the queue from disk
                 List<AionBlock> currentQ = queueSource.get(q.getData());
 

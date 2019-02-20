@@ -12,8 +12,8 @@ import org.aion.mcf.type.AbstractBlock;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPList;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.zero.exceptions.HeaderStructureException;
@@ -41,7 +41,7 @@ public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> imp
     // copy constructor
     public AionBlock(AionBlock block) {
         this.header = new A0BlockHeader(block.getHeader());
-        for (TransactionExtend tx : block.getTransactionsList()) {
+        for (Transaction tx : block.getTransactionsList()) {
             this.transactionsList.add((AionTransaction) tx.clone());
         }
         this.parsed = true;
@@ -329,7 +329,7 @@ public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> imp
 
         if (!getTransactionsList().isEmpty()) {
             toStringBuff.append("Txs [\n");
-            for (TransactionExtend tx : getTransactionsList()) {
+            for (Transaction tx : getTransactionsList()) {
                 toStringBuff.append(tx);
                 toStringBuff.append("\n");
             }
@@ -351,7 +351,7 @@ public class AionBlock extends AbstractBlock<A0BlockHeader, AionTransaction> imp
         toStringBuff.append("hash=").append(ByteUtil.toHexString(this.getHash()));
         toStringBuff.append(header.toFlatString());
 
-        for (TransactionExtend tx : getTransactionsList()) {
+        for (Transaction tx : getTransactionsList()) {
             toStringBuff.append("\n");
             toStringBuff.append(tx.toString());
         }

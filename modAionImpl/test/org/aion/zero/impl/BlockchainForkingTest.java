@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import org.aion.util.biginteger.BIUtil;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.core.ImportResult;
 import org.aion.zero.impl.blockchain.ChainConfiguration;

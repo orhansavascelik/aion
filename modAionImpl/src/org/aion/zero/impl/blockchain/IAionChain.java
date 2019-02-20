@@ -2,11 +2,11 @@ package org.aion.zero.impl.blockchain;
 
 import java.math.BigInteger;
 import java.util.List;
-import org.aion.type.api.interfaces.db.Repository;
+import org.aion.interfaces.db.Repository;
 import org.aion.mcf.blockchain.IChainInstancePOW;
 import org.aion.mcf.blockchain.IPowChain;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.zero.impl.AionHub;
 import org.aion.zero.impl.query.QueryInterface;
 import org.aion.zero.types.A0BlockHeader;
@@ -20,11 +20,11 @@ public interface IAionChain extends IChainInstancePOW, QueryInterface {
 
     void close();
 
-    TransactionExtend createTransaction(BigInteger nonce, Address to, BigInteger value, byte[] data);
+    Transaction createTransaction(BigInteger nonce, Address to, BigInteger value, byte[] data);
 
-    void broadcastTransaction(TransactionExtend transaction);
+    void broadcastTransaction(Transaction transaction);
 
-    AionTxReceipt callConstant(TransactionExtend tx, AionBlock block);
+    AionTxReceipt callConstant(Transaction tx, AionBlock block);
 
     Repository<?, ?> getRepository();
 
@@ -32,13 +32,13 @@ public interface IAionChain extends IChainInstancePOW, QueryInterface {
 
     Repository<?, ?> getSnapshotTo(byte[] root);
 
-    List<TransactionExtend> getWireTransactions();
+    List<Transaction> getWireTransactions();
 
-    List<TransactionExtend> getPendingStateTransactions();
+    List<Transaction> getPendingStateTransactions();
 
     AionHub getAionHub();
 
     void exitOn(long number);
 
-    long estimateTxNrg(TransactionExtend tx, AionBlock block);
+    long estimateTxNrg(Transaction tx, AionBlock block);
 }

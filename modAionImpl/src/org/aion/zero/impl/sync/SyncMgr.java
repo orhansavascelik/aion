@@ -17,8 +17,8 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.evtmgr.IEvent;
@@ -55,7 +55,7 @@ public final class SyncMgr {
     // store the downloaded blocks that are ready to import
     private final BlockingQueue<BlocksWrapper> downloadedBlocks = new LinkedBlockingQueue<>();
     // store the hashes of blocks which have been successfully imported
-    private final Map<Wrapper, Object> importedBlockHashes =
+    private final Map<ByteArrayWrapper, Object> importedBlockHashes =
             Collections.synchronizedMap(new LRUMap<>(4096));
     private int blocksQueueMax; // block header wrappers
     private AionBlockchainImpl chain;

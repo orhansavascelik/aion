@@ -11,7 +11,7 @@ import java.util.List;
 import org.aion.mcf.blockchain.IChainCfg;
 import org.aion.mcf.blockchain.valid.IValidRule.RuleError;
 import org.aion.mcf.core.IDifficultyCalculator;
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.zero.impl.valid.AionDifficultyRule;
 import org.aion.zero.types.A0BlockHeader;
@@ -43,7 +43,7 @@ public class DifficultyRuleTest {
                         (byte) 0x01,
                         1,
                         new byte[32],
-                        AionAddress.ZERO_ADDRESS(),
+                        Address.ZERO_ADDRESS(),
                         new byte[256],
                         ByteUtil.intToBytes(1),
                         null,
@@ -57,7 +57,7 @@ public class DifficultyRuleTest {
                         (byte) 0x01,
                         2,
                         new byte[32],
-                        AionAddress.ZERO_ADDRESS(),
+                        Address.ZERO_ADDRESS(),
                         new byte[256],
                         ByteUtil.intToBytes(1),
                         null,
@@ -80,7 +80,7 @@ public class DifficultyRuleTest {
                         (byte) 0x01,
                         3,
                         new byte[32],
-                        AionAddress.ZERO_ADDRESS(),
+                        Address.ZERO_ADDRESS(),
                         new byte[256],
                         new byte[17],
                         null,
@@ -113,7 +113,7 @@ public class DifficultyRuleTest {
                         (byte) 0x01,
                         3,
                         new byte[32],
-                        AionAddress.ZERO_ADDRESS(),
+                        Address.ZERO_ADDRESS(),
                         new byte[256],
                         ByteUtil.bigIntegerToBytes(BigInteger.ONE, 16),
                         null,

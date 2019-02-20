@@ -1,6 +1,6 @@
 package org.aion.zero.db;
 
-import static org.aion.type.ByteArrayWrapper.wrap;
+import static org.aion.types.ByteArrayWrapper.wrap;
 import static org.aion.util.bytes.ByteUtil.EMPTY_BYTE_ARRAY;
 import static org.aion.crypto.HashUtil.EMPTY_TRIE_HASH;
 import static org.aion.crypto.HashUtil.h256;
@@ -10,11 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
-import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.interfaces.db.ContractDetails;
 
 import org.aion.mcf.db.AbstractContractDetails;
 import org.aion.mcf.ds.XorDataSource;
@@ -23,7 +23,7 @@ import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPItem;
 import org.aion.rlp.RLPList;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 public class AionContractDetailsImpl extends AbstractContractDetails {
 
@@ -31,7 +31,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
 
     private byte[] rlpEncoded;
 
-    private Address address = AionAddress.EMPTY_ADDRESS();
+    private Address address = Address.EMPTY_ADDRESS();
 
     private SecureTrie storageTrie = new SecureTrie(null);
 
@@ -45,7 +45,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     private AionContractDetailsImpl(
-            Address address, SecureTrie storageTrie, Map<Wrapper, byte[]> codes) {
+            Address address, SecureTrie storageTrie, Map<ByteArrayWrapper, byte[]> codes) {
         this.address = address;
         this.storageTrie = storageTrie;
         setCodes(codes);
@@ -60,7 +60,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     /**
-     * Adds the key-value pair to the database unless value is an Wrapper whose underlying
+     * Adds the key-value pair to the database unless value is an ByteArrayWrapper whose underlying
      * byte array consists only of zeros. In this case, if key already exists in the database it
      * will be deleted.
      *
@@ -68,7 +68,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      * @param value The value.
      */
     @Override
-    public void put(Wrapper key, Wrapper value) {
+    public void put(ByteArrayWrapper key, ByteArrayWrapper value) {
         Objects.requireNonNull(key);
         Objects.requireNonNull(value);
 
@@ -84,7 +84,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     @Override
-    public void delete(Wrapper key) {
+    public void delete(ByteArrayWrapper key) {
         Objects.requireNonNull(key);
 
         storageTrie.delete(key.getData());
@@ -101,7 +101,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
      * @return the corresponding value or a zero-byte DataWord if no such value.
      */
     @Override
-    public Wrapper get(Wrapper key) {
+    public ByteArrayWrapper get(ByteArrayWrapper key) {
         byte[] data = storageTrie.get(key.getData());
         return (data == null || data.length == 0)
                 ? null
@@ -155,9 +155,9 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
         RLPElement code = rlpList.get(4);
 
         if (address.getRLPData() == null) {
-            this.address = AionAddress.EMPTY_ADDRESS();
+            this.address = Address.EMPTY_ADDRESS();
         } else {
-            this.address = AionAddress.wrap(address.getRLPData());
+            this.address = Address.wrap(address.getRLPData());
         }
 
         if (code instanceof RLPList) {
@@ -334,7 +334,7 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
         aionContractDetailsCopy.setDirty(this.isDirty());
         aionContractDetailsCopy.setDeleted(this.isDeleted());
         aionContractDetailsCopy.address =
-                (this.address == null) ? null : new AionAddress(this.address.toBytes());
+                (this.address == null) ? null : new Address(this.address.toBytes());
         aionContractDetailsCopy.rlpEncoded =
                 (this.rlpEncoded == null)
                         ? null
@@ -345,17 +345,17 @@ public class AionContractDetailsImpl extends AbstractContractDetails {
     }
 
     // TODO: move this method up to the parent class.
-    private Map<Wrapper, byte[]> getDeepCopyOfCodes() {
-        Map<Wrapper, byte[]> originalCodes = this.getCodes();
+    private Map<ByteArrayWrapper, byte[]> getDeepCopyOfCodes() {
+        Map<ByteArrayWrapper, byte[]> originalCodes = this.getCodes();
 
         if (originalCodes == null) {
             return null;
         }
 
-        Map<Wrapper, byte[]> copyOfCodes = new HashMap<>();
-        for (Entry<Wrapper, byte[]> codeEntry : originalCodes.entrySet()) {
+        Map<ByteArrayWrapper, byte[]> copyOfCodes = new HashMap<>();
+        for (Entry<ByteArrayWrapper, byte[]> codeEntry : originalCodes.entrySet()) {
 
-            Wrapper keyWrapper = null;
+            ByteArrayWrapper keyWrapper = null;
             if (codeEntry.getKey() != null) {
                 byte[] keyBytes = codeEntry.getKey().getData();
                 keyWrapper = new ByteArrayWrapper(Arrays.copyOf(keyBytes, keyBytes.length));

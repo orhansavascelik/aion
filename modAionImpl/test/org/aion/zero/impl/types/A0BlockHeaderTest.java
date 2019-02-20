@@ -2,7 +2,7 @@ package org.aion.zero.impl.types;
 
 import static com.google.common.truth.Truth.assertThat;
 
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.zero.exceptions.HeaderStructureException;
@@ -36,7 +36,7 @@ public class A0BlockHeaderTest {
 
         A0BlockHeader.Builder builder = new A0BlockHeader.Builder();
         // partial build
-        builder.withCoinbase(AionAddress.wrap(COINBASE))
+        builder.withCoinbase(Address.wrap(COINBASE))
                 .withStateRoot(STATE_ROOT)
                 .withTxTrieRoot(TRIE_ROOT)
                 .withExtraData(EXTRA_DATA)
@@ -73,7 +73,7 @@ public class A0BlockHeaderTest {
         // partial build
         builder.fromUnsafeSource()
                 .withStateRoot(STATE_ROOT)
-                .withCoinbase(AionAddress.wrap(COINBASE))
+                .withCoinbase(Address.wrap(COINBASE))
                 .withTxTrieRoot(TRIE_ROOT)
                 .withExtraData(EXTRA_DATA)
                 .withReceiptTrieRoot(RECEIPT_ROOT)
@@ -109,7 +109,7 @@ public class A0BlockHeaderTest {
         A0BlockHeader.Builder builder = new A0BlockHeader.Builder();
 
         builder.fromUnsafeSource()
-                .withCoinbase(AionAddress.wrap(COINBASE))
+                .withCoinbase(Address.wrap(COINBASE))
                 .withTxTrieRoot(TRIE_ROOT)
                 .withExtraData(EXTRA_DATA)
                 .withReceiptTrieRoot(RECEIPT_ROOT)

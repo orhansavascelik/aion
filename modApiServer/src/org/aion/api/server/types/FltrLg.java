@@ -3,9 +3,9 @@ package org.aion.api.server.types;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.block.BlockSummary;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.block.BlockSummary;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.mcf.vm.types.Bloom;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.zero.impl.core.BloomFilter;
@@ -51,7 +51,7 @@ public final class FltrLg extends Fltr {
         if (matchBloom(new Bloom(((AionBlock) blk).getLogBloom()))) {
             int txIndex = 0;
             for (AionTxReceipt receipt : receipts) {
-                TransactionExtend tx = receipt.getTransaction();
+                Transaction tx = receipt.getTransaction();
                 if (matchesContractAddress(tx.getDestinationAddress().toBytes())) {
                     if (matchBloom(receipt.getBloomFilter())) {
                         int logIndex = 0;
@@ -84,7 +84,7 @@ public final class FltrLg extends Fltr {
     public boolean onBlock(AionBlock blk, IAionBlockchain chain) {
         if (matchBloom(new Bloom(blk.getLogBloom()))) {
             int txIndex = 0;
-            for (TransactionExtend txn : blk.getTransactionsList()) {
+            for (Transaction txn : blk.getTransactionsList()) {
                 if (matchesContractAddress(txn.getDestinationAddress().toBytes())) {
                     // now that we know that our filter might match with some logs in this
                     // transaction, go ahead

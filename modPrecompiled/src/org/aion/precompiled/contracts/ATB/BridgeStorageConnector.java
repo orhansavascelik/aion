@@ -3,9 +3,9 @@ package org.aion.precompiled.contracts.ATB;
 import java.math.BigInteger;
 import java.util.Arrays;
 import javax.annotation.Nonnull;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.AccountState;
@@ -13,7 +13,7 @@ import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
 import org.aion.precompiled.PrecompiledUtilities;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 /**
  * Storage layout mapping as the following:
@@ -213,7 +213,7 @@ public class BridgeStorageConnector {
     // DWORD helpers
 
     private byte[] getWORD(@Nonnull final DataWord key) {
-        Wrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
+        ByteArrayWrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
         // C1
         if (word == null || Arrays.equals(word.getData(), ByteUtil.EMPTY_HALFWORD)) return null;
         return alignBytes(word.getData());
@@ -241,7 +241,7 @@ public class BridgeStorageConnector {
     }
 
     private byte[] getDWORD(@Nonnull final DataWord key) {
-        Wrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
+        ByteArrayWrapper word = this.track.getStorageValue(contractAddress, key.toWrapper());
         if (word == null) return null;
 
         if (word.isZero()) return null;

@@ -7,8 +7,7 @@ import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPItem;
 import org.aion.rlp.RLPList;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.util.conversions.Hex;
 import org.aion.vm.api.interfaces.IBloomFilter;
 import org.aion.vm.api.interfaces.IExecutionLog;
@@ -28,7 +27,7 @@ public class Log implements IExecutionLog {
         RLPList topics = (RLPList) logInfo.get(1);
         RLPItem data = (RLPItem) logInfo.get(2);
 
-        this.addr = address.getRLPData() != null ? AionAddress.wrap(address.getRLPData()) : null;
+        this.addr = address.getRLPData() != null ? Address.wrap(address.getRLPData()) : null;
         this.data = data.getRLPData() != null ? data.getRLPData() : new byte[] {};
 
         for (RLPElement topic1 : topics) {

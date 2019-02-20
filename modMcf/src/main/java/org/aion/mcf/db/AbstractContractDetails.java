@@ -8,9 +8,9 @@ import com.google.common.annotations.VisibleForTesting;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ContractDetails;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ContractDetails;
 import org.aion.util.conversions.Hex;
 
 /** Abstract contract details. */
@@ -22,7 +22,7 @@ public abstract class AbstractContractDetails implements ContractDetails {
     protected int prune;
     protected int detailsInMemoryStorageLimit;
 
-    private Map<Wrapper, byte[]> codes = new HashMap<>();
+    private Map<ByteArrayWrapper, byte[]> codes = new HashMap<>();
 
     protected AbstractContractDetails() {
         this(0, 64 * 1024);
@@ -61,15 +61,15 @@ public abstract class AbstractContractDetails implements ContractDetails {
         setDirty(true);
     }
 
-    public Map<Wrapper, byte[]> getCodes() {
+    public Map<ByteArrayWrapper, byte[]> getCodes() {
         return codes;
     }
 
-    protected void setCodes(Map<Wrapper, byte[]> codes) {
+    protected void setCodes(Map<ByteArrayWrapper, byte[]> codes) {
         this.codes = new HashMap<>(codes);
     }
 
-    public void appendCodes(Map<Wrapper, byte[]> codes) {
+    public void appendCodes(Map<ByteArrayWrapper, byte[]> codes) {
         this.codes.putAll(codes);
     }
 
@@ -120,10 +120,10 @@ public abstract class AbstractContractDetails implements ContractDetails {
 
     @VisibleForTesting
     @Override
-    public void setStorage(Map<Wrapper, Wrapper> storage) {
-        for (Map.Entry<Wrapper, Wrapper> entry : storage.entrySet()) {
-            Wrapper key = entry.getKey();
-            Wrapper value = entry.getValue();
+    public void setStorage(Map<ByteArrayWrapper, ByteArrayWrapper> storage) {
+        for (Map.Entry<ByteArrayWrapper, ByteArrayWrapper> entry : storage.entrySet()) {
+            ByteArrayWrapper key = entry.getKey();
+            ByteArrayWrapper value = entry.getValue();
 
             if (value != null) {
                 put(key, value);
@@ -134,14 +134,14 @@ public abstract class AbstractContractDetails implements ContractDetails {
     }
 
     @Override
-    public Map<Wrapper, Wrapper> getStorage(Collection<Wrapper> keys) {
-        Map<Wrapper, Wrapper> storage = new HashMap<>();
+    public Map<ByteArrayWrapper, ByteArrayWrapper> getStorage(Collection<ByteArrayWrapper> keys) {
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage = new HashMap<>();
 
         if (keys == null) {
             throw new IllegalArgumentException("Input keys cannot be null");
         } else {
-            for (Wrapper key : keys) {
-                Wrapper value = get(key);
+            for (ByteArrayWrapper key : keys) {
+                ByteArrayWrapper value = get(key);
 
                 // we check if the value is not null,
                 // cause we keep all historical keys

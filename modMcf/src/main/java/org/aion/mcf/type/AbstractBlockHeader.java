@@ -2,7 +2,7 @@ package org.aion.mcf.type;
 
 import java.math.BigInteger;
 import org.aion.log.AionLoggerFactory;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.spongycastle.util.BigIntegers;
 
 /** Abstract BlockHeader. */

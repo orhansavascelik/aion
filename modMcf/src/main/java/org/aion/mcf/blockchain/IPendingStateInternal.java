@@ -2,8 +2,8 @@ package org.aion.mcf.blockchain;
 
 import java.util.List;
 import org.aion.mcf.type.AbstractTxReceipt;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.tx.Transaction;
 
 /**
  * Internal pending state interface.

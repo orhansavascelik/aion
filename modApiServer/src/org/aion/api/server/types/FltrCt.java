@@ -2,7 +2,7 @@ package org.aion.api.server.types;
 
 import java.util.Arrays;
 import java.util.List;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 /** @author chris */
 // NOTE: only used by java api

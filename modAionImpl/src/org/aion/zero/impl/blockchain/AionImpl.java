@@ -13,12 +13,11 @@ import org.aion.mcf.blockchain.IPowChain;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.core.ImportResult;
 import org.aion.mcf.mine.IMineRunner;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
@@ -84,7 +83,7 @@ public class AionImpl implements IAionChain {
     @Override
     public IMineRunner getBlockMiner() {
 
-        AionAddress minerCoinbase = AionAddress.wrap(this.cfg.getConsensus().getMinerAddress());
+        Address minerCoinbase = Address.wrap(this.cfg.getConsensus().getMinerAddress());
 
         if (minerCoinbase.isEmptyAddress()) {
             LOG_GEN.info("Miner address is not set");
@@ -113,19 +112,19 @@ public class AionImpl implements IAionChain {
      */
     @SuppressWarnings("unchecked")
     @Override
-    public void broadcastTransaction(TransactionExtend transaction) {
+    public void broadcastTransaction(Transaction transaction) {
         transaction.getEncoded();
         collector.submitTx(transaction);
     }
 
-    public void broadcastTransactions(List<TransactionExtend> transaction) {
-        for (TransactionExtend tx : transaction) {
+    public void broadcastTransactions(List<Transaction> transaction) {
+        for (Transaction tx : transaction) {
             ((AionTransaction)tx).getEncoded();
         }
         collector.submitTx(transaction);
     }
 
-    public long estimateTxNrg(TransactionExtend tx, AionBlock block) {
+    public long estimateTxNrg(Transaction tx, AionBlock block) {
 
         if (((AionTransaction)tx).getSignature() == null) {
             ((AionTransaction)tx).sign(ECKeyFac.inst().fromPrivate(new byte[64]));
@@ -153,7 +152,7 @@ public class AionImpl implements IAionChain {
 
     /** TODO: pretty sure we can just use a static key, verify and implement */
     @Override
-    public AionTxReceipt callConstant(TransactionExtend tx, AionBlock block) {
+    public AionTxReceipt callConstant(Transaction tx, AionBlock block) {
         if (((AionTransaction)tx).getSignature() == null) {
             ((AionTransaction)tx).sign(ECKeyFac.inst().fromPrivate(new byte[64]));
         }
@@ -207,13 +206,13 @@ public class AionImpl implements IAionChain {
     }
 
     @Override
-    public List<TransactionExtend> getWireTransactions() {
-        return (List<TransactionExtend>)(List<?>)aionHub.getPendingState().getPendingTransactions();
+    public List<Transaction> getWireTransactions() {
+        return (List<Transaction>)(List<?>)aionHub.getPendingState().getPendingTransactions();
     }
 
     @Override
-    public List<TransactionExtend> getPendingStateTransactions() {
-        return (List<TransactionExtend>)(List<?>)aionHub.getPendingState().getPendingTransactions();
+    public List<Transaction> getPendingStateTransactions() {
+        return (List<Transaction>)(List<?>)aionHub.getPendingState().getPendingTransactions();
     }
 
     @Override

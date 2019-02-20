@@ -17,7 +17,7 @@ import org.aion.mcf.vm.types.Log;
 import org.aion.precompiled.PrecompiledResultCode;
 import org.aion.precompiled.PrecompiledTransactionResult;
 import org.aion.precompiled.PrecompiledUtilities;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.vm.api.interfaces.TransactionSideEffects;
 
 /**

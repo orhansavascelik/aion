@@ -32,8 +32,8 @@ import java.io.IOException;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
 import org.aion.log.AionLoggerFactory;
@@ -43,7 +43,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.StandaloneBlockchain.Builder;
@@ -74,7 +74,7 @@ public class TransactionExecutorTest {
                         .build();
         blockchain = bundle.bc;
         deployerKey = bundle.privateKeys.get(0);
-        deployer = new AionAddress(deployerKey.getAddress());
+        deployer = new Address(deployerKey.getAddress());
     }
 
     @After
@@ -349,7 +349,7 @@ public class TransactionExecutorTest {
     }
 
     private Address getNewRecipient(boolean isContractCreation) {
-        return (isContractCreation) ? null : new AionAddress(RandomUtils.nextBytes(Address.SIZE));
+        return (isContractCreation) ? null : new Address(RandomUtils.nextBytes(Address.SIZE));
     }
 
     private byte[] extractActualOutput(byte[] rawOutput) {

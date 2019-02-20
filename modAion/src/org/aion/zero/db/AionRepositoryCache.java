@@ -4,16 +4,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepositoryCache;
 import org.aion.mcf.db.ContractDetailsCacheImpl;
 import org.aion.mcf.db.IBlockStoreBase;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 public class AionRepositoryCache extends AbstractRepositoryCache<IBlockStoreBase<?, ?>> {
 
@@ -59,7 +59,7 @@ public class AionRepositoryCache extends AbstractRepositoryCache<IBlockStoreBase
                     // ignore contract state for empty accounts at storage
                     cachedDetails.remove(entry.getKey());
                 } else {
-                    cleanedCacheAccounts.put(new AionAddress(entry.getKey().toBytes()), account);
+                    cleanedCacheAccounts.put(new Address(entry.getKey().toBytes()), account);
                 }
             }
             // determine which contracts should get stored

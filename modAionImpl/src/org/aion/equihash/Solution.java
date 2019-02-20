@@ -8,7 +8,7 @@ import org.aion.zero.types.AionBlock;
  *
  * @author Ross Kitsis (ross@nuco.io)
  */
-public class Solution implements org.aion.type.api.interfaces.block.Solution {
+public class Solution implements org.aion.interfaces.block.Solution {
 
     private final AionBlock block;
     private final byte[] nonce;

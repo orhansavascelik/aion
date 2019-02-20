@@ -1,5 +1,6 @@
 package org.aion.api.server.types;
 
+import org.aion.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.string.StringUtils;
 import org.aion.zero.impl.types.AionBlock;
@@ -27,7 +28,7 @@ public class Tx {
         return (AionTransactionToJSON(tx, b, info.getIndex()));
     }
 
-    public static JSONObject AionTransactionToJSON(AionTransaction tx, AionBlock b, int index) {
+    public static JSONObject AionTransactionToJSON(Transaction tx, AionBlock b, int index) {
         if (tx == null) return null;
 
         JSONObject json = new JSONObject();

@@ -3,7 +3,7 @@ package org.aion.mcf.type;
 import java.math.BigInteger;
 import java.util.Arrays;
 import org.aion.rlp.RLP;
-import org.aion.type.api.interfaces.block.Block;
+import org.aion.interfaces.block.Block;
 import org.aion.util.time.TimeUtils;
 
 /** AbstractBlockWrapper */

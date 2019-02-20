@@ -32,8 +32,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
@@ -48,7 +48,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.vm.contracts.ContractUtils;
@@ -84,7 +84,7 @@ public class Benchmark {
         // create owner account
         ECKeyFac.setType(ECKeyType.ED25519);
         key = ECKeyFac.inst().create();
-        owner = AionAddress.wrap(key.getAddress());
+        owner = Address.wrap(key.getAddress());
         repo.createAccount(owner);
         repo.addBalance(owner, BigInteger.valueOf(1_000_000_000L));
 
@@ -285,7 +285,7 @@ public class Benchmark {
         // TODO: set a dummy limit of 5000000 for now
         return new AionBlock(
                 parentHash,
-                AionAddress.wrap(coinbase),
+                Address.wrap(coinbase),
                 logsBloom,
                 difficulty,
                 number,

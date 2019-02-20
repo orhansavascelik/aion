@@ -6,7 +6,7 @@ import static org.junit.Assert.assertNull;
 
 import java.io.File;
 import java.util.Properties;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.db.generic.DatabaseWithCache;
 import org.aion.db.generic.LockedDatabase;
 import org.aion.db.generic.SpecialLockedDatabase;

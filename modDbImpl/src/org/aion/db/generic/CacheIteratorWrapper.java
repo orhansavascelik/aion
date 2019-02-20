@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
 
 /**
  * A wrapper for the iterator needed by {@link DatabaseWithCache} conforming to the {@link Iterator}
@@ -17,20 +16,20 @@ import org.aion.type.api.interfaces.common.Wrapper;
 public class CacheIteratorWrapper implements Iterator<byte[]> {
     private final Iterator<byte[]> iterator;
     private byte[] next;
-    private final List<Wrapper> additions;
-    private final List<Wrapper> removals;
+    private final List<ByteArrayWrapper> additions;
+    private final List<ByteArrayWrapper> removals;
 
     /**
      * @implNote Building two wrappers for the same {@link Iterator} will lead to inconsistent
      *     behavior.
      */
     public CacheIteratorWrapper(
-            final Iterator<byte[]> iterator, Map<Wrapper, byte[]> dirtyEntries) {
+            final Iterator<byte[]> iterator, Map<ByteArrayWrapper, byte[]> dirtyEntries) {
         this.iterator = iterator;
         additions = new ArrayList<>();
         removals = new ArrayList<>();
 
-        for (Map.Entry<Wrapper, byte[]> entry : dirtyEntries.entrySet()) {
+        for (Map.Entry<ByteArrayWrapper, byte[]> entry : dirtyEntries.entrySet()) {
             if (entry.getValue() == null) {
                 removals.add(entry.getKey());
             } else {
@@ -42,7 +41,7 @@ public class CacheIteratorWrapper implements Iterator<byte[]> {
     @Override
     public boolean hasNext() {
         boolean seek = true;
-        Wrapper wrapper;
+        ByteArrayWrapper wrapper;
         // check in the database iterator
         while (seek && iterator.hasNext()) {
             next = iterator.next();

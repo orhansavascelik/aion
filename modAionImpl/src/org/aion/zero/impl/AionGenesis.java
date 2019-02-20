@@ -4,9 +4,9 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.AccountState;
@@ -15,7 +15,7 @@ import org.aion.mcf.trie.Trie;
 import org.aion.mcf.type.AbstractBlockHeader;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.precompiled.ContractFactory;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.db.AionContractDetailsImpl;
 import org.aion.zero.exceptions.HeaderStructureException;
 import org.aion.zero.impl.types.AionBlock;
@@ -50,7 +50,7 @@ public class AionGenesis extends AionBlock {
      * Corresponds to {@link AbstractBlockHeader#getCoinbase()} that mined the first block. For
      * fairness, the address is set to an address that is not ever to be used
      */
-    protected static final Address GENESIS_COINBASE = AionAddress.ZERO_ADDRESS();
+    protected static final Address GENESIS_COINBASE = Address.ZERO_ADDRESS();
 
     /**
      * Corresponds to {@link AbstractBlockHeader#getLogsBloom()} indicates the logsBloom of the
@@ -371,7 +371,7 @@ public class AionGenesis extends AionBlock {
             return worldTrie.getRootHash();
         }
 
-        private static Wrapper wrapValueForPut(DataWord value) {
+        private static ByteArrayWrapper wrapValueForPut(DataWord value) {
             return (value.isZero())
                     ? DataWord.ZERO.toWrapper()
                     : new ByteArrayWrapper(value.getNoLeadZeroesData());

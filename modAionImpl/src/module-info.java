@@ -2,7 +2,7 @@ module aion.zero.impl {
     uses org.aion.evtmgr.EventMgrModule;
     uses org.aion.txpool.TxPoolModule;
 
-    requires aion.type.api;
+
     requires aion.mcf;
     requires aion.log;
     requires aion.p2p;
@@ -28,7 +28,7 @@ module aion.zero.impl {
     requires jdk.management;
     requires java.xml;
     requires aion.util;
-    requires aion.type;
+
 
     exports org.aion.equihash;
     exports org.aion.zero.impl.blockchain;

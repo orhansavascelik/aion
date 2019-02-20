@@ -5,12 +5,12 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.HashUtil;
 import org.aion.mcf.core.ImportResult;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.junit.Ignore;
@@ -45,13 +45,13 @@ public class BlockchainAccountStateTest {
 
     private static AionBlock createBundleAndCheck(
             StandaloneBlockchain bc, ECKey key, AionBlock parentBlock) {
-        BigInteger accountNonce = bc.getRepository().getNonce(new AionAddress(key.getAddress()));
+        BigInteger accountNonce = bc.getRepository().getNonce(new Address(key.getAddress()));
         List<Transaction> transactions = new ArrayList<>();
 
         // create 400 transactions per bundle
         // byte[] nonce, Address to, byte[] value, byte[] data, long nrg, long nrgPrice
         for (int i = 0; i < 400; i++) {
-            Address destAddr = new AionAddress(HashUtil.h256(accountNonce.toByteArray()));
+            Address destAddr = new Address(HashUtil.h256(accountNonce.toByteArray()));
             AionTransaction sendTransaction =
                     new AionTransaction(
                             accountNonce.toByteArray(),
@@ -109,13 +109,13 @@ public class BlockchainAccountStateTest {
 
     private static AionBlock createContractBundle(
             StandaloneBlockchain bc, ECKey key, AionBlock parentBlock) {
-        BigInteger accountNonce = bc.getRepository().getNonce(new AionAddress(key.getAddress()));
+        BigInteger accountNonce = bc.getRepository().getNonce(new Address(key.getAddress()));
         List<Transaction> transactions = new ArrayList<>();
 
         // create 400 transactions per bundle
         // byte[] nonce, Address to, byte[] value, byte[] data, long nrg, long nrgPrice
         for (int i = 0; i < 400; i++) {
-            Address destAddr = new AionAddress(HashUtil.h256(accountNonce.toByteArray()));
+            Address destAddr = new Address(HashUtil.h256(accountNonce.toByteArray()));
             AionTransaction sendTransaction =
                     new AionTransaction(
                             accountNonce.toByteArray(),

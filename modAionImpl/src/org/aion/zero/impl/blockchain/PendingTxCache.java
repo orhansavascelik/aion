@@ -12,15 +12,15 @@ import java.util.TreeMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.zero.types.AionTransaction;
 import org.apache.commons.collections4.map.LRUMap;
 import org.slf4j.Logger;
 
 public class PendingTxCache {
 
-    private Map<Address, TreeMap<BigInteger, TransactionExtend>> cacheTxMap;
+    private Map<Address, TreeMap<BigInteger, Transaction>> cacheTxMap;
     private Map<Address, Integer> cachedAccountSize;
     protected static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.TX.name());
     private static int CacheMax;
@@ -68,7 +68,7 @@ public class PendingTxCache {
         return (currentSize.get() + txSize) > CacheMax;
     }
 
-    void addCacheTx(TransactionExtend tx) {
+    void addCacheTx(Transaction tx) {
         if (tx == null) {
             throw new NullPointerException();
         }
@@ -101,7 +101,7 @@ public class PendingTxCache {
                     } else {
                         // case 1b: replace nonce still over the cachelimit, replace it and find the
                         // best remove list
-                        for (Map.Entry<BigInteger, TransactionExtend> e :
+                        for (Map.Entry<BigInteger, Transaction> e :
                                 cacheTxMap.get(tx.getSenderAddress()).descendingMap().entrySet()) {
                             if (e.getKey().compareTo(nonce) > 0) {
                                 removeTx.add(e.getKey());
@@ -116,7 +116,7 @@ public class PendingTxCache {
                 } else {
                     // case 2: backward iterate the cache to remove bigger nonce tx until find the
                     // enough cache size
-                    for (Map.Entry<BigInteger, TransactionExtend> e :
+                    for (Map.Entry<BigInteger, Transaction> e :
                             cacheTxMap.get(tx.getSenderAddress()).descendingMap().entrySet()) {
                         if (e.getKey().compareTo(nonce) > 0) {
                             removeTx.add(e.getKey());
@@ -131,7 +131,7 @@ public class PendingTxCache {
 
                 if (findPosition) {
                     for (BigInteger bi : removeTx) {
-                        TransactionExtend remove = cacheTxMap.get(tx.getSenderAddress()).get(bi);
+                        Transaction remove = cacheTxMap.get(tx.getSenderAddress()).get(bi);
                         if (isPoolBackup) {
                             cacheClearTxHash.add(remove.getTransactionHash().clone());
                         }
@@ -149,14 +149,14 @@ public class PendingTxCache {
         } else {
             if (cacheTxMap.size() == cacheAccountLimit) {
                 // remove firstAccount in pendingTxCache
-                Iterator<Map.Entry<Address, TreeMap<BigInteger, TransactionExtend>>> it =
+                Iterator<Map.Entry<Address, TreeMap<BigInteger, Transaction>>> it =
                         cacheTxMap.entrySet().iterator();
                 if (it.hasNext()) {
-                    Map.Entry<Address, TreeMap<BigInteger, TransactionExtend>> e = it.next();
+                    Map.Entry<Address, TreeMap<BigInteger, Transaction>> e = it.next();
                     currentSize.addAndGet(-getAccountSize(e.getKey()));
                     cachedAccountSize.remove(tx.getSenderAddress());
                     if (isPoolBackup) {
-                        for (TransactionExtend removeTx : e.getValue().values()) {
+                        for (Transaction removeTx : e.getValue().values()) {
                             cacheClearTxHash.add(removeTx.getTransactionHash().clone());
                         }
                     }
@@ -227,8 +227,8 @@ public class PendingTxCache {
             if (cacheTxMap.get(addr) != null) {
                 currentSize.addAndGet(-getAccountSize(addr));
 
-                Map<BigInteger, TransactionExtend> headmap = cacheTxMap.get(addr).headMap(bn);
-                for (TransactionExtend tx : headmap.values()) {
+                Map<BigInteger, Transaction> headmap = cacheTxMap.get(addr).headMap(bn);
+                for (Transaction tx : headmap.values()) {
                     subAccountSize(addr, tx.getEncoded().length);
                     if (isPoolBackup) {
                         cacheClearTxHash.add(tx.getTransactionHash().clone());
@@ -255,7 +255,7 @@ public class PendingTxCache {
         }
 
         Map<BigInteger, AionTransaction> timeMap = new LinkedHashMap<>();
-        for (TreeMap<BigInteger, TransactionExtend> e : cacheTxMap.values()) {
+        for (TreeMap<BigInteger, Transaction> e : cacheTxMap.values()) {
             if (!e.isEmpty()) {
                 BigInteger ts = e.firstEntry().getValue().getTimeStampBI();
                 while (timeMap.get(ts) != null) {
@@ -275,7 +275,7 @@ public class PendingTxCache {
 
     Set<Address> getCacheTxAccount() {
         Set<Address> acc = new HashSet<>();
-        for (Map.Entry<Address, TreeMap<BigInteger, TransactionExtend>> e :
+        for (Map.Entry<Address, TreeMap<BigInteger, Transaction>> e :
                 this.cacheTxMap.entrySet()) {
             if (!e.getValue().isEmpty()) {
                 acc.add(e.getKey());
@@ -285,7 +285,7 @@ public class PendingTxCache {
         return acc;
     }
 
-    Map<BigInteger, TransactionExtend> getCacheTx(Address from) {
+    Map<BigInteger, Transaction> getCacheTx(Address from) {
         if (from == null) {
             throw new NullPointerException();
         }

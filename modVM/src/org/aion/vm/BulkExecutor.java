@@ -3,20 +3,20 @@ package org.aion.vm;
 import java.util.ArrayList;
 import java.util.List;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.tx.TxExecSummary;
-import org.aion.type.api.interfaces.vm.VirtualMachineSpecs;
 import org.aion.fastvm.FastVirtualMachine;
 import org.aion.fastvm.FastVmResultCode;
 import org.aion.fastvm.SideEffects;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.tx.TxExecSummary;
+import org.aion.interfaces.vm.VirtualMachineSpecs;
 import org.aion.kernel.AvmTransactionResult;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.KernelInterfaceForFastVM;
 import org.aion.mcf.vm.types.Log;
+import org.aion.types.Address;
 import org.aion.vm.VmFactoryImplementation.VM;
-import org.aion.type.api.interfaces.common.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.vm.api.interfaces.KernelInterface;
 import org.aion.vm.api.interfaces.ResultCode;
@@ -149,31 +149,33 @@ public class BulkExecutor {
                 AionTransaction firstTransactionInNextBatch =
                         this.executionBatch.getTransactions().get(currentIndex);
 
+                KernelInterface vmKernel;
                 if (transactionIsForFastVirtualMachine(firstTransactionInNextBatch)) {
-                    KernelInterfaceForFastVM fvmKernel =
+                    vmKernel =
                             new KernelInterfaceForFastVM(
                                     this.repositoryChild.startTracking(),
                                     this.allowNonceIncrement,
                                     this.isLocalCall);
                     virtualMachineForNextBatch =
-                            VirtualMachineProvider.getVirtualMachineInstance(VM.FVM, fvmKernel);
+                            VirtualMachineProvider.getVirtualMachineInstance(VM.FVM, vmKernel);
                     nextBatchToExecute =
                             fetchNextBatchOfTransactionsForFastVirtualMachine(currentIndex);
                 } else {
-                    KernelInterfaceForAVM avmKernel =
+                    vmKernel =
                             new KernelInterfaceForAVM(
                                     this.repositoryChild.startTracking(),
                                     this.allowNonceIncrement,
                                     this.isLocalCall);
                     virtualMachineForNextBatch =
-                            VirtualMachineProvider.getVirtualMachineInstance(VM.AVM, avmKernel);
+                            VirtualMachineProvider.getVirtualMachineInstance(VM.AVM, vmKernel);
                     nextBatchToExecute =
                             fetchNextBatchOfTransactionsForAionVirtualMachine(currentIndex);
                 }
 
                 // Execute the next batch of transactions using the specified virtual machine.
                 summaries.addAll(
-                        executeTransactions(virtualMachineForNextBatch, nextBatchToExecute));
+                        executeTransactions(
+                                virtualMachineForNextBatch, nextBatchToExecute, vmKernel));
                 currentIndex += nextBatchToExecute.size();
             }
 
@@ -182,12 +184,12 @@ public class BulkExecutor {
     }
 
     private List<AionTxExecSummary> executeTransactions(
-            VirtualMachine virtualMachine, ExecutionBatch details) {
+            VirtualMachine virtualMachine, ExecutionBatch details, KernelInterface vmKernel) {
         List<AionTxExecSummary> summaries = new ArrayList<>();
 
         // Run the transactions.
         SimpleFuture<TransactionResult>[] resultsAsFutures =
-                virtualMachine.run(details.getExecutionContexts());
+                virtualMachine.run(vmKernel, details.getExecutionContexts());
 
         // Process the results of the transactions.
         List<AionTransaction> transactions = details.getTransactions();
@@ -352,8 +354,8 @@ public class BulkExecutor {
         }
 
         if (this.logger.isDebugEnabled()) {
-            this.logger.debug("TransactionExtend receipt: {}", summary.getReceipt());
-            this.logger.debug("TransactionExtend logs: {}", summary.getLogs());
+            this.logger.debug("Transaction receipt: {}", summary.getReceipt());
+            this.logger.debug("Transaction logs: {}", summary.getLogs());
         }
     }
 

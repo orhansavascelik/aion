@@ -95,11 +95,10 @@ public final class VmFactoryImplementation implements VirtualMachineManager {
 
         switch (request) {
             case FVM:
-                FastVirtualMachine fvm = new FastVirtualMachine();
-                fvm.setKernelInterface(kernel);
-                return fvm;
+                //fvm.setKernelInterface(kernel);
+                return new FastVirtualMachine();
             case AVM:
-                this.aionVirtualMachine.setKernelInterface(kernel);
+                //this.aionVirtualMachine.setKernelInterface(kernel);
                 return this.aionVirtualMachine;
             default:
                 throw new UnsupportedOperationException("Unsupported VM request.");

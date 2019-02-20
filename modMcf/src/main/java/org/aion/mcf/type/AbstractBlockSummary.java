@@ -5,23 +5,22 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPElement;
 import org.aion.rlp.RLPList;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.functional.Functional;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
-import org.aion.type.api.interfaces.tx.TxExecSummary;
+import org.aion.types.Address;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.functional.Functional;
+import org.aion.interfaces.tx.TxExecSummary;
 import org.slf4j.Logger;
 
 /** AbstractBlockSummary */
 public class AbstractBlockSummary<
         BLK extends Block<?, ?>,
-        TX extends TransactionExtend,
+        TX extends Transaction,
         TXR extends AbstractTxReceipt<TX>,
         TXES extends TxExecSummary> {
 
@@ -53,7 +52,7 @@ public class AbstractBlockSummary<
     protected static Map<Address, BigInteger> decodeRewards(RLPList rewards) {
         return decodeMap(
                 rewards,
-                AionAddress::wrap,
+                Address::wrap,
                 bytes ->
                         (bytes == null || bytes.length == 0)
                                 ? BigInteger.ZERO

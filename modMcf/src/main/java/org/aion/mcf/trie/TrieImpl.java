@@ -7,7 +7,7 @@ import static org.aion.rlp.CompactEncoder.hasTerminator;
 import static org.aion.rlp.CompactEncoder.packNibbles;
 import static org.aion.rlp.CompactEncoder.unpackToNibbles;
 import static org.aion.rlp.RLP.calcElementPrefixSize;
-import static org.aion.type.ByteArrayWrapper.wrap;
+import static org.aion.types.ByteArrayWrapper.wrap;
 import static org.aion.util.bytes.ByteUtil.matchingNibbleLength;
 import static org.spongycastle.util.Arrays.concatenate;
 
@@ -33,9 +33,9 @@ import org.aion.rlp.RLP;
 import org.aion.rlp.RLPItem;
 import org.aion.rlp.RLPList;
 import org.aion.rlp.Value;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
 import org.aion.util.conversions.Hex;
 
 /**
@@ -522,7 +522,7 @@ public class TrieImpl implements Trie {
     public TrieImpl copy() {
         synchronized (cache) {
             TrieImpl trie = new TrieImpl(this.cache.getDb(), this.root);
-            for (Wrapper key : this.cache.getNodes().keySet()) {
+            for (ByteArrayWrapper key : this.cache.getNodes().keySet()) {
                 Node node = this.cache.getNodes().get(key);
                 trie.cache.getNodes().put(key, node.copy());
             }
@@ -551,17 +551,17 @@ public class TrieImpl implements Trie {
 
             this.scanTree(this.getRootHash(), collectAction);
 
-            Set<Wrapper> hashSet = collectAction.getCollectedHashes();
-            Map<Wrapper, Node> nodes = this.getCache().getNodes();
-            Set<Wrapper> toRemoveSet = new HashSet<>();
+            Set<ByteArrayWrapper> hashSet = collectAction.getCollectedHashes();
+            Map<ByteArrayWrapper, Node> nodes = this.getCache().getNodes();
+            Set<ByteArrayWrapper> toRemoveSet = new HashSet<>();
 
-            for (Wrapper key : nodes.keySet()) {
+            for (ByteArrayWrapper key : nodes.keySet()) {
                 if (!hashSet.contains(key)) {
                     toRemoveSet.add(key);
                 }
             }
 
-            for (Wrapper key : toRemoveSet) {
+            for (ByteArrayWrapper key : toRemoveSet) {
                 this.getCache().delete(key.getData());
                 // if (LOG.isTraceEnabled()) {
                 // LOG.trace("Garbage collected node: [{}]",
@@ -714,13 +714,13 @@ public class TrieImpl implements Trie {
     public byte[] serialize() {
 
         synchronized (cache) {
-            Map<Wrapper, Node> map = getCache().getNodes();
+            Map<ByteArrayWrapper, Node> map = getCache().getNodes();
 
             int keysTotalSize = 0;
             int valsTotalSize = 0;
 
-            Set<Wrapper> keys = map.keySet();
-            for (Wrapper key : keys) {
+            Set<ByteArrayWrapper> keys = map.keySet();
+            for (ByteArrayWrapper key : keys) {
                 Node node = map.get(key);
                 if (node == null) {
                     continue;
@@ -787,7 +787,7 @@ public class TrieImpl implements Trie {
 
             int k_1 = 0;
             int k_2 = 0;
-            for (Wrapper key : keys) {
+            for (ByteArrayWrapper key : keys) {
                 Node node = map.get(key);
                 if (node == null) {
                     continue;
@@ -849,7 +849,7 @@ public class TrieImpl implements Trie {
         return "root: " + Hex.toHexString(stateRoot) + "\n" + traceAction.getOutput();
     }
 
-    public Set<Wrapper> getTrieKeys(byte[] stateRoot) {
+    public Set<ByteArrayWrapper> getTrieKeys(byte[] stateRoot) {
         CollectFullSetOfNodes traceAction = new CollectFullSetOfNodes();
         traceTrie(stateRoot, traceAction);
         return traceAction.getCollectedHashes();

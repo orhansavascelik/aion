@@ -5,15 +5,14 @@ import static com.google.common.truth.Truth.assertThat;
 import java.math.BigInteger;
 import java.util.Optional;
 import java.util.Properties;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.PruneConfig;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.PruneConfig;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.db.RepositoryConfig;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.crypto.HashUtil;
 import org.aion.db.impl.DBVendor;
@@ -22,7 +21,7 @@ import org.aion.mcf.config.CfgPrune;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.db.AionContractDetailsImpl;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -69,7 +68,7 @@ public class AionRepositoryImplTest {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         byte[] originalRoot = repository.getRoot();
 
-        Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
+        Address defaultAccount = Address.wrap(ByteUtil.hexStringToBytes(value1));
 
         RepositoryCache track = repository.startTracking();
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
@@ -87,7 +86,7 @@ public class AionRepositoryImplTest {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         RepositoryCache track = repository.startTracking();
 
-        Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
+        Address defaultAccount = Address.wrap(ByteUtil.hexStringToBytes(value1));
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
 
         byte[] originalRoot = repository.getRoot();
@@ -108,7 +107,7 @@ public class AionRepositoryImplTest {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         RepositoryCache track = repository.startTracking();
 
-        Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
+        Address defaultAccount = Address.wrap(ByteUtil.hexStringToBytes(value1));
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
 
         // Consider the original root the one after an account has been added
@@ -137,7 +136,7 @@ public class AionRepositoryImplTest {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         RepositoryCache track = repository.startTracking();
 
-        Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
+        Address defaultAccount = Address.wrap(ByteUtil.hexStringToBytes(value1));
         track.addBalance(defaultAccount, BigInteger.valueOf(1));
 
         // Consider the original root the one after an account has been added
@@ -175,7 +174,7 @@ public class AionRepositoryImplTest {
         final AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         final RepositoryCache<AccountState, IBlockStoreBase<?, ?>> repoTrack =
                 repository.startTracking();
-        final Address defaultAccount = AionAddress.wrap(ByteUtil.hexStringToBytes(value1));
+        final Address defaultAccount = Address.wrap(ByteUtil.hexStringToBytes(value1));
         final byte[] key = HashUtil.blake128("hello".getBytes());
         final byte[] value = HashUtil.blake128("world".getBytes());
 
@@ -186,7 +185,7 @@ public class AionRepositoryImplTest {
         repoTrack.addStorageRow(
                 defaultAccount, new DataWord(key).toWrapper(), new DataWord(value).toWrapper());
 
-        Wrapper retrievedStorageValue =
+        ByteArrayWrapper retrievedStorageValue =
                 repoTrack.getStorageValue(defaultAccount, new DataWord(key).toWrapper());
         assertThat(retrievedStorageValue).isEqualTo(new DataWord(value).toWrapper());
 
@@ -202,8 +201,8 @@ public class AionRepositoryImplTest {
 
     @Test
     public void testSyncToPreviousRootNoFlush() {
-        final Address FIRST_ACC = AionAddress.wrap(value2);
-        final Address SECOND_ACC = AionAddress.wrap(value3);
+        final Address FIRST_ACC = Address.wrap(value2);
+        final Address SECOND_ACC = Address.wrap(value3);
 
         final AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         byte[] originalRoot = repository.getRoot();
@@ -248,7 +247,7 @@ public class AionRepositoryImplTest {
 
     @Test
     public void testSyncToPreviousRootWithFlush() {
-        final Address FIRST_ACC = AionAddress.wrap(value2);
+        final Address FIRST_ACC = Address.wrap(value2);
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
 
         byte[] originalRoot = repository.getRoot();
@@ -286,8 +285,8 @@ public class AionRepositoryImplTest {
     public void test17NodePreviousRootTest() {
         // not that it matters since things are going to be hashed, but at least
         // the root node should point to a node that contains references to both
-        final Address DOG_ACC = AionAddress.wrap("00000000000000000000000000000dog".getBytes());
-        final Address DOGE_ACC = AionAddress.wrap("0000000000000000000000000000doge".getBytes());
+        final Address DOG_ACC = Address.wrap("00000000000000000000000000000dog".getBytes());
+        final Address DOGE_ACC = Address.wrap("0000000000000000000000000000doge".getBytes());
 
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
         RepositoryCache track = repository.startTracking();
@@ -318,9 +317,9 @@ public class AionRepositoryImplTest {
         AionRepositoryImpl repository = AionRepositoryImpl.createForTesting(repoConfig);
 
         // make some changes to the repository
-        final Address account1 = AionAddress.wrap(value1);
-        final Address account2 = AionAddress.wrap(value2);
-        final Address account3 = AionAddress.wrap(value3);
+        final Address account1 = Address.wrap(value1);
+        final Address account2 = Address.wrap(value2);
+        final Address account3 = Address.wrap(value3);
         RepositoryCache track = repository.startTracking();
         track.addBalance(account1, BigInteger.ONE);
         track.addBalance(account2, BigInteger.TWO);

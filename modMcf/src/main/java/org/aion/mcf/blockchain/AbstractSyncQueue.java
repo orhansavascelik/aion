@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.block.Block;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.block.Block;
 import org.aion.mcf.type.AbstractBlockHeaderWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
 
 /** Abstract SyncQueue Class */
 public abstract class AbstractSyncQueue<
@@ -66,7 +66,7 @@ public abstract class AbstractSyncQueue<
         public boolean exported;
     }
 
-    protected Map<Long, Map<Wrapper, HeaderElement<BLK, BHW>>> headers = new HashMap<>();
+    protected Map<Long, Map<ByteArrayWrapper, HeaderElement<BLK, BHW>>> headers = new HashMap<>();
 
     protected long minNum = Integer.MAX_VALUE;
     protected long maxNum = 0;
@@ -74,7 +74,7 @@ public abstract class AbstractSyncQueue<
 
     public HeaderElement<BLK, BHW> getParent(HeaderElement<?, ?> self) {
         long bn = self.header.getNumber();
-        Map<Wrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(bn - 1);
+        Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(bn - 1);
         if (genHeaders == null) {
             return null;
         }
@@ -84,7 +84,7 @@ public abstract class AbstractSyncQueue<
     public List<HeaderElement<BLK, BHW>> getChildren(HeaderElement<?, ?> self) {
         List<HeaderElement<BLK, BHW>> ret = new ArrayList<>();
         long bn = self.header.getNumber();
-        Map<Wrapper, HeaderElement<BLK, BHW>> childGenHeaders = headers.get(bn + 1);
+        Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> childGenHeaders = headers.get(bn + 1);
         if (childGenHeaders != null) {
             for (HeaderElement<?, ?> child : childGenHeaders.values()) {
                 if (Arrays.equals(
@@ -97,7 +97,7 @@ public abstract class AbstractSyncQueue<
     }
 
     protected HeaderElement<BLK, BHW> findHeaderElement(BLK blk) {
-        Map<Wrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(blk.getNumber());
+        Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(blk.getNumber());
         if (genHeaders == null) {
             return null;
         }
@@ -121,7 +121,7 @@ public abstract class AbstractSyncQueue<
     protected List<BLK> exportBlocks() {
         List<BLK> ret = new ArrayList<>();
         for (long i = minNum; i <= maxNum; i++) {
-            Map<Wrapper, HeaderElement<BLK, BHW>> gen = headers.get(i);
+            Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> gen = headers.get(i);
             if (gen == null) {
                 break;
             }
@@ -150,7 +150,7 @@ public abstract class AbstractSyncQueue<
 
     protected void trimExported() {
         for (; minNum < darkZoneNum; minNum++) {
-            Map<Wrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(minNum);
+            Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(minNum);
             assert genHeaders.size() == 1;
             HeaderElement<BLK, BHW> headerElement = genHeaders.values().iterator().next();
             if (headerElement.exported) {
@@ -162,14 +162,14 @@ public abstract class AbstractSyncQueue<
     }
 
     protected List<HeaderElement<BLK, BHW>> getLongestChain() {
-        Map<Wrapper, HeaderElement<BLK, BHW>> lastValidatedGen = headers.get(darkZoneNum);
+        Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> lastValidatedGen = headers.get(darkZoneNum);
         assert lastValidatedGen.size() == 1;
         return getLongestChain(lastValidatedGen.values().iterator().next());
     }
 
     protected List<HeaderElement<BLK, BHW>> getLongestChain(HeaderElement<?, ?> parent) {
 
-        Map<Wrapper, HeaderElement<BLK, BHW>> gen =
+        Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> gen =
                 headers.get(parent.header.getNumber() + 1);
 
         List<HeaderElement<BLK, BHW>> longest = null; // = new ArrayList<>();
@@ -204,7 +204,7 @@ public abstract class AbstractSyncQueue<
             long newTrimNum =
                     getLongestChain().get(longestChain.size() - MAX_CHAIN_LEN).header.getNumber();
             for (int i = 0; darkZoneNum < newTrimNum; darkZoneNum++, i++) {
-                Wrapper wHash = new ByteArrayWrapper(longestChain.get(i).header.getHash());
+                ByteArrayWrapper wHash = new ByteArrayWrapper(longestChain.get(i).header.getHash());
                 putGenHeaders(darkZoneNum, Collections.singletonMap(wHash, longestChain.get(i)));
             }
             darkZoneNum--;
@@ -212,7 +212,7 @@ public abstract class AbstractSyncQueue<
     }
 
     protected void putGenHeaders(
-            long num, Map<Wrapper, HeaderElement<BLK, BHW>> genHeaders) {
+            long num, Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> genHeaders) {
         minNum = Math.min(minNum, num);
         maxNum = Math.max(maxNum, num);
         headers.put(num, genHeaders);
@@ -250,12 +250,12 @@ public abstract class AbstractSyncQueue<
 
     protected boolean addHeaderPriv(BHW header) {
         long num = header.getNumber();
-        Map<Wrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(num);
+        Map<ByteArrayWrapper, HeaderElement<BLK, BHW>> genHeaders = headers.get(num);
         if (genHeaders == null) {
             genHeaders = new HashMap<>();
             putGenHeaders(num, genHeaders);
         }
-        Wrapper wHash = new ByteArrayWrapper(header.getHash());
+        ByteArrayWrapper wHash = new ByteArrayWrapper(header.getHash());
         HeaderElement<BLK, BHW> headerElement = genHeaders.get(wHash);
         if (headerElement != null) {
             return false;

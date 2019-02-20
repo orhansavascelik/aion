@@ -1,6 +1,6 @@
 // package org.aion.equihash.benchmark;
 //
-// import AionAddress;
+// import Address;
 // import ByteUtil;
 // import org.aion.equihash.EquiUtils;
 // import org.aion.equihash.OptimizedEquiValidator;

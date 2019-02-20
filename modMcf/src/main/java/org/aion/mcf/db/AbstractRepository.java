@@ -11,11 +11,11 @@ import java.util.Objects;
 import java.util.Properties;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
-import org.aion.type.api.interfaces.block.BlockHeader;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryConfig;
+import org.aion.interfaces.block.BlockHeader;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.config.CfgDb.Names;
@@ -31,7 +31,7 @@ import org.slf4j.Logger;
 
 /** Abstract Repository class. */
 public abstract class AbstractRepository<
-                BLK extends AbstractBlock<BH, ? extends TransactionExtend>,
+                BLK extends AbstractBlock<BH, ? extends Transaction>,
                 BH extends BlockHeader,
                 BSB extends IBlockStoreBase<?, ?>>
         implements Repository<AccountState, BSB> {

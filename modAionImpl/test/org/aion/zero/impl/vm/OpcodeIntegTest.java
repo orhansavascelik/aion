@@ -33,8 +33,8 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.crypto.ECKey;
@@ -44,7 +44,7 @@ import org.aion.mcf.vm.types.DataWord;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.vm.api.interfaces.IExecutionLog;
 import org.aion.vm.api.interfaces.InternalTransactionInterface;
 import org.aion.zero.impl.BlockContext;
@@ -76,7 +76,7 @@ public class OpcodeIntegTest {
                         .build();
         blockchain = bundle.bc;
         deployerKey = bundle.privateKeys.get(0);
-        deployer = new AionAddress(deployerKey.getAddress());
+        deployer = new Address(deployerKey.getAddress());
         deployerBalance = Builder.DEFAULT_BALANCE;
     }
 
@@ -594,7 +594,7 @@ public class OpcodeIntegTest {
     public void testSuicideRecipientExists() throws IOException {
         RepositoryCache repo = blockchain.getRepository().startTracking();
         BigInteger balance = new BigInteger("32522224");
-        Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
+        Address recipient = new Address(RandomUtils.nextBytes(Address.SIZE));
         repo.createAccount(recipient);
 
         Address contract = deployContract(repo, "Suicide", "Suicide.sol", BigInteger.ZERO);
@@ -641,7 +641,7 @@ public class OpcodeIntegTest {
     public void testSuicideRecipientNewlyCreated() throws IOException {
         RepositoryCache repo = blockchain.getRepository().startTracking();
         BigInteger balance = new BigInteger("32522224");
-        Address recipient = new AionAddress(RandomUtils.nextBytes(Address.SIZE));
+        Address recipient = new Address(RandomUtils.nextBytes(Address.SIZE));
 
         Address contract = deployContract(repo, "Suicide", "Suicide.sol", BigInteger.ZERO);
         repo.addBalance(contract, balance);

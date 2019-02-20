@@ -3,10 +3,10 @@ package org.aion.types;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.types.AionTransaction;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
@@ -31,7 +31,7 @@ public class AionTransactionTest {
     @Test
     public void testSerializationZero() {
         byte[] nonce = RandomUtils.nextBytes(16);
-        Address to = AionAddress.wrap(RandomUtils.nextBytes(32));
+        Address to = Address.wrap(RandomUtils.nextBytes(32));
         byte[] value = RandomUtils.nextBytes(16);
         byte[] data = RandomUtils.nextBytes(64);
         long nrg = 0;
@@ -49,7 +49,7 @@ public class AionTransactionTest {
     @Test
     public void testClone() {
         byte[] nonce = RandomUtils.nextBytes(16);
-        Address to = AionAddress.wrap(RandomUtils.nextBytes(32));
+        Address to = Address.wrap(RandomUtils.nextBytes(32));
         byte[] value = RandomUtils.nextBytes(16);
         byte[] data = RandomUtils.nextBytes(64);
         long nrg = RandomUtils.nextLong(0, Long.MAX_VALUE);
@@ -75,7 +75,7 @@ public class AionTransactionTest {
         long nrgPrice = DataWord.ONE.longValue();
 
         AionTransaction tx =
-                new AionTransaction(nonce, AionAddress.wrap(to), value, data, nrg, nrgPrice);
+                new AionTransaction(nonce, Address.wrap(to), value, data, nrg, nrgPrice);
 
         long expected = 21000;
         for (byte b : data) {
@@ -88,7 +88,7 @@ public class AionTransactionTest {
     public void testTransactionCost2() {
         byte[] nonce = DataWord.ONE.getData();
         byte[] from = RandomUtils.nextBytes(Address.SIZE);
-        Address to = AionAddress.EMPTY_ADDRESS();
+        Address to = Address.EMPTY_ADDRESS();
         byte[] value = DataWord.ONE.getData();
         byte[] data = RandomUtils.nextBytes(128);
         long nrg = new DataWord(1000L).longValue();

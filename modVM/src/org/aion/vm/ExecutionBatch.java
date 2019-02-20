@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.aion.fastvm.ExecutionContext;
 import org.aion.mcf.vm.types.DataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionBlock;
 import org.apache.commons.lang3.ArrayUtils;

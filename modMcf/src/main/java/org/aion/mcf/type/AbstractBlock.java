@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.block.BlockHeader;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.block.BlockHeader;
 import org.aion.rlp.RLP;
 
 /** Abstract Block class. */

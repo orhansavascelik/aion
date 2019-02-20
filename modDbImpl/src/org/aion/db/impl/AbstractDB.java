@@ -8,9 +8,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.PersistenceMethod;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.PersistenceMethod;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.slf4j.Logger;
@@ -155,7 +155,7 @@ public abstract class AbstractDB implements ByteArrayKeyValueDatabase {
     }
 
     /** Functionality for directly interacting with the heap cache. */
-    public abstract boolean commitCache(Map<Wrapper, byte[]> cache);
+    public abstract boolean commitCache(Map<ByteArrayWrapper, byte[]> cache);
 
     @Override
     public Optional<byte[]> get(byte[] key) {

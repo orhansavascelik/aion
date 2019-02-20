@@ -1,6 +1,5 @@
 module aion.txpool {
-    requires aion.type.api;
-    requires aion.type;
+    requires aion.vm.api;
 
     exports org.aion.txpool;
 }

@@ -11,8 +11,8 @@ import org.aion.crypto.ECKey;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.rlp.RLP;
 import org.aion.rlp.RLPList;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.vm.api.interfaces.InternalTransactionInterface;
 
@@ -40,7 +40,7 @@ public class AionInternalTx extends AionTransaction implements InternalTransacti
             byte[] data,
             String note) {
 
-        // @TODO: pass null to nrg and nrgprice for base class ( TransactionExtend )
+        // @TODO: pass null to nrg and nrgprice for base class ( Transaction )
         // will be safe?
         super(nonce, receiveAddress, nullToEmpty(value), nullToEmpty(data));
 
@@ -149,8 +149,8 @@ public class AionInternalTx extends AionTransaction implements InternalTransacti
         int rlpIdx = 0;
         this.nonce = transaction.get(rlpIdx++).getRLPData();
         this.parentHash = transaction.get(rlpIdx++).getRLPData();
-        this.from = AionAddress.wrap(transaction.get(rlpIdx++).getRLPData());
-        this.to = AionAddress.wrap(transaction.get(rlpIdx++).getRLPData());
+        this.from = Address.wrap(transaction.get(rlpIdx++).getRLPData());
+        this.to = Address.wrap(transaction.get(rlpIdx++).getRLPData());
         this.value = transaction.get(rlpIdx++).getRLPData();
 
         // TODO: check the order

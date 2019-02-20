@@ -8,7 +8,7 @@ import org.aion.rlp.RLPList;
 import org.aion.util.conversions.Hex;
 
 /** Block identifier holds block hash and number <br> */
-public class BlockIdentifier implements org.aion.type.api.interfaces.block.BlockIdentifier {
+public class BlockIdentifier implements org.aion.interfaces.block.BlockIdentifier {
 
     /** Block hash */
     private byte[] hash;

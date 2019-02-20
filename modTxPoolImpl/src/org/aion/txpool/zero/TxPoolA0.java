@@ -16,19 +16,18 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.stream.Collectors;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.txpool.ITxPool;
 import org.aion.txpool.common.AbstractTxPool;
 import org.aion.txpool.common.AccountState;
 import org.aion.txpool.common.TxDependList;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.time.TimeInstant;
 import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
 
 @SuppressWarnings("unchecked")
-public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> implements ITxPool<TX> {
+public class TxPoolA0<TX extends Transaction> extends AbstractTxPool<TX> implements ITxPool<TX> {
 
     public TxPoolA0() {
         super();
@@ -113,10 +112,10 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
     public List<TX> add(List<TX> txl) {
 
         List<TX> newPendingTx = new ArrayList<>();
-        Map<Wrapper, TXState> mainMap = new HashMap<>();
+        Map<ByteArrayWrapper, TXState> mainMap = new HashMap<>();
         for (TX tx : txl) {
 
-            Wrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
+            ByteArrayWrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
             if (this.getMainMap().get(bw) != null) {
                 if (LOG.isWarnEnabled()) {
                     LOG.warn(
@@ -145,7 +144,7 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
                 snapshot();
             }
 
-            AbstractMap.SimpleEntry<Wrapper, BigInteger> entry =
+            AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger> entry =
                     this.getAccView(tx.getSenderAddress()).getMap().get(txNonce);
             if (entry != null) {
                 if (LOG.isTraceEnabled()) {
@@ -189,15 +188,15 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
     @Override
     public List<TX> remove(Map<Address, BigInteger> accNonce) {
 
-        List<Wrapper> bwList = new ArrayList<>();
+        List<ByteArrayWrapper> bwList = new ArrayList<>();
         for (Map.Entry<Address, BigInteger> en1 : accNonce.entrySet()) {
             AccountState as = this.getAccView(en1.getKey());
             lock.writeLock().lock();
-            Iterator<Map.Entry<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>>>
+            Iterator<Map.Entry<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>>>
                     it = as.getMap().entrySet().iterator();
 
             while (it.hasNext()) {
-                Map.Entry<BigInteger, AbstractMap.SimpleEntry<Wrapper, BigInteger>> en =
+                Map.Entry<BigInteger, AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger>> en =
                         it.next();
                 if (en1.getValue().compareTo(en.getKey()) > 0) {
                     bwList.add(en.getValue().getKey());
@@ -285,7 +284,7 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
         Set<Address> checkedAddress = Collections.synchronizedSet(new HashSet<>());
 
         for (TX tx : txs) {
-            Wrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
+            ByteArrayWrapper bw = ByteArrayWrapper.wrap(tx.getTransactionHash());
             lock.writeLock().lock();
             try {
                 if (this.getMainMap().remove(bw) == null) {
@@ -402,7 +401,7 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
 
         lock.readLock().lock();
         try {
-            AbstractMap.SimpleEntry<Wrapper, BigInteger> entry =
+            AbstractMap.SimpleEntry<ByteArrayWrapper, BigInteger> entry =
                     this.getAccView(from).getMap().get(txNonce);
             return (entry == null ? null : this.getMainMap().get(entry.getKey()).getTx());
         } finally {
@@ -418,7 +417,7 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
 
         List<TX> rtn = new ArrayList<>();
         for (Map.Entry<Address, AccountState> as : this.getFullAcc().entrySet()) {
-            for (Map.Entry<Wrapper, BigInteger> txMap : as.getValue().getMap().values()) {
+            for (Map.Entry<ByteArrayWrapper, BigInteger> txMap : as.getValue().getMap().values()) {
                 if (this.getMainMap().get(txMap.getKey()) == null) {
                     LOG.error("can't find the tx in the mainMap");
                     continue;
@@ -450,19 +449,19 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
         int cnt_txSz = 0;
         long cnt_nrg = 0;
         List<TX> rtn = new ArrayList<>();
-        Set<Wrapper> snapshotSet = new HashSet<>();
-        Map<Wrapper, Entry<Wrapper, TxDependList<Wrapper>>> nonPickedTx =
+        Set<ByteArrayWrapper> snapshotSet = new HashSet<>();
+        Map<ByteArrayWrapper, Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>> nonPickedTx =
                 new HashMap<>();
-        for (Entry<BigInteger, Map<Wrapper, TxDependList<Wrapper>>> e :
+        for (Entry<BigInteger, Map<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>> e :
                 this.getFeeView().entrySet()) {
 
             if (LOG.isTraceEnabled()) {
                 LOG.trace("snapshot  fee[{}]", e.getKey().toString());
             }
 
-            SortedMap<BigInteger, Entry<Wrapper, TxDependList<Wrapper>>>
+            SortedMap<BigInteger, Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>>>
                     timeTxDep = Collections.synchronizedSortedMap(new TreeMap<>());
-            for (Entry<Wrapper, TxDependList<Wrapper>> pair :
+            for (Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>> pair :
                     e.getValue().entrySet()) {
                 BigInteger ts = pair.getValue().getTimeStamp();
                 while (timeTxDep.get(ts.add(BigInteger.ONE)) != null) {
@@ -471,13 +470,13 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
                 timeTxDep.put(ts, pair);
             }
 
-            for (Entry<Wrapper, TxDependList<Wrapper>> pair :
+            for (Entry<ByteArrayWrapper, TxDependList<ByteArrayWrapper>> pair :
                     timeTxDep.values()) {
                 // Check the small nonce tx must been picked before put the high nonce tx
-                Wrapper dependTx = pair.getValue().getDependTx();
+                ByteArrayWrapper dependTx = pair.getValue().getDependTx();
                 if (dependTx == null || snapshotSet.contains(dependTx)) {
                     boolean firstTx = true;
-                    for (Wrapper bw : pair.getValue().getTxList()) {
+                    for (ByteArrayWrapper bw : pair.getValue().getTxList()) {
                         TX itx = this.getMainMap().get(bw).getTx();
 
                         cnt_txSz += itx.getEncoded().length;
@@ -520,10 +519,10 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
                         }
                     }
 
-                    Wrapper ancestor = pair.getKey();
+                    ByteArrayWrapper ancestor = pair.getKey();
                     while (nonPickedTx.get(ancestor) != null) {
                         firstTx = true;
-                        for (Wrapper bw :
+                        for (ByteArrayWrapper bw :
                                 nonPickedTx.get(ancestor).getValue().getTxList()) {
                             TX itx = this.getMainMap().get(bw).getTx();
 
@@ -607,7 +606,7 @@ public class TxPoolA0<TX extends TransactionExtend> extends AbstractTxPool<TX> i
                 .forEach(
                         e -> {
                             if (e.getKey() < ts) {
-                                for (Wrapper bw : e.getValue()) {
+                                for (ByteArrayWrapper bw : e.getValue()) {
                                     txl.add(this.getMainMap().get(bw).getTx());
                                 }
                             }

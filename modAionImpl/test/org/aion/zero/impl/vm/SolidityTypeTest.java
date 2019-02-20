@@ -30,8 +30,8 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.log.AionLoggerFactory;
@@ -53,7 +53,7 @@ import org.aion.solidity.SolidityType.StringType;
 import org.aion.vm.BulkExecutor;
 import org.aion.vm.ExecutionBatch;
 import org.aion.vm.PostExecutionWork;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.vm.contracts.ContractUtils;
@@ -88,11 +88,11 @@ public class SolidityTypeTest {
     private AionTransaction createTransaction(byte[] callData) {
         byte[] txNonce = DataWord.ZERO.getData();
         Address from =
-                AionAddress.wrap(
+                Address.wrap(
                         Hex.decode(
                                 "1111111111111111111111111111111111111111111111111111111111111111"));
         Address to =
-                AionAddress.wrap(
+                Address.wrap(
                         Hex.decode(
                                 "2222222222222222222222222222222222222222222222222222222222222222"));
         byte[] value = DataWord.ZERO.getData();
@@ -430,7 +430,7 @@ public class SolidityTypeTest {
         // TODO: set a dummy limit of 5000000 for now
         return new org.aion.zero.impl.types.AionBlock(
                 parentHash,
-                AionAddress.wrap(coinbase),
+                Address.wrap(coinbase),
                 logsBloom,
                 difficulty,
                 number,

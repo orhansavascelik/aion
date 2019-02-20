@@ -2,15 +2,14 @@ package org.aion.vm;
 
 import java.math.BigInteger;
 import org.aion.avm.core.NodeEnvironment;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.RepositoryCache;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.valid.TxNrgRule;
 import org.aion.mcf.vm.types.KernelInterfaceForFastVM;
 import org.aion.precompiled.ContractFactory;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.vm.api.interfaces.KernelInterface;
 
 public class KernelInterfaceForAVM implements KernelInterface {
@@ -77,21 +76,21 @@ public class KernelInterfaceForAVM implements KernelInterface {
 
     @Override
     public void putStorage(Address address, byte[] key, byte[] value) {
-        Wrapper storageKey = new ByteArrayWrapper(key);
-        Wrapper storageValue = new ByteArrayWrapper(value);
+        ByteArrayWrapper storageKey = new ByteArrayWrapper(key);
+        ByteArrayWrapper storageValue = new ByteArrayWrapper(value);
         this.repositoryCache.addStorageRow(address, storageKey, storageValue);
     }
 
     @Override
     public void removeStorage(Address address, byte[] key) {
-        Wrapper storageKey = new ByteArrayWrapper(key);
+        ByteArrayWrapper storageKey = new ByteArrayWrapper(key);
         this.repositoryCache.addStorageRow(address, storageKey, ByteArrayWrapper.ZERO);
     }
 
     @Override
     public byte[] getStorage(Address address, byte[] key) {
-        Wrapper storageKey = new ByteArrayWrapper(key);
-        Wrapper value = this.repositoryCache.getStorageValue(address, storageKey);
+        ByteArrayWrapper storageKey = new ByteArrayWrapper(key);
+        ByteArrayWrapper value = this.repositoryCache.getStorageValue(address, storageKey);
         return (value == null) ? null : value.getData();
     }
 

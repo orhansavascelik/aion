@@ -1,14 +1,13 @@
 package org.aion.zero.impl.core;
 
 import java.util.List;
-import org.aion.type.api.interfaces.db.Repository;
+import org.aion.interfaces.db.Repository;
 import org.aion.mcf.core.IBlockchain;
-import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.zero.impl.BlockContext;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionTxInfo;
 import org.aion.zero.types.A0BlockHeader;
-import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
 
 /** aion blockchain interface. */

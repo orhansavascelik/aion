@@ -1,11 +1,10 @@
 package org.aion.mcf.vm.types;
 
 import java.math.BigInteger;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.vm.VirtualMachineSpecs;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.Address;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.vm.VirtualMachineSpecs;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.valid.TxNrgRule;
@@ -75,8 +74,8 @@ public class KernelInterfaceForFastVM implements KernelInterface {
 
     @Override
     public void putStorage(Address address, byte[] key, byte[] value) {
-        Wrapper storageKey = alignDataToWordSize(key);
-        Wrapper storageValue = alignValueToWordSizeForPut(value);
+        ByteArrayWrapper storageKey = alignDataToWordSize(key);
+        ByteArrayWrapper storageValue = alignValueToWordSizeForPut(value);
         if (value.length == 0 || storageValue.isZero()) {
             // used to ensure FVM correctness
             throw new IllegalArgumentException(
@@ -88,14 +87,14 @@ public class KernelInterfaceForFastVM implements KernelInterface {
 
     @Override
     public void removeStorage(Address address, byte[] key) {
-        Wrapper storageKey = alignDataToWordSize(key);
+        ByteArrayWrapper storageKey = alignDataToWordSize(key);
         this.repositoryCache.removeStorageRow(address, storageKey);
     }
 
     @Override
     public byte[] getStorage(Address address, byte[] key) {
-        Wrapper storageKey = alignDataToWordSize(key);
-        Wrapper value = this.repositoryCache.getStorageValue(address, storageKey);
+        ByteArrayWrapper storageKey = alignDataToWordSize(key);
+        ByteArrayWrapper value = this.repositoryCache.getStorageValue(address, storageKey);
         if (value != null && (value.isZero() || value.isEmpty())) {
             // used to ensure FVM correctness
             throw new IllegalStateException(
@@ -191,7 +190,7 @@ public class KernelInterfaceForFastVM implements KernelInterface {
      *
      * <p>This method should only be used for putting data into storage.
      */
-    private Wrapper alignValueToWordSizeForPut(byte[] value) {
+    private ByteArrayWrapper alignValueToWordSizeForPut(byte[] value) {
         if (value.length == DoubleDataWord.BYTES) {
             return new ByteArrayWrapper(new DoubleDataWord(value).getData());
         } else {
@@ -209,7 +208,7 @@ public class KernelInterfaceForFastVM implements KernelInterface {
      *
      * <p>This method should only be used for getting data from storage.
      */
-    private byte[] alignValueToWordSizeForGet(Wrapper wrappedValue) {
+    private byte[] alignValueToWordSizeForGet(ByteArrayWrapper wrappedValue) {
         byte[] value = wrappedValue.getData();
 
         if (value.length > DataWord.BYTES) {
@@ -224,9 +223,9 @@ public class KernelInterfaceForFastVM implements KernelInterface {
      *
      * <p>Otherwise it is aligned to be 16 bytes.
      *
-     * <p>Takes a byte[] and outputs a {@link Wrapper}.
+     * <p>Takes a byte[] and outputs a {@link ByteArrayWrapper}.
      */
-    private Wrapper alignDataToWordSize(byte[] data) {
+    private ByteArrayWrapper alignDataToWordSize(byte[] data) {
         if (data.length == DoubleDataWord.BYTES) {
             return new ByteArrayWrapper(new DoubleDataWord(data).getData());
         } else {

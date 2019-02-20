@@ -1,9 +1,9 @@
 package org.aion.mcf.evt;
 
 import java.util.List;
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
-import org.aion.type.api.interfaces.tx.TxExecSummary;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.tx.Transaction;
+import org.aion.interfaces.tx.TxExecSummary;
 import org.aion.mcf.type.AbstractBlockSummary;
 import org.aion.mcf.type.AbstractTxReceipt;
 
@@ -17,7 +17,7 @@ import org.aion.mcf.type.AbstractTxReceipt;
  */
 public interface IPowListener<
                 BLK extends Block<?, ?>,
-                TX extends TransactionExtend,
+                TX extends Transaction,
                 TXR extends AbstractTxReceipt<?>,
                 BS extends AbstractBlockSummary<?, ?, ?, ?>>
         extends IListenerBase<BLK, TX, TXR, BS> {

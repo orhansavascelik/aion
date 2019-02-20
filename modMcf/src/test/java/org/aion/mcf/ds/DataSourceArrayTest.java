@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 import junitparams.JUnitParamsRunner;
 import junitparams.Parameters;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.crypto.HashUtil;
 import org.aion.db.impl.mockdb.MockDB;
 import org.aion.zero.impl.db.AionBlockStore;

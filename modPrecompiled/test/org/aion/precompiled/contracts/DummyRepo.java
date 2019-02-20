@@ -6,16 +6,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 public class DummyRepo implements RepositoryCache<AccountState, IBlockStoreBase<?, ?>> {
     private Map<Address, AccountState> accounts = new HashMap<>();
@@ -25,7 +25,7 @@ public class DummyRepo implements RepositoryCache<AccountState, IBlockStoreBase<
     // Made this alterable for testing since this default value is not always what real
     // implementations
     // do ... and don't want to break tests that rely on this value.
-    public Wrapper storageErrorReturn = DoubleDataWord.ZERO.toWrapper();
+    public ByteArrayWrapper storageErrorReturn = DoubleDataWord.ZERO.toWrapper();
 
     public DummyRepo() {}
 
@@ -106,25 +106,25 @@ public class DummyRepo implements RepositoryCache<AccountState, IBlockStoreBase<
     }
 
     @Override
-    public Map<Wrapper, Wrapper> getStorage(
-            Address address, Collection<Wrapper> keys) {
+    public Map<ByteArrayWrapper, ByteArrayWrapper> getStorage(
+            Address address, Collection<ByteArrayWrapper> keys) {
         throw new RuntimeException("Not supported");
     }
 
     @Override
-    public void addStorageRow(Address addr, Wrapper key, Wrapper value) {
+    public void addStorageRow(Address addr, ByteArrayWrapper key, ByteArrayWrapper value) {
         Map<String, byte[]> map = storage.computeIfAbsent(addr, k -> new HashMap<>());
         map.put(key.toString(), value.getData());
     }
 
     @Override
-    public void removeStorageRow(Address addr, Wrapper key) {
+    public void removeStorageRow(Address addr, ByteArrayWrapper key) {
         Map<String, byte[]> map = storage.computeIfAbsent(addr, k -> new HashMap<>());
         map.put(key.toString(), null);
     }
 
     @Override
-    public Wrapper getStorageValue(Address addr, Wrapper key) {
+    public ByteArrayWrapper getStorageValue(Address addr, ByteArrayWrapper key) {
         Map<String, byte[]> map = storage.get(addr);
         if (map != null && map.containsKey(key.toString())) {
             byte[] res = map.get(key.toString());

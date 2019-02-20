@@ -1,6 +1,6 @@
 package org.aion.zero.impl;
 
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.impl.core.energy.AbstractEnergyStrategyLimit;
 
 public interface A0BCConfig {

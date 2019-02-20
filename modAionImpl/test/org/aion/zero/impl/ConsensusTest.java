@@ -7,14 +7,14 @@ import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKeyFac;
 import org.aion.mcf.core.ImportResult;
-import org.aion.type.api.interfaces.tx.Transaction;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionBlockSummary;
 import org.aion.zero.types.AionTransaction;
@@ -38,11 +38,11 @@ import org.junit.Test;
  */
 public class ConsensusTest {
     private static final Address CONTRACT =
-            AionAddress.wrap("a04272bb5f935fb170baf2998cb25dd15cc5794e7c5bac7241bec00c4971c7f8");
+            Address.wrap("a04272bb5f935fb170baf2998cb25dd15cc5794e7c5bac7241bec00c4971c7f8");
     private static final Address OWNER =
-            AionAddress.wrap("a05577af5a82aa86bb2f4247e3f809bd0d396d45ec3c4602d5824962d21b1679");
+            Address.wrap("a05577af5a82aa86bb2f4247e3f809bd0d396d45ec3c4602d5824962d21b1679");
     private static final Address OTHER =
-            AionAddress.wrap("a05577af5a82aa86bb2f4247e3f809bd0d396d45ec3c4602d5824962d21b1678");
+            Address.wrap("a05577af5a82aa86bb2f4247e3f809bd0d396d45ec3c4602d5824962d21b1678");
     private static final byte[] PRIVATE_KEY =
             Hex.decode(
                     "81e071e5bf2c155f641641d88b5956af52c768fbb90968979b20858d65d71f32aa935b67ac46480caaefcdd56dd31862e578694a99083e9fad88cb6df89fc7cb");
@@ -241,7 +241,7 @@ public class ConsensusTest {
         byte[] receiptTrieEncoded6 = receipt6.getReceiptTrieEncoded();
         byte[] receiptTrieEncoded7 = receipt7.getReceiptTrieEncoded();
 
-        System.out.println("TransactionExtend: " + receipt.getTransaction());
+        System.out.println("Transaction: " + receipt.getTransaction());
         System.out.println();
         System.out.println("BLOCK RECEIPT ROOT: " + Hex.toHexString(blockReceiptsRoot));
         System.out.println("RECEIPT TRIE ENCODING: " + Hex.toHexString(receiptTrieEncoded));
@@ -252,8 +252,8 @@ public class ConsensusTest {
         System.out.println("STATE ROOT: " + Hex.toHexString(stateRoot));
         System.out.println(
                 "----------------------------------------------------------------------");
-        System.out.println("TransactionExtend (CALL #1): " + receipt1.getTransaction());
-        System.out.println("TransactionExtend (CALL #2): " + receipt2.getTransaction());
+        System.out.println("Transaction (CALL #1): " + receipt1.getTransaction());
+        System.out.println("Transaction (CALL #2): " + receipt2.getTransaction());
         System.out.println();
         System.out.println("BLOCK RECEIPT ROOT: " + Hex.toHexString(blockReceiptsRoot2));
         System.out.println(

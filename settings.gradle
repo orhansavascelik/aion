@@ -1,5 +1,6 @@
 rootProject.name = 'aion'
-include 'type_api', 'modAion', 'modAionImpl',
+include 'modAion', 
+    'modAionImpl',
     'modUtil',
     'modCrypto',
     'modLogger',
@@ -13,10 +14,9 @@ include 'type_api', 'modAion', 'modAionImpl',
     'modVM',
     'modApiServer',
     'aion_fastvm/modFastVM',
-//    'aion_api',
     'aion_vm_api',
-    'modBoot',
-    'type'
+    'aion_api',
+    'modBoot'
 
 project(":aion_fastvm/modFastVM").name = "aion_fastvm"
 

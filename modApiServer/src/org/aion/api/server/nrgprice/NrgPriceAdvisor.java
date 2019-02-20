@@ -1,9 +1,9 @@
 package org.aion.api.server.nrgprice;
 
-import org.aion.type.api.interfaces.block.Block;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.block.Block;
+import org.aion.interfaces.tx.Transaction;
 
-public abstract class NrgPriceAdvisor<BLK extends Block, TXN extends TransactionExtend>
+public abstract class NrgPriceAdvisor<BLK extends Block, TXN extends Transaction>
         implements INrgPriceAdvisor<BLK, TXN> {
 
     protected long defaultPrice;

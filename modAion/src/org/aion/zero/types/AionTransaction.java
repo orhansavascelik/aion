@@ -5,8 +5,7 @@ import static org.aion.util.bytes.ByteUtil.ZERO_BYTE_ARRAY;
 
 import java.math.BigInteger;
 import java.util.Arrays;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 
 import org.aion.crypto.ECKey;
 import org.aion.crypto.ECKey.MissingPrivateKeyException;
@@ -140,7 +139,7 @@ public class AionTransaction extends AbstractTransaction {
         if (tx.get(RLP_TX_TO).getRLPData() == null) {
             this.to = null;
         } else {
-            this.to = AionAddress.wrap(tx.get(RLP_TX_TO).getRLPData());
+            this.to = Address.wrap(tx.get(RLP_TX_TO).getRLPData());
         }
 
         this.timeStamp = tx.get(RLP_TX_TIMESTAMP).getRLPData();
@@ -296,7 +295,7 @@ public class AionTransaction extends AbstractTransaction {
         }
 
         try {
-            return AionAddress.wrap(HashUtil.calcNewAddr(from.toBytes(), this.getNonce()));
+            return Address.wrap(HashUtil.calcNewAddr(from.toBytes(), this.getNonce()));
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
             return null;
@@ -314,7 +313,7 @@ public class AionTransaction extends AbstractTransaction {
             return true;
         }
         byte[] toBytes = this.to.toBytes();
-        byte[] emptyBytes = AionAddress.EMPTY_ADDRESS().toBytes();
+        byte[] emptyBytes = Address.EMPTY_ADDRESS().toBytes();
         return Arrays.equals(toBytes, emptyBytes);
     }
 
@@ -334,7 +333,7 @@ public class AionTransaction extends AbstractTransaction {
         }
 
         try {
-            from = AionAddress.wrap(this.signature.getAddress());
+            from = Address.wrap(this.signature.getAddress());
             return from;
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
@@ -496,7 +495,7 @@ public class AionTransaction extends AbstractTransaction {
             throws Exception {
         return new AionTransaction(
                 nonce.toByteArray(),
-                AionAddress.wrap(to),
+                Address.wrap(to),
                 amount.toByteArray(),
                 null,
                 nrg,

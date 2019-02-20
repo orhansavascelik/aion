@@ -17,9 +17,9 @@ import org.aion.crypto.HashUtil;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.rlp.Value;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
 import org.slf4j.Logger;
 
 /** Cache class */
@@ -28,8 +28,8 @@ public class Cache {
     private static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.DB.name());
 
     private ByteArrayKeyValueStore dataSource;
-    private Map<Wrapper, Node> nodes = new LinkedHashMap<>();
-    private Set<Wrapper> removedNodes = new HashSet<>();
+    private Map<ByteArrayWrapper, Node> nodes = new LinkedHashMap<>();
+    private Set<ByteArrayWrapper> removedNodes = new HashSet<>();
     private boolean isDirty;
 
     public Cache(ByteArrayKeyValueStore dataSource) {
@@ -37,7 +37,7 @@ public class Cache {
     }
 
     public synchronized void markRemoved(byte[] key) {
-        Wrapper keyW = new ByteArrayWrapper(key);
+        ByteArrayWrapper keyW = new ByteArrayWrapper(key);
         removedNodes.add(keyW);
         nodes.remove(keyW);
     }
@@ -53,7 +53,7 @@ public class Cache {
         byte[] enc = value.encode();
         if (enc.length >= 32) {
             byte[] sha = HashUtil.h256(value.encode());
-            Wrapper key = ByteArrayWrapper.wrap(sha);
+            ByteArrayWrapper key = ByteArrayWrapper.wrap(sha);
             this.nodes.put(key, new Node(value, true));
             this.removedNodes.remove(key);
             this.isDirty = true;
@@ -65,7 +65,7 @@ public class Cache {
 
     public synchronized Value get(byte[] key) {
 
-        Wrapper wrappedKey = ByteArrayWrapper.wrap(key);
+        ByteArrayWrapper wrappedKey = ByteArrayWrapper.wrap(key);
         Node node = nodes.get(wrappedKey);
         if (node != null) {
             // cachehits++;
@@ -85,7 +85,7 @@ public class Cache {
     }
 
     public synchronized void delete(byte[] key) {
-        Wrapper wrappedKey = ByteArrayWrapper.wrap(key);
+        ByteArrayWrapper wrappedKey = ByteArrayWrapper.wrap(key);
         this.nodes.remove(wrappedKey);
 
         if (dataSource != null) {
@@ -111,7 +111,7 @@ public class Cache {
         // int batchMemorySize = 0;
         Map<byte[], byte[]> batch = new HashMap<>();
         List<byte[]> deleteBatch = new ArrayList<>();
-        for (Wrapper nodeKey : this.nodes.keySet()) {
+        for (ByteArrayWrapper nodeKey : this.nodes.keySet()) {
             Node node = this.nodes.get(nodeKey);
 
             if (node == null || node.isDirty()) {
@@ -129,7 +129,7 @@ public class Cache {
                 // batchMemorySize += length(key, value);
             }
         }
-        for (Wrapper removedNode : removedNodes) {
+        for (ByteArrayWrapper removedNode : removedNodes) {
             deleteBatch.add(removedNode.getData());
         }
 
@@ -155,7 +155,7 @@ public class Cache {
         this.isDirty = isDirty;
     }
 
-    public synchronized Map<Wrapper, Node> getNodes() {
+    public synchronized Map<ByteArrayWrapper, Node> getNodes() {
         return nodes;
     }
 
@@ -165,7 +165,7 @@ public class Cache {
 
     public String cacheDump() {
         StringBuilder cacheDump = new StringBuilder();
-        for (Wrapper key : nodes.keySet()) {
+        for (ByteArrayWrapper key : nodes.keySet()) {
             Node node = nodes.get(key);
             if (node.getValue() != null) {
                 cacheDump
@@ -186,7 +186,7 @@ public class Cache {
 
         Map<byte[], byte[]> rows = new HashMap<>();
         if (this.dataSource == null) {
-            for (Wrapper key : nodes.keySet()) {
+            for (ByteArrayWrapper key : nodes.keySet()) {
                 Node node = nodes.get(key);
                 if (node == null) {
                     rows.put(key.getData(), null);
@@ -233,14 +233,14 @@ public class Cache {
         return cacheCopy;
     }
 
-    private Map<Wrapper, Node> copyOfNodes() {
+    private Map<ByteArrayWrapper, Node> copyOfNodes() {
         if (this.nodes == null) {
             return null;
         }
 
-        Map<Wrapper, Node> nodesCopy = new HashMap<>();
-        for (Entry<Wrapper, Node> nodesEntry : this.nodes.entrySet()) {
-            Wrapper keyWrapper = null;
+        Map<ByteArrayWrapper, Node> nodesCopy = new HashMap<>();
+        for (Entry<ByteArrayWrapper, Node> nodesEntry : this.nodes.entrySet()) {
+            ByteArrayWrapper keyWrapper = null;
 
             if (nodesEntry.getKey() != null) {
                 byte[] keyBytes = nodesEntry.getKey().getData();
@@ -254,14 +254,14 @@ public class Cache {
         return nodesCopy;
     }
 
-    private Set<Wrapper> copyOfRemovedNodes() {
+    private Set<ByteArrayWrapper> copyOfRemovedNodes() {
         if (this.removedNodes == null) {
             return null;
         }
 
-        Set<Wrapper> removedNodesCopy = new HashSet<>();
-        for (Wrapper removedNode : this.removedNodes) {
-            Wrapper removedNodeWrapper = null;
+        Set<ByteArrayWrapper> removedNodesCopy = new HashSet<>();
+        for (ByteArrayWrapper removedNode : this.removedNodes) {
+            ByteArrayWrapper removedNodeWrapper = null;
 
             if (removedNode != null) {
                 byte[] removedNodeBytes = removedNode.toBytes();

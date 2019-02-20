@@ -5,7 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.LinkedList;
 import java.util.List;
-import org.aion.type.api.interfaces.block.BlockHeader;
+import org.aion.interfaces.block.BlockHeader;
 import org.aion.mcf.blockchain.valid.IValidRule;
 import org.aion.mcf.valid.TimeStampRule;
 import org.junit.Before;

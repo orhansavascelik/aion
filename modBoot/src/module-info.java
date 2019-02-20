@@ -10,7 +10,7 @@ module aion.boot {
     requires aion.fastvm;
     requires aion.util;
     requires aion.txpool.impl;
-    requires aion.type.api;
+
     requires libnzmq;
     requires aion.vm;
 

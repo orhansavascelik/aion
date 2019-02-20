@@ -13,12 +13,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
+import org.aion.interfaces.db.RepositoryConfig;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
 import org.aion.util.conversions.Hex;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.AbstractRepository;
@@ -26,7 +26,7 @@ import org.aion.mcf.db.ContractDetailsCacheImpl;
 import org.aion.mcf.db.TransactionStore;
 import org.aion.mcf.trie.SecureTrie;
 import org.aion.mcf.trie.Trie;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.config.CfgAion;
 import org.aion.zero.impl.types.AionBlock;
@@ -64,7 +64,7 @@ public class AionRepositoryImpl
         // repository singleton instance
         private static final AionRepositoryImpl inst =
                 new AionRepositoryImpl(
-                        new org.aion.zero.impl.db.RepositoryConfig(
+                        new RepositoryConfigImpl(
                                 config.getDatabasePath(),
                                 ContractDetailsAion.getInstance(),
                                 config.getDb()));
@@ -312,7 +312,7 @@ public class AionRepositoryImpl
     }
 
     @Override
-    public Wrapper getStorageValue(Address address, Wrapper key) {
+    public ByteArrayWrapper getStorageValue(Address address, ByteArrayWrapper key) {
         ContractDetails details = getContractDetails(address);
         return (details == null) ? null : details.get(key);
     }
@@ -358,8 +358,8 @@ public class AionRepositoryImpl
     }
 
     @Override
-    public Map<Wrapper, Wrapper> getStorage(
-            Address address, Collection<Wrapper> keys) {
+    public Map<ByteArrayWrapper, ByteArrayWrapper> getStorage(
+            Address address, Collection<ByteArrayWrapper> keys) {
         ContractDetails details = getContractDetails(address);
         return (details == null) ? Collections.emptyMap() : details.getStorage(keys);
     }
@@ -673,7 +673,7 @@ public class AionRepositoryImpl
             try {
                 if (transactionDatabase != null) {
                     transactionDatabase.close();
-                    LOGGEN.info("TransactionExtend database closed.");
+                    LOGGEN.info("Transaction database closed.");
                     transactionDatabase = null;
                 }
             } catch (Exception e) {

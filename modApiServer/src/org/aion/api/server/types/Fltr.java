@@ -2,8 +2,8 @@ package org.aion.api.server.types;
 
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.atomic.AtomicLong;
-import org.aion.type.api.interfaces.block.BlockSummary;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.interfaces.block.BlockSummary;
+import org.aion.interfaces.tx.Transaction;
 
 public abstract class Fltr {
 
@@ -74,7 +74,7 @@ public abstract class Fltr {
         return false;
     }
 
-    public boolean onTransaction(TransactionExtend tx) {
+    public boolean onTransaction(Transaction tx) {
         return false;
     }
 }

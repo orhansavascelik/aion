@@ -4,12 +4,12 @@ import static org.aion.mcf.vm.Constants.NRG_CREATE_CONTRACT_DEFAULT;
 import static org.aion.mcf.vm.Constants.NRG_TRANSACTION_DEFAULT;
 
 import java.math.BigInteger;
-import org.aion.type.AionAddress;
+import org.aion.types.Address;
 import org.aion.util.bytes.ByteUtil;
-import org.aion.type.api.interfaces.vm.VirtualMachineSpecs;
+import org.aion.interfaces.vm.VirtualMachineSpecs;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.util.string.StringUtils;
 import org.json.JSONObject;
 import org.slf4j.Logger;
@@ -72,8 +72,8 @@ public final class ArgTxCall {
     public static ArgTxCall fromJSON(final JSONObject _jsonObj, long defaultNrgPrice) {
         try {
             Address from =
-                    AionAddress.wrap(ByteUtil.hexStringToBytes(_jsonObj.optString("from", "")));
-            Address to = AionAddress.wrap(ByteUtil.hexStringToBytes(_jsonObj.optString("to", "")));
+                    Address.wrap(ByteUtil.hexStringToBytes(_jsonObj.optString("from", "")));
+            Address to = Address.wrap(ByteUtil.hexStringToBytes(_jsonObj.optString("to", "")));
             byte[] data = ByteUtil.hexStringToBytes(_jsonObj.optString("data", ""));
             byte type = ByteUtil.hexStringToBytes(_jsonObj.optString("type", "0x1"))[0];
 

@@ -7,7 +7,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import org.aion.api.server.nrgprice.NrgPriceAdvisor;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.slf4j.Logger;

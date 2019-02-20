@@ -2,7 +2,7 @@ package org.aion.db.generic;
 
 import java.util.Collection;
 import java.util.Map;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 
 /**
  * Implements locking functionality for a database that is mostly thread-safe except for open and

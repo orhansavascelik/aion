@@ -5,14 +5,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotSame;
 
 import java.math.BigInteger;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.AionAddress;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.Repository;
+import org.aion.types.Address;
 import org.aion.mcf.core.AccountState;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.apache.commons.lang3.RandomUtils;
@@ -45,7 +45,7 @@ public class FlushCopiesTest {
     public void testAccountStateObjectReference() {
         AionRepositoryCache repositoryChild = (AionRepositoryCache) this.repository.startTracking();
 
-        Address account = randomAionAddress();
+        Address account = randomAddress();
         BigInteger nonce = BigInteger.TEN;
         BigInteger balance = BigInteger.valueOf(11223344);
         byte[] code = new byte[100];
@@ -79,7 +79,7 @@ public class FlushCopiesTest {
     public void testContractDetailsObjectReference() {
         AionRepositoryCache repositoryChild = (AionRepositoryCache) this.repository.startTracking();
 
-        Address account = randomAionAddress();
+        Address account = randomAddress();
         BigInteger nonce = BigInteger.TEN;
         BigInteger balance = BigInteger.valueOf(11223344);
         byte[] code = new byte[100];
@@ -88,8 +88,8 @@ public class FlushCopiesTest {
 
         // Create a new account state in the child, flush to the parent without clearing child
         // state.
-        Wrapper key = new DataWord(5).toWrapper();
-        Wrapper value = new DoubleDataWord(13429765314L).toWrapper();
+        ByteArrayWrapper key = new DataWord(5).toWrapper();
+        ByteArrayWrapper value = new DoubleDataWord(13429765314L).toWrapper();
 
         repositoryChild.createAccount(account);
         repositoryChild.setNonce(account, nonce);
@@ -115,7 +115,7 @@ public class FlushCopiesTest {
     public void testSiblingStateModificationsAreIndependentOfOneAnother() {
         AionRepositoryCache firstChild = (AionRepositoryCache) this.repository.startTracking();
 
-        Address account = randomAionAddress();
+        Address account = randomAddress();
         BigInteger firstNonce = BigInteger.TEN;
         BigInteger firstBalance = BigInteger.valueOf(11223344);
         byte[] code = new byte[100];
@@ -126,8 +126,8 @@ public class FlushCopiesTest {
 
         // Create a new account state in the child, flush to the parent without clearing child
         // state.
-        Wrapper firstKey = new DataWord(5).toWrapper();
-        Wrapper firstValue = new DoubleDataWord(13429765314L).toWrapper();
+        ByteArrayWrapper firstKey = new DataWord(5).toWrapper();
+        ByteArrayWrapper firstValue = new DoubleDataWord(13429765314L).toWrapper();
 
         firstChild.createAccount(account);
         firstChild.setNonce(account, firstNonce);
@@ -142,8 +142,8 @@ public class FlushCopiesTest {
         AionRepositoryCache secondChild = (AionRepositoryCache) this.repository.startTracking();
 
         BigInteger secondNonce = firstNonce.multiply(BigInteger.TWO);
-        Wrapper secondKey = new DoubleDataWord(289356).toWrapper();
-        Wrapper secondValue = new DataWord(23674).toWrapper();
+        ByteArrayWrapper secondKey = new DoubleDataWord(289356).toWrapper();
+        ByteArrayWrapper secondValue = new DataWord(23674).toWrapper();
 
         secondChild.setNonce(account, secondNonce);
         secondChild.addBalance(account, firstBalance);
@@ -156,9 +156,9 @@ public class FlushCopiesTest {
         assertArrayEquals(firstStorageHash, firstChild.getContractDetails(account).getStorageHash());
     }
 
-    private Address randomAionAddress() {
+    private Address randomAddress() {
         byte[] bytes = RandomUtils.nextBytes(Address.SIZE);
         bytes[0] = (byte) 0xa0;
-        return new AionAddress(bytes);
+        return new Address(bytes);
     }
 }

@@ -45,15 +45,12 @@ import org.aion.mcf.valid.GrandParentBlockHeaderValidator;
 import org.aion.mcf.valid.ParentBlockHeaderValidator;
 import org.aion.mcf.vm.types.Bloom;
 import org.aion.rlp.RLP;
-import org.aion.type.AionAddress;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Hash;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.tx.Transaction;
-import org.aion.type.api.interfaces.tx.TransactionExtend;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.Hash256;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.tx.Transaction;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 import org.aion.vm.BulkExecutor;
@@ -132,7 +129,7 @@ public class AionBlockchainImpl implements IAionBlockchain {
     private final ParentBlockHeaderValidator<A0BlockHeader> parentHeaderValidator;
     private final BlockHeaderValidator<A0BlockHeader> blockHeaderValidator;
     private AtomicReference<BlockIdentifier> bestKnownBlock =
-            new AtomicReference<BlockIdentifier>();
+        new AtomicReference<>();
 
     private boolean fork = false;
 
@@ -179,7 +176,7 @@ public class AionBlockchainImpl implements IAionBlockchain {
 
             @Override
             public Address getMinerCoinbase() {
-                return AionAddress.wrap(cfgAion.getConsensus().getMinerAddress());
+                return Address.wrap(cfgAion.getConsensus().getMinerAddress());
             }
 
             // TODO: hook up to configuration file
@@ -1287,7 +1284,7 @@ public class AionBlockchainImpl implements IAionBlockchain {
     }
 
     @Override
-    public Map<Wrapper, List<org.aion.zero.impl.types.AionBlock>> loadPendingBlocksAtLevel(
+    public Map<ByteArrayWrapper, List<org.aion.zero.impl.types.AionBlock>> loadPendingBlocksAtLevel(
             long level) {
         try {
             return repository.getPendingBlockStore().loadBlockRange(level);
@@ -1312,8 +1309,8 @@ public class AionBlockchainImpl implements IAionBlockchain {
     @Override
     public void dropImported(
             long level,
-            List<Wrapper> ranges,
-            Map<Wrapper, List<org.aion.zero.impl.types.AionBlock>> blocks) {
+            List<ByteArrayWrapper> ranges,
+            Map<ByteArrayWrapper, List<org.aion.zero.impl.types.AionBlock>> blocks) {
         try {
             repository.getPendingBlockStore().dropPendingQueues(level, ranges, blocks);
         } catch (Exception e) {
@@ -1857,7 +1854,7 @@ public class AionBlockchainImpl implements IAionBlockchain {
     }
 
     @Override
-    public BigInteger getTotalDifficultyByHash(Hash hash) {
+    public BigInteger getTotalDifficultyByHash(Hash256 hash) {
         if (hash == null) {
             throw new NullPointerException();
         }

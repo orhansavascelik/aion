@@ -13,10 +13,10 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueStore;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueStore;
 import org.aion.log.AionLoggerFactory;
 import org.aion.log.LogEnum;
 import org.aion.mcf.ds.ArchivedDataSource;
@@ -35,10 +35,10 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
     private static final Logger LOG = AionLoggerFactory.getLogger(LogEnum.DB.name());
 
     private class Updates {
-        Wrapper blockHeader;
+        ByteArrayWrapper blockHeader;
         long blockNumber;
-        Set<Wrapper> insertedKeys = new HashSet<>();
-        Set<Wrapper> deletedKeys = new HashSet<>();
+        Set<ByteArrayWrapper> insertedKeys = new HashSet<>();
+        Set<ByteArrayWrapper> deletedKeys = new HashSet<>();
     }
 
     private static class Ref {
@@ -60,11 +60,11 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         }
     }
 
-    Map<Wrapper, Ref> refCount = new HashMap<>();
+    Map<ByteArrayWrapper, Ref> refCount = new HashMap<>();
 
     private ByteArrayKeyValueStore src;
-    // block hash => Wrapper
-    private LinkedHashMap<Wrapper, Updates> blockUpdates = new LinkedHashMap<>();
+    // block hash => ByteArrayWrapper
+    private LinkedHashMap<ByteArrayWrapper, Updates> blockUpdates = new LinkedHashMap<>();
     private Updates currentUpdates = new Updates();
     private AtomicBoolean enabled = new AtomicBoolean(false);
     private final boolean hasArchive;
@@ -91,7 +91,7 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         try {
             if (enabled.get()) {
                 // pruning enabled
-                Wrapper keyW = ByteArrayWrapper.wrap(key);
+                ByteArrayWrapper keyW = ByteArrayWrapper.wrap(key);
 
                 // Check to see the value exists.
                 if (value != null) {
@@ -163,7 +163,7 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
             Map<byte[], byte[]> insertsOnly = new HashMap<>();
             if (enabled.get()) {
                 for (Map.Entry<byte[], byte[]> entry : inputMap.entrySet()) {
-                    Wrapper keyW = ByteArrayWrapper.wrap(entry.getKey());
+                    ByteArrayWrapper keyW = ByteArrayWrapper.wrap(entry.getKey());
                     if (entry.getValue() != null) {
                         currentUpdates.insertedKeys.add(keyW);
                         incRef(keyW);
@@ -191,7 +191,7 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         }
     }
 
-    private void incRef(Wrapper keyW) {
+    private void incRef(ByteArrayWrapper keyW) {
         Ref cnt = refCount.get(keyW);
         if (cnt == null) {
             cnt = new Ref(src.get(keyW.getData()).isPresent());
@@ -200,7 +200,7 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         cnt.journalRefs++;
     }
 
-    private Ref decRef(Wrapper keyW) {
+    private Ref decRef(ByteArrayWrapper keyW) {
         Ref cnt = refCount.get(keyW);
         cnt.journalRefs -= 1;
         if (cnt.journalRefs == 0) {
@@ -217,7 +217,7 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         lock.writeLock().lock();
 
         try {
-            Wrapper hash = ByteArrayWrapper.wrap(blockHash);
+            ByteArrayWrapper hash = ByteArrayWrapper.wrap(blockHash);
             currentUpdates.blockHeader = hash;
             currentUpdates.blockNumber = blockNumber;
             blockUpdates.put(hash, currentUpdates);
@@ -235,15 +235,15 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         lock.writeLock().lock();
 
         try {
-            Wrapper blockHashW = ByteArrayWrapper.wrap(blockHash);
+            ByteArrayWrapper blockHashW = ByteArrayWrapper.wrap(blockHash);
             Updates updates = blockUpdates.remove(blockHashW);
             if (updates != null) {
-                for (Wrapper insertedKey : updates.insertedKeys) {
+                for (ByteArrayWrapper insertedKey : updates.insertedKeys) {
                     decRef(insertedKey).dbRef = true;
                 }
 
                 List<byte[]> batchRemove = new ArrayList<>();
-                for (Wrapper key : updates.deletedKeys) {
+                for (ByteArrayWrapper key : updates.deletedKeys) {
                     Ref ref = refCount.get(key);
                     if (ref == null || ref.journalRefs == 0) {
                         batchRemove.add(key.getData());
@@ -268,10 +268,10 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         }
     }
 
-    private void rollback(Wrapper blockHashW) {
+    private void rollback(ByteArrayWrapper blockHashW) {
         Updates updates = blockUpdates.remove(blockHashW);
         List<byte[]> batchRemove = new ArrayList<>();
-        for (Wrapper insertedKey : updates.insertedKeys) {
+        for (ByteArrayWrapper insertedKey : updates.insertedKeys) {
             Ref ref = decRef(insertedKey);
             if (ref.getTotRefs() == 0) {
                 batchRemove.add(insertedKey.getData());
@@ -280,11 +280,11 @@ public class JournalPruneDataSource implements ByteArrayKeyValueStore {
         src.deleteBatch(batchRemove);
     }
 
-    public Map<Wrapper, Ref> getRefCount() {
+    public Map<ByteArrayWrapper, Ref> getRefCount() {
         return refCount;
     }
 
-    public LinkedHashMap<Wrapper, Updates> getBlockUpdates() {
+    public LinkedHashMap<ByteArrayWrapper, Updates> getBlockUpdates() {
         return blockUpdates;
     }
 

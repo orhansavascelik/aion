@@ -1,7 +1,7 @@
 package org.aion.mcf.db;
 
 import java.util.List;
-import org.aion.type.api.interfaces.block.Block;
+import org.aion.interfaces.block.Block;
 import org.aion.mcf.type.AbstractBlockHeader;
 
 /**

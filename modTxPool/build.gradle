@@ -9,7 +9,5 @@ repositories {
 }
 
 dependencies {
-    compile 'network.aion:type-api4j:0.3.3'
-    compile 'network.aion:type4j:0.3.3'
-
+    compile 'network.aion:vm-api4j:0.3.3'
 }

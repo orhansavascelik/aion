@@ -3,15 +3,14 @@ package org.aion.mcf.vm.types;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Wrapper;
+import org.aion.types.ByteArrayWrapper;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.util.conversions.Hex;
 
 /**
  * Data word is the basic unit data used by virtual machine. The size of a data word is 128 bits.
  */
-public class DataWord implements Comparable<DataWord>, org.aion.type.api.interfaces.vm.DataWord {
+public class DataWord implements Comparable<DataWord>, org.aion.interfaces.vm.DataWord {
 
     public static final BigInteger MAX_VALUE =
             BigInteger.valueOf(2).pow(128).subtract(BigInteger.ONE);
@@ -173,7 +172,7 @@ public class DataWord implements Comparable<DataWord>, org.aion.type.api.interfa
     }
 
     @Override
-    public Wrapper toWrapper() {
+    public ByteArrayWrapper toWrapper() {
         return ByteArrayWrapper.wrap(data);
     }
 }

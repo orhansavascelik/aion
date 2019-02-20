@@ -9,10 +9,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.vm.DataWord;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.vm.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
 import org.aion.util.conversions.Hex;
 import org.aion.zero.db.AionContractDetailsImpl;
@@ -51,7 +50,7 @@ public class IContractDetailsTest {
 
     @Test
     public void testPutSingleZeroValue() {
-        Wrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        ByteArrayWrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
         checkGetNonExistentPairing(cache1, key);
         checkGetNonExistentPairing(cache2, key);
@@ -63,7 +62,7 @@ public class IContractDetailsTest {
 
     @Test
     public void testPutDoubleZeroValue() {
-        Wrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        ByteArrayWrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
         checkGetNonExistentPairing(cache1, key);
         checkGetNonExistentPairing(cache2, key);
@@ -75,7 +74,7 @@ public class IContractDetailsTest {
 
     @Test
     public void testPutSingleZeroKey() {
-        Wrapper value = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        ByteArrayWrapper value = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
         doPutSingleZeroKeyTest(cache1, value);
         doPutSingleZeroKeyTest(cache2, value);
@@ -87,7 +86,7 @@ public class IContractDetailsTest {
 
     @Test
     public void testPutDoubleZeroKey() {
-        Wrapper value = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        ByteArrayWrapper value = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
         doPutDoubleZeroKeyTest(cache1, value);
         doPutDoubleZeroKeyTest(cache2, value);
@@ -101,7 +100,7 @@ public class IContractDetailsTest {
     public void testPutZeroKeyAndValue() {
         // Try single-single
         cache1.delete(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper());
-        Wrapper result = cache1.get(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper());
+        ByteArrayWrapper result = cache1.get(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper());
         assertNull(result);
         cache2.delete(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper());
         assertNull(cache2.get(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper()));
@@ -131,9 +130,9 @@ public class IContractDetailsTest {
     @Test
     public void testPutKeyValueThenOverwriteValueWithZero() {
         // single-single
-        Wrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        ByteArrayWrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
-        Wrapper value = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        ByteArrayWrapper value = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
         doPutKeyValueThenOverwriteValueWithZero(cache1, key, value);
         doPutKeyValueThenOverwriteValueWithZero(cache2, key, value);
@@ -161,8 +160,8 @@ public class IContractDetailsTest {
     public void testPutAndGetEnMass() {
         int numEntries = RandomUtils.nextInt(1_000, 5_000);
         int deleteOdds = 4;
-        List<Wrapper> keys = getKeysInBulk(numEntries);
-        List<Wrapper> values = getValuesInBulk(numEntries);
+        List<ByteArrayWrapper> keys = getKeysInBulk(numEntries);
+        List<ByteArrayWrapper> values = getValuesInBulk(numEntries);
         massPutIntoCache(cache1, keys, values);
         deleteEveryNthEntry(cache1, keys, deleteOdds);
         checkAllPairs(cache1, keys, values, deleteOdds);
@@ -176,8 +175,8 @@ public class IContractDetailsTest {
     public void testGetStorage() {
         int numEntries = RandomUtils.nextInt(1_000, 5_000);
         int deleteOdds = 6;
-        List<Wrapper> keys = getKeysInBulk(numEntries);
-        List<Wrapper> values = getValuesInBulk(numEntries);
+        List<ByteArrayWrapper> keys = getKeysInBulk(numEntries);
+        List<ByteArrayWrapper> values = getValuesInBulk(numEntries);
         massPutIntoCache(cache1, keys, values);
         deleteEveryNthEntry(cache1, keys, deleteOdds);
         checkStorage(cache1, keys, values, deleteOdds);
@@ -197,7 +196,7 @@ public class IContractDetailsTest {
     public void testSetStorageEnMass() {
         int numEntries = RandomUtils.nextInt(1_000, 5_000);
         int deleteOdds = 7;
-        Map<Wrapper, Wrapper> storage =
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage =
                 getKeyValueMappingInBulk(numEntries, deleteOdds);
         cache1.setStorage(storage);
         checkKeyValueMapping(cache1, storage);
@@ -217,18 +216,18 @@ public class IContractDetailsTest {
 
         int numEntries = RandomUtils.nextInt(1_000, 5_000);
         int deleteOdds = 3;
-        List<Wrapper> keys = getKeysInBulk(numEntries);
-        List<Wrapper> values = getValuesInBulk(numEntries);
+        List<ByteArrayWrapper> keys = getKeysInBulk(numEntries);
+        List<ByteArrayWrapper> values = getValuesInBulk(numEntries);
         massPutIntoCache(impl, keys, values);
         deleteEveryNthEntry(impl, keys, deleteOdds);
 
-        Map<Wrapper, Wrapper> storage = impl.getStorage(keys);
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage = impl.getStorage(keys);
         assertEquals(0, cache1.getStorage(keys).size());
         impl.commit();
         assertEquals(storage.size(), cache1.getStorage(keys).size());
 
         int count = 1;
-        for (Wrapper key : keys) {
+        for (ByteArrayWrapper key : keys) {
             try {
                 if (count % deleteOdds == 0) {
                     assertNull(impl.get(key));
@@ -255,18 +254,18 @@ public class IContractDetailsTest {
 
         int numEntries = RandomUtils.nextInt(1_000, 5_000);
         int deleteOdds = 3;
-        List<Wrapper> keys = getKeysInBulk(numEntries);
-        List<Wrapper> values = getValuesInBulk(numEntries);
+        List<ByteArrayWrapper> keys = getKeysInBulk(numEntries);
+        List<ByteArrayWrapper> values = getValuesInBulk(numEntries);
         massPutIntoCache(impl, keys, values);
         deleteEveryNthEntry(impl, keys, deleteOdds);
 
-        Map<Wrapper, Wrapper> storage = impl.getStorage(keys);
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage = impl.getStorage(keys);
         assertEquals(0, cache2.getStorage(keys).size());
         impl.commit();
         assertEquals(storage.size(), cache2.getStorage(keys).size());
 
         int count = 1;
-        for (Wrapper key : keys) {
+        for (ByteArrayWrapper key : keys) {
             try {
                 if (count % deleteOdds == 0) {
                     assertNull(impl.get(key));
@@ -290,9 +289,9 @@ public class IContractDetailsTest {
     @Test
     public void testCacheUpdatedAndGetWithOriginalAionContract() {
 
-        Wrapper key = getRandomWord(true).toWrapper();
-        Wrapper value1 = getRandomWord(true).toWrapper();
-        Wrapper value2 = getRandomWord(true).toWrapper();
+        ByteArrayWrapper key = getRandomWord(true).toWrapper();
+        ByteArrayWrapper value1 = getRandomWord(true).toWrapper();
+        ByteArrayWrapper value2 = getRandomWord(true).toWrapper();
 
         // ensure the second value is different
         // unlikely to be necessary
@@ -344,13 +343,13 @@ public class IContractDetailsTest {
     }
 
     /** Tests putting value into cache with a zero-byte DataWord key. */
-    private void doPutSingleZeroKeyTest(ContractDetails cache, Wrapper value) {
+    private void doPutSingleZeroKeyTest(ContractDetails cache, ByteArrayWrapper value) {
         cache.put(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper(), value);
         assertEquals(value, cache.get(org.aion.mcf.vm.types.DataWord.ZERO.toWrapper()));
     }
 
     /** Tests putting value into cache with a zero-byte DoubleDataWord key. */
-    private void doPutDoubleZeroKeyTest(ContractDetails cache, Wrapper value) {
+    private void doPutDoubleZeroKeyTest(ContractDetails cache, ByteArrayWrapper value) {
         cache.put(DoubleDataWord.ZERO.toWrapper(), value);
         assertEquals(value, cache.get(DoubleDataWord.ZERO.toWrapper()));
     }
@@ -360,7 +359,7 @@ public class IContractDetailsTest {
      * key and then calling get() on that key.
      */
     private void doPutKeyValueThenOverwriteValueWithZero(
-            ContractDetails cache, Wrapper key, Wrapper value) {
+            ContractDetails cache, ByteArrayWrapper key, ByteArrayWrapper value) {
 
         // Test DataWord.
         cache.put(key, value);
@@ -381,14 +380,14 @@ public class IContractDetailsTest {
      */
     private void checkAllPairs(
             ContractDetails cache,
-            List<Wrapper> keys,
-            List<Wrapper> values,
+            List<ByteArrayWrapper> keys,
+            List<ByteArrayWrapper> values,
             int n) {
 
         int size = keys.size();
         assertEquals(size, values.size());
         int count = 1;
-        for (Wrapper key : keys) {
+        for (ByteArrayWrapper key : keys) {
             if (count % n == 0) {
                 checkGetNonExistentPairing(cache, key);
             } else {
@@ -404,13 +403,13 @@ public class IContractDetailsTest {
      */
     private void checkStorage(
             ContractDetails cache,
-            List<Wrapper> keys,
-            List<Wrapper> values,
+            List<ByteArrayWrapper> keys,
+            List<ByteArrayWrapper> values,
             int n) {
 
-        Map<Wrapper, Wrapper> storage = cache.getStorage(keys);
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage = cache.getStorage(keys);
         int count = 1;
-        for (Wrapper key : keys) {
+        for (ByteArrayWrapper key : keys) {
             if (count % n == 0) {
                 try {
                     assertNull(storage.get(key));
@@ -430,9 +429,9 @@ public class IContractDetailsTest {
      * Iterates over every key in keys -- which are assumed to exist in cache -- and then deletes
      * any key-value pair in cache for every n'th key in keys.
      */
-    private void deleteEveryNthEntry(ContractDetails cache, List<Wrapper> keys, int n) {
+    private void deleteEveryNthEntry(ContractDetails cache, List<ByteArrayWrapper> keys, int n) {
         int count = 1;
-        for (Wrapper key : keys) {
+        for (ByteArrayWrapper key : keys) {
             if (count % n == 0) {
                 cache.delete(key);
             }
@@ -442,12 +441,12 @@ public class IContractDetailsTest {
 
     /** Puts all of the key-value pairs in keys and values into cache. */
     private void massPutIntoCache(
-            ContractDetails cache, List<Wrapper> keys, List<Wrapper> values) {
+            ContractDetails cache, List<ByteArrayWrapper> keys, List<ByteArrayWrapper> values) {
 
         int size = keys.size();
         assertEquals(size, values.size());
         for (int i = 0; i < size; i++) {
-            Wrapper value = values.get(i);
+            ByteArrayWrapper value = values.get(i);
             if (value == null || value.isZero()) {
                 cache.delete(keys.get(i));
             } else {
@@ -457,8 +456,8 @@ public class IContractDetailsTest {
     }
 
     /** Returns a list of numKeys keys, every other one is single and then double. */
-    private List<Wrapper> getKeysInBulk(int numKeys) {
-        List<Wrapper> keys = new ArrayList<>(numKeys);
+    private List<ByteArrayWrapper> getKeysInBulk(int numKeys) {
+        List<ByteArrayWrapper> keys = new ArrayList<>(numKeys);
         boolean isSingleKey = true;
         for (int i = 0; i < numKeys; i++) {
             keys.add(getRandomWord(isSingleKey).toWrapper());
@@ -468,8 +467,8 @@ public class IContractDetailsTest {
     }
 
     /** Returns a list of numValues values, every other one is single and then double. */
-    private List<Wrapper> getValuesInBulk(int numValues) {
-        List<Wrapper> values = new ArrayList<>(numValues);
+    private List<ByteArrayWrapper> getValuesInBulk(int numValues) {
+        List<ByteArrayWrapper> values = new ArrayList<>(numValues);
         boolean isSingleValue = true;
         for (int i = 0; i < numValues; i++) {
             values.add(getRandomWord(isSingleValue).toWrapper());
@@ -491,8 +490,8 @@ public class IContractDetailsTest {
      * returned when called on that same key.
      */
     private void doSetZeroValueViaStorageTest(ContractDetails cache) {
-        Map<Wrapper, Wrapper> storage = new HashMap<>();
-        Wrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage = new HashMap<>();
+        ByteArrayWrapper key = new org.aion.mcf.vm.types.DataWord(RandomUtils.nextBytes(
             org.aion.mcf.vm.types.DataWord.BYTES)).toWrapper();
         storage.put(key, null);
         cache.setStorage(storage);
@@ -501,10 +500,10 @@ public class IContractDetailsTest {
 
     /** Checks cache returns the expected values given its storage is storage. */
     private void checkKeyValueMapping(
-            ContractDetails cache, Map<Wrapper, Wrapper> storage) {
+            ContractDetails cache, Map<ByteArrayWrapper, ByteArrayWrapper> storage) {
 
-        for (Wrapper key : storage.keySet()) {
-            Wrapper value = storage.get(key);
+        for (ByteArrayWrapper key : storage.keySet()) {
+            ByteArrayWrapper value = storage.get(key);
             if (value == null) {
                 checkGetNonExistentPairing(cache, key);
             } else {
@@ -517,11 +516,11 @@ public class IContractDetailsTest {
      * Returns a key-value mapping with numEntries mappings, where every n'th mapping has a zero
      * value.
      */
-    private Map<Wrapper, Wrapper> getKeyValueMappingInBulk(
+    private Map<ByteArrayWrapper, ByteArrayWrapper> getKeyValueMappingInBulk(
             int numEntries, int n) {
-        Map<Wrapper, Wrapper> storage = new HashMap<>(numEntries);
-        List<Wrapper> keys = getKeysInBulk(numEntries);
-        List<Wrapper> values = getValuesInBulk(numEntries);
+        Map<ByteArrayWrapper, ByteArrayWrapper> storage = new HashMap<>(numEntries);
+        List<ByteArrayWrapper> keys = getKeysInBulk(numEntries);
+        List<ByteArrayWrapper> values = getValuesInBulk(numEntries);
         int size = keys.size();
         assertEquals(size, values.size());
         for (int i = 0; i < size; i++) {
@@ -538,7 +537,7 @@ public class IContractDetailsTest {
      * Assumption: key has no valid value mapping in cache. This method calls cache.get(key) and
      * checks its result.
      */
-    private void checkGetNonExistentPairing(ContractDetails cache, Wrapper key) {
+    private void checkGetNonExistentPairing(ContractDetails cache, ByteArrayWrapper key) {
         try {
             assertNull(cache.get(key));
         } catch (AssertionError e) {

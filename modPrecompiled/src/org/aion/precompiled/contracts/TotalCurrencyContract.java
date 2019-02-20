@@ -1,11 +1,11 @@
 package org.aion.precompiled.contracts;
 
 import java.math.BigInteger;
-import org.aion.type.ByteArrayWrapper;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.common.Wrapper;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.AionAddress;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.types.Address;
+import org.aion.types.ByteArrayWrapper;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.types.Address;
 import org.aion.util.biginteger.BIUtil;
 import org.aion.crypto.ed25519.ECKeyEd25519;
 import org.aion.crypto.ed25519.Ed25519Signature;
@@ -97,7 +97,7 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
             return new PrecompiledTransactionResult(PrecompiledResultCode.OUT_OF_NRG, 0);
         }
 
-        Wrapper balanceData =
+        ByteArrayWrapper balanceData =
                 this.track.getStorageValue(this.address, new DataWord(input).toWrapper());
         return new PrecompiledTransactionResult(
                 PrecompiledResultCode.SUCCESS, nrg - COST, balanceData.getData());
@@ -143,12 +143,12 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
         }
 
         // verify public key matches owner
-        if (!this.ownerAddress.equals(AionAddress.wrap(sig.getAddress()))) {
+        if (!this.ownerAddress.equals(Address.wrap(sig.getAddress()))) {
             return new PrecompiledTransactionResult(PrecompiledResultCode.FAILURE, 0);
         }
 
         // payload processing
-        Wrapper totalCurr = this.track.getStorageValue(this.address, chainId.toWrapper());
+        ByteArrayWrapper totalCurr = this.track.getStorageValue(this.address, chainId.toWrapper());
         BigInteger totalCurrBI =
                 totalCurr == null ? BigInteger.ZERO : BIUtil.toBI(totalCurr.getData());
         BigInteger value = BIUtil.toBI(amount);
@@ -178,7 +178,7 @@ public class TotalCurrencyContract extends StatefulPrecompiledContract {
         return new PrecompiledTransactionResult(PrecompiledResultCode.SUCCESS, nrg - COST);
     }
 
-    private static Wrapper wrapValueForPut(DataWord value) {
+    private static ByteArrayWrapper wrapValueForPut(DataWord value) {
         return (value.isZero()) ? value.toWrapper() : new ByteArrayWrapper(value.getNoLeadZeroesData());
     }
 }

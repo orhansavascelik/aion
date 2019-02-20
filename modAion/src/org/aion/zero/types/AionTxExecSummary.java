@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import org.aion.type.AionAddress;
-import org.aion.type.api.interfaces.common.Address;
-import org.aion.type.api.interfaces.tx.TxReceipt;
-import org.aion.type.api.interfaces.tx.TxExecSummary;
+import org.aion.types.Address;
+import org.aion.types.Address;
+import org.aion.interfaces.tx.TxReceipt;
+import org.aion.interfaces.tx.TxExecSummary;
 import org.aion.mcf.core.TxTouchedStorage;
 import org.aion.mcf.db.DetailsDataStore;
 import org.aion.mcf.vm.types.DataWord;
@@ -213,7 +213,7 @@ public class AionTxExecSummary implements TxExecSummary {
     private static List<Address> decodeDeletedAccounts(RLPList deletedAccounts) {
         List<Address> result = new ArrayList<>();
         for (RLPElement deletedAccount : deletedAccounts) {
-            result.add(AionAddress.wrap(deletedAccount.getRLPData()));
+            result.add(Address.wrap(deletedAccount.getRLPData()));
         }
         return result;
     }

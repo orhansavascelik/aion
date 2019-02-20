@@ -1,7 +1,7 @@
 package org.aion.mcf.valid;
 
 import java.util.List;
-import org.aion.type.api.interfaces.block.BlockHeader;
+import org.aion.interfaces.block.BlockHeader;
 
 public class BlockNumberRule<BH extends BlockHeader> extends DependentBlockHeaderRule<BH> {
 

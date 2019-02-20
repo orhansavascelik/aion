@@ -5,12 +5,12 @@ import static org.junit.Assert.assertNull;
 
 import java.util.Properties;
 import java.util.Random;
-import org.aion.type.api.interfaces.db.ContractDetails;
-import org.aion.type.api.interfaces.db.PruneConfig;
-import org.aion.type.api.interfaces.db.Repository;
-import org.aion.type.api.interfaces.db.RepositoryCache;
-import org.aion.type.api.interfaces.db.RepositoryConfig;
-import org.aion.type.AionAddress;
+import org.aion.interfaces.db.ContractDetails;
+import org.aion.interfaces.db.PruneConfig;
+import org.aion.interfaces.db.Repository;
+import org.aion.interfaces.db.RepositoryCache;
+import org.aion.interfaces.db.RepositoryConfig;
+import org.aion.types.Address;
 import org.aion.crypto.ECKeyFac;
 import org.aion.db.impl.DBVendor;
 import org.aion.db.impl.DatabaseFactory;
@@ -19,7 +19,7 @@ import org.aion.mcf.core.AccountState;
 import org.aion.mcf.db.IBlockStoreBase;
 import org.aion.mcf.vm.types.DataWord;
 import org.aion.mcf.vm.types.DoubleDataWord;
-import org.aion.type.api.interfaces.common.Address;
+import org.aion.types.Address;
 import org.aion.zero.db.AionRepositoryCache;
 import org.aion.zero.impl.db.AionRepositoryImpl;
 import org.aion.zero.impl.db.ContractDetailsAion;
@@ -66,7 +66,7 @@ public class DoubleDataWordTest {
         this.repo = AionRepositoryImpl.createForTesting(repoConfig);
         this.track = new AionRepositoryCache(repo);
         this.rand = new Random();
-        this.addr = AionAddress.wrap(ECKeyFac.inst().create().getAddress());
+        this.addr = Address.wrap(ECKeyFac.inst().create().getAddress());
     }
 
     @After

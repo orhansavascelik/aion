@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.aion.type.api.interfaces.db.ByteArrayKeyValueDatabase;
+import org.aion.interfaces.db.ByteArrayKeyValueDatabase;
 import org.aion.util.bytes.ByteUtil;
 import org.aion.log.AionLoggerFactory;
 import org.aion.mcf.core.ImportResult;
