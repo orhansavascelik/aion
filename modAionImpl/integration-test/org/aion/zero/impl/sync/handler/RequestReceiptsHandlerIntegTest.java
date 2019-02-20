@@ -21,7 +21,7 @@ import org.aion.zero.impl.Version;
 import org.aion.zero.impl.core.IAionBlockchain;
 import org.aion.zero.impl.db.AionBlockStore;
 import org.aion.zero.impl.sync.SyncMgr;
-import org.aion.zero.impl.sync.msg.ReqTxReceipts;
+import org.aion.zero.impl.sync.msg.RequestReceipts;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.AionTransaction;
 import org.aion.zero.types.AionTxReceipt;
@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
 
-public class RequestTxReceiptHandlerIntegTest {
+public class RequestReceiptsHandlerIntegTest {
 
     /**
      * Transaction hash that we'll request receipt for.  This particular tx is the first tx on the mastery network at block 213091:
@@ -102,8 +102,8 @@ public class RequestTxReceiptHandlerIntegTest {
         List<Handler> cbs = new ArrayList<>();
         cbs.add(new ReqStatusHandler(syncLOG, blockchain, p2p, genesis));
         cbs.add(new ResStatusHandler(syncLOG, p2p, syncMgr));
-        cbs.add(new ResponseTxReceiptHandler(transactionStore, blockStore));
-        cbs.add(new RequestTxReceiptHandler(p2p, blockchain));
+        cbs.add(new ResponseReceiptsHandler(transactionStore, blockStore));
+        cbs.add(new RequestReceiptsHandler(p2p, blockchain));
         p2p.register(cbs);
 
         p2p.run();
@@ -115,7 +115,7 @@ public class RequestTxReceiptHandlerIntegTest {
         Thread.sleep(20000);
 
         System.out.println("Sending tx receipts request");
-        p2p.send(717142562, "33de43", new ReqTxReceipts(TEST_TX));
+        p2p.send(717142562, "33de43", new RequestReceipts(TEST_TX));
 
         System.out.println("Sleeping to wait for response to our tx receipts request");
         Thread.sleep(20000);

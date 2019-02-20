@@ -18,13 +18,13 @@ import java.util.Properties;
 import static org.aion.mcf.db.DatabaseUtils.connectAndOpen;
 
 /**
- * Like {@link ResponseTxReceiptHandler} but instead of writing to actual Transaction Store, write
+ * Like {@link ResponseReceiptsHandler} but instead of writing to actual Transaction Store, write
  * it to an alternate Transaction Store used only for verification/testing purposes, and then
  * perform verification on the result by {@link ReceiptsRetrievalVerifier}.
  *
  * Unlike the normal ResTxReceiptHandler,
  */
-public class InstrumentedResponseTxReceiptHandler extends ResponseTxReceiptHandler {
+public class InstrumentedResponseReceiptsHandler extends ResponseReceiptsHandler {
 
     private final ReceiptsRetrievalVerifier rrv;
 
@@ -38,7 +38,7 @@ public class InstrumentedResponseTxReceiptHandler extends ResponseTxReceiptHandl
     /**
      * Constructor
      */
-    public InstrumentedResponseTxReceiptHandler(
+    public InstrumentedResponseReceiptsHandler(
         AionBlockStore blockStore,
         ReceiptsRetrievalVerifier rrv,
         String altDbPath) {

@@ -12,18 +12,18 @@ import java.util.List;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
-public class ReqTxReceiptsTest {
+public class RequestReceiptsTest {
     @Test
     public void testBaseCtor() {
         byte[] b1 = new byte[] { 0xa };
         byte[] b2 = new byte[] { 0xb };
         List<byte[]> receipts = List.of(b1, b2);
 
-        ReqTxReceipts unit = new ReqTxReceipts(receipts);
+        RequestReceipts unit = new RequestReceipts(receipts);
 
         assertThat(unit.getTxHashes().size(), is(2));
         assertThat(unit.getTxHashes().containsAll(receipts), is(true));
-        assertThat(unit.getHeader().getAction(), is(Act.REQUEST_TX_RECEIPT_HEADERS));
+        assertThat(unit.getHeader().getAction(), is(Act.REQUEST_RECEIPTS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
     }
@@ -42,12 +42,12 @@ public class ReqTxReceiptsTest {
                 "04000000000a0b0c"); // 32 bytes
         ByteBuffer encodedRequest = ByteBuffer.allocate(64).put(b1).put(b2);
 
-        ReqTxReceipts unit = new ReqTxReceipts(encodedRequest.array());
+        RequestReceipts unit = new RequestReceipts(encodedRequest.array());
 
         assertThat(unit.getTxHashes().size(), is(2));
         assertThat(unit.getTxHashes().get(0), is(b1));
         assertThat(unit.getTxHashes().get(1), is(b2));
-        assertThat(unit.getHeader().getAction(), is(Act.REQUEST_TX_RECEIPT_HEADERS));
+        assertThat(unit.getHeader().getAction(), is(Act.REQUEST_RECEIPTS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
     }
@@ -67,6 +67,6 @@ public class ReqTxReceiptsTest {
         ByteBuffer brokenEncoding = ByteBuffer.allocate(65).put(b1).put(b2);
         brokenEncoding.put((byte)0xff);
 
-        new ReqTxReceipts(brokenEncoding.array());
+        new RequestReceipts(brokenEncoding.array());
     }
 }

@@ -37,11 +37,11 @@ import org.aion.zero.impl.sync.SyncMgr;
 import org.aion.zero.impl.sync.handler.BlockPropagationHandler;
 import org.aion.zero.impl.sync.handler.BroadcastNewBlockHandler;
 import org.aion.zero.impl.sync.handler.BroadcastTxHandler;
-import org.aion.zero.impl.sync.handler.InstrumentedResponseTxReceiptHandler;
+import org.aion.zero.impl.sync.handler.InstrumentedResponseReceiptsHandler;
 import org.aion.zero.impl.sync.handler.ReqBlocksBodiesHandler;
 import org.aion.zero.impl.sync.handler.ReqBlocksHeadersHandler;
 import org.aion.zero.impl.sync.handler.ReqStatusHandler;
-import org.aion.zero.impl.sync.handler.RequestTxReceiptHandler;
+import org.aion.zero.impl.sync.handler.RequestReceiptsHandler;
 import org.aion.zero.impl.sync.handler.ResBlocksBodiesHandler;
 import org.aion.zero.impl.sync.handler.ResBlocksHeadersHandler;
 import org.aion.zero.impl.sync.handler.ResStatusHandler;
@@ -219,7 +219,7 @@ public class AionHub {
         initializeHub(_cfgAion, _blockchain, _repository, forTest);
     }
 
-    private InstrumentedResponseTxReceiptHandler instrumentedResTxReceiptHandler;
+    private InstrumentedResponseReceiptsHandler instrumentedResTxReceiptHandler;
 
     private void registerCallback() {
         List<Handler> cbs = new ArrayList<>();
@@ -234,14 +234,14 @@ public class AionHub {
         cbs.add(new BroadcastNewBlockHandler(syncLOG, propHandler, p2pMgr));
 
         // Receipts transfer response handler -- use instrumented version for test/verification
-        instrumentedResTxReceiptHandler = new InstrumentedResponseTxReceiptHandler(
+        instrumentedResTxReceiptHandler = new InstrumentedResponseReceiptsHandler(
             (AionBlockStore) getBlockStore(), receiptsRetrievalVerifier,
             this.cfg.getDatabasePath());
         // Receipts transfer response handler -- non-instrumented version
         // cbs.add(new ResTxReceiptHandler(repository.getTransactionStore(), (AionBlockStore) getBlockStore()));
         cbs.add(instrumentedResTxReceiptHandler);
         // Receipts transfer request handler
-        cbs.add(new RequestTxReceiptHandler(p2pMgr, blockchain));
+        cbs.add(new RequestReceiptsHandler(p2pMgr, blockchain));
 
         this.p2pMgr.register(cbs);
     }

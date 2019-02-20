@@ -14,7 +14,7 @@ import org.aion.zero.impl.sync.Act;
 /**
  * Request for transaction receipts
  */
-public class ReqTxReceipts extends Msg {
+public class RequestReceipts extends Msg {
 
     private final List<byte[]> txHashes;
     private final static int TX_RECEIPT_LENGTH = 32;
@@ -24,8 +24,8 @@ public class ReqTxReceipts extends Msg {
      *
      * @param txHashes hashes of the transaction receipts requested
      */
-    public ReqTxReceipts(List<byte[]> txHashes) {
-        super(Ver.V0, Ctrl.SYNC, Act.REQUEST_TX_RECEIPT_HEADERS);
+    public RequestReceipts(List<byte[]> txHashes) {
+        super(Ver.V0, Ctrl.SYNC, Act.REQUEST_RECEIPTS);
         this.txHashes = new LinkedList<>(txHashes);
     }
 
@@ -35,7 +35,7 @@ public class ReqTxReceipts extends Msg {
      * @param msgBytes List of transaction hashes, as encoded by {@link #encode())} (or
      * equivalently, a ReqTxReceipts).  Must not be null.
      */
-    public ReqTxReceipts(byte[] msgBytes) {
+    public RequestReceipts(byte[] msgBytes) {
         this(decode(msgBytes));
     }
 

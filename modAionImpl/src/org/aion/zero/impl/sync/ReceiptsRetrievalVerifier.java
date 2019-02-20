@@ -7,7 +7,7 @@ import org.aion.mcf.db.TransactionStore;
 import org.aion.p2p.IP2pMgr;
 import org.aion.zero.impl.core.IAionBlockchain;
 import org.aion.zero.impl.db.AionRepositoryImpl;
-import org.aion.zero.impl.sync.msg.ReqTxReceipts;
+import org.aion.zero.impl.sync.msg.RequestReceipts;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.impl.types.AionTxInfo;
 import org.aion.zero.types.AionTransaction;
@@ -50,7 +50,7 @@ public class ReceiptsRetrievalVerifier {
             }
         }
 
-        ReqTxReceipts request = new ReqTxReceipts(blocks
+        RequestReceipts request = new RequestReceipts(blocks
             .stream()
             .flatMap(b -> b.getTransactionsList()
                 .stream().map(t -> t.getTransactionHash())

@@ -9,8 +9,8 @@ import org.aion.p2p.IP2pMgr;
 import org.aion.p2p.Ver;
 import org.aion.zero.impl.core.IAionBlockchain;
 import org.aion.zero.impl.sync.Act;
-import org.aion.zero.impl.sync.msg.ReqTxReceipts;
-import org.aion.zero.impl.sync.msg.ResTxReceipts;
+import org.aion.zero.impl.sync.msg.RequestReceipts;
+import org.aion.zero.impl.sync.msg.ResponseReceipts;
 import org.aion.zero.impl.types.AionTxInfo;
 import org.slf4j.Logger;
 
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Handle requests for transaction receipts
  */
-public class RequestTxReceiptHandler extends Handler {
+public class RequestReceiptsHandler extends Handler {
     // Impl notes:
     // - Consider having a cache, like ReqBlocksBodiesHandler does
     // - Consider having an upper bound on number of receipts we're willing to send
@@ -37,18 +37,18 @@ public class RequestTxReceiptHandler extends Handler {
      * @param p2pMgr p2p manager
      * @param bc blockchain
      */
-    public RequestTxReceiptHandler(IP2pMgr p2pMgr,
+    public RequestReceiptsHandler(IP2pMgr p2pMgr,
         IAionBlockchain bc) {
-        super(Ver.V0, Ctrl.SYNC, Act.REQUEST_TX_RECEIPT_HEADERS);
+        super(Ver.V0, Ctrl.SYNC, Act.REQUEST_RECEIPTS);
         this.p2pMgr = p2pMgr;
         this.bc = bc;
     }
 
     @Override
     public void receive(int id, String displayId, byte[] msg) {
-        final ReqTxReceipts reqTxReceipts;
+        final RequestReceipts requestReceipts;
         try {
-            reqTxReceipts = new ReqTxReceipts(msg);
+            requestReceipts = new RequestReceipts(msg);
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.error(
                 "ReqTxReceiptHandler req-tx-receipts decode-error, unable to decode bodies from {}, len: {}, reason: {}",
@@ -59,11 +59,11 @@ public class RequestTxReceiptHandler extends Handler {
             return;
         }
         LOGGER.debug(
-            "ReqTxReceiptHandler receive start, request size " + reqTxReceipts.getTxHashes()
+            "ReqTxReceiptHandler receive start, request size " + requestReceipts.getTxHashes()
                 .size());
 
         List<AionTxInfo> receipts = new LinkedList<>();
-        for (byte[] txHash : reqTxReceipts.getTxHashes()) {
+        for (byte[] txHash : requestReceipts.getTxHashes()) {
             AionTxInfo txInfo = bc.getTransactionInfo(txHash);
             if (txInfo != null) {
                 receipts.add(txInfo);
@@ -73,7 +73,7 @@ public class RequestTxReceiptHandler extends Handler {
 
         LOGGER.debug(String.format(
             "ReqTxReceiptHandler received receipt request of size %d; sending back %d receipts",
-            reqTxReceipts.getTxHashes().size(), receipts.size()));
-        this.p2pMgr.send(id, displayId, new ResTxReceipts(receipts));
+            requestReceipts.getTxHashes().size(), receipts.size()));
+        this.p2pMgr.send(id, displayId, new ResponseReceipts(receipts));
     }
 }

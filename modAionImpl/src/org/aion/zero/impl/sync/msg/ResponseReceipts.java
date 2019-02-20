@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * Response for transaction receipts request
  */
-public class ResTxReceipts extends Msg {
+public class ResponseReceipts extends Msg {
 
     private final List<AionTxInfo> txInfo;
 
@@ -27,8 +27,8 @@ public class ResTxReceipts extends Msg {
      *
      * @param txInfo list of transaction receipts
      */
-    public ResTxReceipts(List<AionTxInfo> txInfo) {
-        super(Ver.V0, Ctrl.SYNC, Act.RESPONSE_TX_RECEIPT_HEADERS);
+    public ResponseReceipts(List<AionTxInfo> txInfo) {
+        super(Ver.V0, Ctrl.SYNC, Act.RESPONSE_RECEIPTS);
         this.txInfo = new LinkedList<>(txInfo);
     }
 
@@ -38,7 +38,7 @@ public class ResTxReceipts extends Msg {
      * @param msg RLP-encoded representation of a ResTxReceipts (or equivalently, list of
      * transaction receipts).  Must not be null.
      */
-    public ResTxReceipts(byte[] msg) {
+    public ResponseReceipts(byte[] msg) {
         this(decode(msg));
     }
 

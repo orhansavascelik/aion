@@ -3,7 +3,7 @@ package org.aion.zero.impl.sync.handler;
 import org.aion.base.util.ByteUtil;
 import org.aion.p2p.IP2pMgr;
 import org.aion.zero.impl.core.IAionBlockchain;
-import org.aion.zero.impl.sync.msg.ResTxReceipts;
+import org.aion.zero.impl.sync.msg.ResponseReceipts;
 import org.aion.zero.impl.types.AionTxInfo;
 import org.aion.zero.types.AionTxReceipt;
 import org.junit.Before;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class RequestTxReceiptHandlerTest {
+public class RequestReceiptsHandlerTest {
 
     private IP2pMgr p2pMgr;
     private IAionBlockchain bc;
@@ -57,12 +57,12 @@ public class RequestTxReceiptHandlerTest {
         when(bc.getTransactionInfo(b2)).thenReturn(txInfo2);
         when(txInfo2.getReceipt()).thenReturn(txr2);
 
-        RequestTxReceiptHandler unit = new RequestTxReceiptHandler(p2pMgr, bc);
+        RequestReceiptsHandler unit = new RequestReceiptsHandler(p2pMgr, bc);
         unit.receive(id, displayId, request);
 
-        ArgumentCaptor<ResTxReceipts> receipts = ArgumentCaptor.forClass(ResTxReceipts.class);
+        ArgumentCaptor<ResponseReceipts> receipts = ArgumentCaptor.forClass(ResponseReceipts.class);
         verify(p2pMgr).send(eq(id), eq(displayId), receipts.capture());
-        ResTxReceipts receiptsSent = receipts.getValue();
+        ResponseReceipts receiptsSent = receipts.getValue();
         assertThat(receiptsSent.getTxInfo().size(), is(2));
         assertThat(receiptsSent.getTxInfo().contains(txInfo1), is(true));
         assertThat(receiptsSent.getTxInfo().contains(txInfo2), is(true));
@@ -74,7 +74,7 @@ public class RequestTxReceiptHandlerTest {
         String displayId = "321";
         byte[] badRequest = new byte[]{(byte) 0xc0, (byte) 0xff, (byte) 0xee};
 
-        RequestTxReceiptHandler unit = new RequestTxReceiptHandler(p2pMgr, bc);
+        RequestReceiptsHandler unit = new RequestReceiptsHandler(p2pMgr, bc);
         unit.receive(id, displayId, badRequest);
 
         verifyZeroInteractions(p2pMgr);
