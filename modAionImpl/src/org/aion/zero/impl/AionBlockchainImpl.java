@@ -643,9 +643,14 @@ public class AionBlockchainImpl implements IAionBlockchain {
 
         if (ret == IMPORTED_BEST) {
             if (TX_LOG.isDebugEnabled()) {
-                for (AionTxReceipt receipt : summary.getReceipts()) {
-                    byte[] transactionHash = receipt.getTransaction().getTransactionHash();
-                    TX_LOG.debug("Transaction: " + Hex.toHexString(transactionHash) + " was sealed into block #" + block.getNumber());
+                if (summary != null){
+                    for (AionTxReceipt receipt : summary.getReceipts()) {
+                        if (receipt != null) {
+                            byte[] transactionHash = receipt.getTransaction().getTransactionHash();
+                            TX_LOG.debug("Transaction: " + Hex.toHexString(transactionHash) +
+                                    " was sealed into block #" + block.getNumber());
+                        }
+                    }
                 }
             }
         }
