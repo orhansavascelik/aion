@@ -67,17 +67,17 @@ final class TaskImportBlocks implements Runnable {
     private final ReceiptsRetrievalVerifier rrv; // Used only for testing/verification
 
     TaskImportBlocks(
-            final AionBlockchainImpl _chain,
-            final AtomicBoolean _start,
-            final SyncStats _syncStats,
-            final BlockingQueue<BlocksWrapper> _downloadedBlocks,
-            final Map<ByteArrayWrapper, Object> _importedBlockHashes,
-            final Map<Integer, PeerState> _peerStates,
-            final Logger _log,
-            final int _slowImportTime,
-            final int _compactFrequency,
-            final boolean requestReceipts,
-            final ReceiptsRetrievalVerifier receiptsRetrievalVerifier) {
+        final AionBlockchainImpl _chain,
+        final AtomicBoolean _start,
+        final SyncStats _syncStats,
+        final BlockingQueue<BlocksWrapper> _downloadedBlocks,
+        final Map<ByteArrayWrapper, Object> _importedBlockHashes,
+        final Map<Integer, PeerState> _peerStates,
+        final Logger _log,
+        final int _slowImportTime,
+        final int _compactFrequency,
+        final boolean requestReceipts,
+        final ReceiptsRetrievalVerifier receiptsRetrievalVerifier) {
         this.chain = _chain;
         this.start = _start;
         this.syncStats = _syncStats;
@@ -95,21 +95,22 @@ final class TaskImportBlocks implements Runnable {
     }
 
     TaskImportBlocks(
-            final AionBlockchainImpl _chain,
-            final AtomicBoolean _start,
-            final SyncStats _syncStats,
-            final BlockingQueue<BlocksWrapper> _downloadedBlocks,
-            final Map<ByteArrayWrapper, Object> _importedBlockHashes,
-            final Map<Integer, PeerState> _peerStates,
-            final Logger _log,
-            final int _slowImportTime,
-            final int _compactFrequency) {
-        this(_chain, _start, _syncStats, _downloadedBlocks, _importedBlockHashes, _peerStates, _log, _slowImportTime, _compactFrequency,
+        final AionBlockchainImpl _chain,
+        final AtomicBoolean _start,
+        final SyncStats _syncStats,
+        final BlockingQueue<BlocksWrapper> _downloadedBlocks,
+        final Map<ByteArrayWrapper, Object> _importedBlockHashes,
+        final Map<Integer, PeerState> _peerStates,
+        final Logger _log,
+        final int _slowImportTime,
+        final int _compactFrequency) {
+        this(_chain, _start, _syncStats, _downloadedBlocks, _importedBlockHashes, _peerStates, _log,
+            _slowImportTime, _compactFrequency,
             false /* requestReceipts */, null /* receiptsRetrievalVerifier */);
     }
 
     ExecutorService executors =
-            Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
     @Override
     public void run() {
@@ -134,24 +135,25 @@ final class TaskImportBlocks implements Runnable {
 
                 if (log.isDebugEnabled()) {
                     log.debug(
-                            "<import-mode-before: node = {}, sync mode = {}, base = {}>",
-                            bw.getDisplayId(),
-                            peerState.getMode(),
-                            peerState.getBase());
+                        "<import-mode-before: node = {}, sync mode = {}, base = {}>",
+                        bw.getDisplayId(),
+                        peerState.getMode(),
+                        peerState.getBase());
                 }
 
                 // process batch and update the peer state
-                peerState.copy(processBatch(peerState, batch, bw.getDisplayId(), bw.getNodeIdHash()));
+                peerState
+                    .copy(processBatch(peerState, batch, bw.getDisplayId(), bw.getNodeIdHash()));
 
                 // so we can continue immediately
                 peerState.resetLastHeaderRequest();
 
                 if (log.isDebugEnabled()) {
                     log.debug(
-                            "<import-mode-after: node = {}, sync mode = {}, base = {}>",
-                            bw.getDisplayId(),
-                            peerState.getMode(),
-                            peerState.getBase());
+                        "<import-mode-after: node = {}, sync mode = {}, base = {}>",
+                        bw.getDisplayId(),
+                        peerState.getMode(),
+                        peerState.getBase());
                 }
 
                 syncStats.update(getBestBlockNumber());
@@ -159,9 +161,9 @@ final class TaskImportBlocks implements Runnable {
         }
         if (log.isDebugEnabled()) {
             log.debug(
-                    "Thread ["
-                            + Thread.currentThread().getName()
-                            + "] performing block imports was shutdown.");
+                "Thread ["
+                    + Thread.currentThread().getName()
+                    + "] performing block imports was shutdown.");
         }
         executors.shutdown();
     }
@@ -172,26 +174,26 @@ final class TaskImportBlocks implements Runnable {
      *
      * @param blocks the list of blocks to be filtered
      * @param chain the blockchain where the blocks will be imported which may impose pruning
-     *     restrictions
+     * restrictions
      * @param imported the collection of recently imported blocks
      * @return the list of blocks that pass the filter conditions.
      */
     @VisibleForTesting
     static List<AionBlock> filterBatch(
-            List<AionBlock> blocks,
-            AionBlockchainImpl chain,
-            Map<ByteArrayWrapper, Object> imported) {
+        List<AionBlock> blocks,
+        AionBlockchainImpl chain,
+        Map<ByteArrayWrapper, Object> imported) {
         if (chain.hasPruneRestriction()) {
             // filter out restricted blocks if prune restrictions enabled
             return blocks.stream()
-                    .filter(b -> isNotImported(b, imported))
-                    .filter(b -> isNotRestricted(b, chain))
-                    .collect(Collectors.toList());
+                .filter(b -> isNotImported(b, imported))
+                .filter(b -> isNotRestricted(b, chain))
+                .collect(Collectors.toList());
         } else {
             // filter out only imported blocks
             return blocks.stream()
-                    .filter(b -> isNotImported(b, imported))
-                    .collect(Collectors.toList());
+                .filter(b -> isNotImported(b, imported))
+                .collect(Collectors.toList());
         }
     }
 
@@ -203,8 +205,11 @@ final class TaskImportBlocks implements Runnable {
         return !chain.isPruneRestricted(b.getNumber());
     }
 
-    /** @implNote This method is called only when state is not null. */
-    private PeerState processBatch(PeerState givenState, List<AionBlock> batch, String displayId, int nodeId) {
+    /**
+     * @implNote This method is called only when state is not null.
+     */
+    private PeerState processBatch(PeerState givenState, List<AionBlock> batch, String displayId,
+        int nodeId) {
         // make a copy of the original state
         state.copy(Objects.requireNonNull(givenState));
 
@@ -216,10 +221,10 @@ final class TaskImportBlocks implements Runnable {
         if (batch.isEmpty()) {
             if (log.isDebugEnabled()) {
                 log.debug(
-                        "Empty batch received from node = {} in mode = {} with base = {}.",
-                        displayId,
-                        givenState.getMode(),
-                        givenState.getBase());
+                    "Empty batch received from node = {} in mode = {} with base = {}.",
+                    displayId,
+                    givenState.getMode(),
+                    givenState.getBase());
             }
 
             if (state.getMode() == BACKWARD || state.getMode() == FORWARD) {
@@ -230,7 +235,7 @@ final class TaskImportBlocks implements Runnable {
                 return state;
             } else {
                 return attemptLightningJump(
-                        getBestBlockNumber(), state, peerStates.values(), baseList, chain);
+                    getBestBlockNumber(), state, peerStates.values(), baseList, chain);
             }
         }
 
@@ -246,15 +251,14 @@ final class TaskImportBlocks implements Runnable {
                 // keeping track of the last block check
                 importedBlockHashes.put(ByteArrayWrapper.wrap(b.getHash()), true);
 
-
                 // skipping the batch
                 if (log.isDebugEnabled()) {
                     log.debug(
-                            "Skip {} blocks from node = {} in mode = {} with base = {}.",
-                            batch.size(),
-                            displayId,
-                            givenState.getMode(),
-                            givenState.getBase());
+                        "Skip {} blocks from node = {} in mode = {} with base = {}.",
+                        batch.size(),
+                        displayId,
+                        givenState.getMode(),
+                        givenState.getBase());
                 }
                 batch.clear();
 
@@ -264,7 +268,7 @@ final class TaskImportBlocks implements Runnable {
                 } else {
                     // mode in { NORMAL, LIGHTNING, THUNDER }
                     return attemptLightningJump(
-                            getBestBlockNumber(), state, peerStates.values(), baseList, chain);
+                        getBestBlockNumber(), state, peerStates.values(), baseList, chain);
                 }
             }
         }
@@ -283,7 +287,7 @@ final class TaskImportBlocks implements Runnable {
                     importedBlockHashes.put(ByteArrayWrapper.wrap(b.getHash()), true);
                     this.syncStats.updatePeerImportedBlocks(displayId, 1);
 
-                    if(requestReceipts) {
+                    if (requestReceipts) {
                         // only used for requesting receipts transfer
                         storedImportedBlocks.add(b);
                     }
@@ -309,59 +313,56 @@ final class TaskImportBlocks implements Runnable {
 
                 // if any block results in NO_PARENT, all subsequent blocks will too
                 if (importResult == ImportResult.NO_PARENT) {
-                    executors.submit(new TaskStorePendingBlocks(chain, batch, displayId, syncStats, log));
+                    executors.submit(
+                        new TaskStorePendingBlocks(chain, batch, displayId, syncStats, log));
 
                     if (log.isDebugEnabled()) {
                         log.debug(
-                                "Stopped importing batch due to NO_PARENT result. "
-                                        + "Batch of {} blocks starting at hash = {}, number = {} from node = {} delegated to storage.",
-                                batch.size(),
-                                b.getShortHash(),
-                                b.getNumber(),
-                                displayId);
+                            "Stopped importing batch due to NO_PARENT result. "
+                                + "Batch of {} blocks starting at hash = {}, number = {} from node = {} delegated to storage.",
+                            batch.size(),
+                            b.getShortHash(),
+                            b.getNumber(),
+                            displayId);
                     } else {
                         // message used instead of import NO_PARENT ones
                         if (state.isInFastMode()) {
                             log.info(
-                                    "<import-status: STORED {} blocks from node = {}, starting with hash = {}, number = {}, txs = {}>",
-                                    batch.size(),
-                                    displayId,
-                                    b.getShortHash(),
-                                    b.getNumber(),
-                                    b.getTransactionsList().size());
+                                "<import-status: STORED {} blocks from node = {}, starting with hash = {}, number = {}, txs = {}>",
+                                batch.size(),
+                                displayId,
+                                b.getShortHash(),
+                                b.getNumber(),
+                                b.getTransactionsList().size());
                         }
                     }
 
                     switch (mode) {
-                        case FORWARD:
-                            {
+                        case FORWARD: {
+                            // switch to backward mode
+                            state.setMode(BACKWARD);
+                            state.setBase(b.getNumber());
+                            break;
+                        }
+                        case NORMAL: {
+                            // requiring a minimum number of normal states
+                            if (countStates(getBestBlockNumber(), NORMAL, peerStates.values())
+                                > MIN_NORMAL_PEERS) {
                                 // switch to backward mode
                                 state.setMode(BACKWARD);
                                 state.setBase(b.getNumber());
-                                break;
                             }
-                        case NORMAL:
-                            {
-                                // requiring a minimum number of normal states
-                                if (countStates(getBestBlockNumber(), NORMAL, peerStates.values())
-                                        > MIN_NORMAL_PEERS) {
-                                    // switch to backward mode
-                                    state.setMode(BACKWARD);
-                                    state.setBase(b.getNumber());
-                                }
-                                break;
-                            }
-                        case BACKWARD:
-                            {
-                                // update base
-                                state.setBase(b.getNumber());
-                                break;
-                            }
-                        case LIGHTNING:
-                            {
-                                state.setBase(b.getNumber() + batch.size());
-                                break;
-                            }
+                            break;
+                        }
+                        case BACKWARD: {
+                            // update base
+                            state.setBase(b.getNumber());
+                            break;
+                        }
+                        case LIGHTNING: {
+                            state.setBase(b.getNumber() + batch.size());
+                            break;
+                        }
                         case THUNDER:
                             break;
                     }
@@ -384,12 +385,12 @@ final class TaskImportBlocks implements Runnable {
                         case LIGHTNING:
                         case THUNDER:
                             state =
-                                    attemptLightningJump(
-                                            getBestBlockNumber(),
-                                            state,
-                                            peerStates.values(),
-                                            baseList,
-                                            chain);
+                                attemptLightningJump(
+                                    getBestBlockNumber(),
+                                    state,
+                                    peerStates.values(),
+                                    baseList,
+                                    chain);
                             break;
                         case NORMAL:
                         default:
@@ -399,7 +400,7 @@ final class TaskImportBlocks implements Runnable {
             }
         }
 
-        if(requestReceipts) {
+        if (requestReceipts) {
             rrv.requestReceiptsFromPeers(storedImportedBlocks, displayId, nodeId);
         }
 
@@ -410,14 +411,14 @@ final class TaskImportBlocks implements Runnable {
                 // TODO: may have already updated torrent mode
                 if (state.getMode() == LIGHTNING) {
                     if (state.getBase() == givenState.getBase() // was not already updated
-                            || state.getBase() <= getBestBlockNumber() + P2pConstant.REQUEST_SIZE) {
+                        || state.getBase() <= getBestBlockNumber() + P2pConstant.REQUEST_SIZE) {
                         state =
-                                attemptLightningJump(
-                                        getBestBlockNumber(),
-                                        state,
-                                        peerStates.values(),
-                                        baseList,
-                                        chain);
+                            attemptLightningJump(
+                                getBestBlockNumber(),
+                                state,
+                                peerStates.values(),
+                                baseList,
+                                chain);
                     } // else already updated to a correct request
                     return state;
                 } else if (state.getMode() == BACKWARD || state.getMode() == FORWARD) {
@@ -441,24 +442,24 @@ final class TaskImportBlocks implements Runnable {
      * @param best the starting point value for the attempted jump
      * @param state the state to be modified for the jump or ramp down
      * @param states all the existing peer states are the time of the method call used for checking
-     *     if the jump conditions are met
+     * if the jump conditions are met
      * @param baseSet sorted set of generated values that can be used as base for the jump
      * @param chain the blockchain where the blocks will be imported which can be used to expand the
-     *     set of base value options
+     * set of base value options
      * @return a state modified for a LIGHTNING when possible, otherwise a state in THUNDER (ramp
-     *     down) mode if the state was previously in LIGHTNING mode, or an unchanged state when none
-     *     of the before mentioned conditions are met.
+     * down) mode if the state was previously in LIGHTNING mode, or an unchanged state when none of
+     * the before mentioned conditions are met.
      * @implNote Typically called when {@link PeerState#getMode()} in { {@link
-     *     PeerState.Mode#NORMAL}, {@link PeerState.Mode#LIGHTNING}, {@link PeerState.Mode#THUNDER}
-     *     }, but the same behaviour of jumping ahead will be applied if the give state mode is
-     *     {@link PeerState.Mode#BACKWARD} or {@link PeerState.Mode#FORWARD}.
+     * PeerState.Mode#NORMAL}, {@link PeerState.Mode#LIGHTNING}, {@link PeerState.Mode#THUNDER} },
+     * but the same behaviour of jumping ahead will be applied if the give state mode is {@link
+     * PeerState.Mode#BACKWARD} or {@link PeerState.Mode#FORWARD}.
      */
     static PeerState attemptLightningJump(
-            long best,
-            PeerState state,
-            Collection<PeerState> states,
-            SortedSet<Long> baseSet,
-            AionBlockchainImpl chain) {
+        long best,
+        PeerState state,
+        Collection<PeerState> states,
+        SortedSet<Long> baseSet,
+        AionBlockchainImpl chain) {
 
         // no need to count states if already in LIGHTNING
         if (state.getMode() == LIGHTNING) {
@@ -485,15 +486,15 @@ final class TaskImportBlocks implements Runnable {
         } else {
             // compute the relevant state count
             long normalStates =
-                    countStates(best, NORMAL, states) + countStates(best, THUNDER, states);
+                countStates(best, NORMAL, states) + countStates(best, THUNDER, states);
             long fastStates = countStates(best, LIGHTNING, states);
 
             // requiring a minimum number of normal states
             if (normalStates > MIN_NORMAL_PEERS
-                    // the fast vs normal states balance depends on the give coefficient
-                    && (fastStates < COEFFICIENT_NORMAL_PEERS * normalStates
-                            // with a maximum number of normal states
-                            || normalStates > MAX_NORMAL_PEERS)) {
+                // the fast vs normal states balance depends on the give coefficient
+                && (fastStates < COEFFICIENT_NORMAL_PEERS * normalStates
+                // with a maximum number of normal states
+                || normalStates > MAX_NORMAL_PEERS)) {
 
                 // select the base to be used
                 long nextBase = selectBase(best, state.getLastBestBlock(), baseSet, chain);
@@ -525,9 +526,9 @@ final class TaskImportBlocks implements Runnable {
      */
     static long countStates(long best, Mode mode, Collection<PeerState> states) {
         return states.stream()
-                .filter(s -> s.getLastBestBlock() > best)
-                .filter(s -> s.getMode() == mode)
-                .count();
+            .filter(s -> s.getLastBestBlock() > best)
+            .filter(s -> s.getMode() == mode)
+            .count();
     }
 
     /**
@@ -539,12 +540,12 @@ final class TaskImportBlocks implements Runnable {
      * @param best the starting point value for the next base
      * @param baseSet list of already generated values
      * @param chain the blockchain where the blocks will be imported which can be used to expand the
-     *     set of base value options
+     * set of base value options
      * @return the next base from the set or the given best value when the set does not contain any
-     *     values greater than it.
+     * values greater than it.
      */
     static long selectBase(
-            long best, long knownStatus, SortedSet<Long> baseSet, AionBlockchainImpl chain) {
+        long best, long knownStatus, SortedSet<Long> baseSet, AionBlockchainImpl chain) {
         // remove bases that are no longer relevant
         while (!baseSet.isEmpty() && baseSet.first() <= best) {
             baseSet.remove(baseSet.first());
@@ -568,7 +569,7 @@ final class TaskImportBlocks implements Runnable {
      * @param block the block for which we need to determine if it is already stored or not
      * @return {@code true} if the given block exists in the block store, {@code false} otherwise.
      * @apiNote Should be used when we aim to bypass any recovery methods set in place for importing
-     *     old blocks, for example when blocks are imported in {@link PeerState.Mode#FORWARD} mode.
+     * old blocks, for example when blocks are imported in {@link PeerState.Mode#FORWARD} mode.
      */
     static boolean isAlreadyStored(AionBlockStore store, AionBlock block) {
         return store.getMaxNumber() >= block.getNumber() && store.isBlockExist(block.getHash());
@@ -582,34 +583,34 @@ final class TaskImportBlocks implements Runnable {
         if (log.isDebugEnabled()) {
             // printing sync mode only when debug is enabled
             log.debug(
-                    "<import-status: node = {}, sync mode = {}, hash = {}, number = {}, txs = {}, block time = {}, result = {}, time elapsed = {} ms>",
-                    displayId,
-                    (state != null ? state.getMode() : NORMAL),
-                    b.getShortHash(),
-                    b.getNumber(),
-                    b.getTransactionsList().size(),
-                    b.getTimestamp(),
-                    importResult,
-                    t2 - t1);
+                "<import-status: node = {}, sync mode = {}, hash = {}, number = {}, txs = {}, block time = {}, result = {}, time elapsed = {} ms>",
+                displayId,
+                (state != null ? state.getMode() : NORMAL),
+                b.getShortHash(),
+                b.getNumber(),
+                b.getTransactionsList().size(),
+                b.getTimestamp(),
+                importResult,
+                t2 - t1);
         } else {
             // not printing this message when the state is in fast mode with no parent result
             // a different message will be printed to indicate the storage of blocks
             if (log.isInfoEnabled()
-                    && (!state.isInFastMode() || importResult != ImportResult.NO_PARENT)) {
+                && (!state.isInFastMode() || importResult != ImportResult.NO_PARENT)) {
                 log.info(
-                        "<import-status: node = {}, hash = {}, number = {}, txs = {}, result = {}, time elapsed = {} ms>",
-                        displayId,
-                        b.getShortHash(),
-                        b.getNumber(),
-                        b.getTransactionsList().size(),
-                        importResult,
-                        t2 - t1);
+                    "<import-status: node = {}, hash = {}, number = {}, txs = {}, result = {}, time elapsed = {} ms>",
+                    displayId,
+                    b.getShortHash(),
+                    b.getNumber(),
+                    b.getTransactionsList().size(),
+                    importResult,
+                    t2 - t1);
             }
         }
         // trigger compact when IO is slow
         if (slowImportTime > 0 // disabled when set to <= 0
-                && t2 - t1 > this.slowImportTime
-                && t2 - lastCompactTime > this.compactFrequency) {
+            && t2 - t1 > this.slowImportTime
+            && t2 - lastCompactTime > this.compactFrequency) {
             if (log.isInfoEnabled()) {
                 log.info("Compacting state database due to slow IO time.");
             }
@@ -629,17 +630,16 @@ final class TaskImportBlocks implements Runnable {
      * when (1) a block import resulted in an IMPORTED_BEST result or (2) the maximum number of
      * repetitions has been reached.
      *
-     * @implNote Reaching the maximum number of repetitions allowed means that the FORWARD requests
-     *     have covered the scope of blocks between the BACKWARD request that has had a NO_PARENT
-     *     result and the subsequent BACKWARD request that got an EXIST / IMPORTED_BEST /
-     *     IMPORTED_NOT_BEST result. Effectively covering this space without storing the blocks
-     *     means that either an error has occurred or that another peer has already imported these
-     *     blocks. The second scenario is the most likely which makes switching to NORMAL mode the
-     *     natural consequence.
      * @param state the peer state to be updated
      * @param lastBlock the last imported block number
      * @param importResult the result for the last imported block
      * @return an updated state according to the description above.
+     * @implNote Reaching the maximum number of repetitions allowed means that the FORWARD requests
+     * have covered the scope of blocks between the BACKWARD request that has had a NO_PARENT result
+     * and the subsequent BACKWARD request that got an EXIST / IMPORTED_BEST / IMPORTED_NOT_BEST
+     * result. Effectively covering this space without storing the blocks means that either an error
+     * has occurred or that another peer has already imported these blocks. The second scenario is
+     * the most likely which makes switching to NORMAL mode the natural consequence.
      */
     static PeerState forwardModeUpdate(PeerState state, long lastBlock, ImportResult importResult) {
         // when the maximum number of repeats has passed
@@ -667,7 +667,7 @@ final class TaskImportBlocks implements Runnable {
         while (level <= last) {
             // get blocks stored for level
             Map<ByteArrayWrapper, List<AionBlock>> levelFromDisk =
-                    chain.loadPendingBlocksAtLevel(level);
+                chain.loadPendingBlocksAtLevel(level);
 
             if (levelFromDisk.isEmpty()) {
                 // move on to next level
@@ -685,10 +685,10 @@ final class TaskImportBlocks implements Runnable {
 
                 if (log.isDebugEnabled()) {
                     log.debug(
-                            "Loaded {} blocks from disk from level {} queue {} before filtering.",
-                            batchFromDisk.size(),
-                            entry.getKey(),
-                            level);
+                        "Loaded {} blocks from disk from level {} queue {} before filtering.",
+                        batchFromDisk.size(),
+                        entry.getKey(),
+                        level);
                 }
 
                 // filter already imported blocks
@@ -697,9 +697,9 @@ final class TaskImportBlocks implements Runnable {
                 if (!batchFromDisk.isEmpty()) {
                     if (log.isDebugEnabled()) {
                         log.debug(
-                                "{} {} left after filtering out imported blocks.",
-                                batchFromDisk.size(),
-                                (batchFromDisk.size() == 1 ? "block" : "blocks"));
+                            "{} {} left after filtering out imported blocks.",
+                            batchFromDisk.size(),
+                            (batchFromDisk.size() == 1 ? "block" : "blocks"));
                     }
                 } else {
                     if (log.isDebugEnabled()) {
@@ -732,7 +732,7 @@ final class TaskImportBlocks implements Runnable {
                     } catch (Exception e) {
                         log.error("<import-block throw> ", e);
                         if (e.getMessage() != null
-                                && e.getMessage().contains("No space left on device")) {
+                            && e.getMessage().contains("No space left on device")) {
                             log.error("Shutdown due to lack of disk space.");
                             System.exit(0);
                         }
@@ -744,7 +744,7 @@ final class TaskImportBlocks implements Runnable {
 
             // remove imported data from storage
             executors.submit(
-                    new TaskDropImportedBlocks(chain, level, importedQueues, levelFromDisk, log));
+                new TaskDropImportedBlocks(chain, level, importedQueues, levelFromDisk, log));
 
             // increment level
             level++;

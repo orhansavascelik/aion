@@ -15,8 +15,11 @@ import org.aion.p2p.Msg;
 import org.aion.p2p.Ver;
 import org.aion.zero.impl.sync.Act;
 
-/** Request for transaction receipts */
+/**
+ * Request for transaction receipts
+ */
 public class ReqTxReceipts extends Msg {
+
     private final List<byte[]> txHashes;
     private final static int TX_RECEIPT_LENGTH = 32;
 
@@ -34,7 +37,7 @@ public class ReqTxReceipts extends Msg {
      * Constructor
      *
      * @param msgBytes List of transaction hashes, as encoded by {@link #encode())} (or
-     *                 equivalently, a ReqTxReceipts).  Must not be null.
+     * equivalently, a ReqTxReceipts).  Must not be null.
      */
     public ReqTxReceipts(byte[] msgBytes) {
         this(decode(msgBytes));
@@ -49,12 +52,13 @@ public class ReqTxReceipts extends Msg {
     private static List<byte[]> decode(byte[] msgBytes) {
         Preconditions.checkNotNull(msgBytes, "Cannot decode null message bytes to ReqTxReceipts");
         Preconditions.checkArgument(msgBytes.length % TX_RECEIPT_LENGTH == 0,
-                "Invalid encoding of ReqTxReceipts; length must be a multiple of 32, but was " + msgBytes.length);
+            "Invalid encoding of ReqTxReceipts; length must be a multiple of 32, but was "
+                + msgBytes.length);
 
         List<byte[]> blocksHashes = new LinkedList<>();
         ByteBuffer bb = ByteBuffer.wrap(msgBytes);
 
-        for(int ix = 0; ix < msgBytes.length; ix += TX_RECEIPT_LENGTH ) {
+        for (int ix = 0; ix < msgBytes.length; ix += TX_RECEIPT_LENGTH) {
             byte[] receipt = new byte[TX_RECEIPT_LENGTH];
             bb.get(receipt);
             blocksHashes.add(receipt);
@@ -63,7 +67,9 @@ public class ReqTxReceipts extends Msg {
         return blocksHashes;
     }
 
-    /** @return the hashes of the requested transaction receipts. */
+    /**
+     * @return the hashes of the requested transaction receipts.
+     */
     public List<byte[]> getTxHashes() {
         return Collections.unmodifiableList(txHashes);
     }

@@ -17,7 +17,9 @@ import org.slf4j.Logger;
 import java.util.LinkedList;
 import java.util.List;
 
-/** Handle requests for transaction receipts */
+/**
+ * Handle requests for transaction receipts
+ */
 public class RequestTxReceiptHandler extends Handler {
     // Impl notes:
     // - Consider having a cache, like ReqBlocksBodiesHandler does
@@ -30,12 +32,13 @@ public class RequestTxReceiptHandler extends Handler {
     private static final Logger LOGGER = AionLoggerFactory.getLogger(LogEnum.SYNC.name());
 
     /**
+     * Constructor
      *
-     * @param p2pMgr
-     * @param bc
+     * @param p2pMgr p2p manager
+     * @param bc blockchain
      */
     public RequestTxReceiptHandler(IP2pMgr p2pMgr,
-                               IAionBlockchain bc) {
+        IAionBlockchain bc) {
         super(Ver.V0, Ctrl.SYNC, Act.REQ_TX_RECEIPT_HEADERS);
         this.p2pMgr = p2pMgr;
         this.bc = bc;
@@ -48,25 +51,28 @@ public class RequestTxReceiptHandler extends Handler {
             reqTxReceipts = new ReqTxReceipts(msg);
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.error(
-                    "ReqTxReceiptHandler req-tx-receipts decode-error, unable to decode bodies from {}, len: {}, reason: {}",
-                    displayId, msg.length, ex.getMessage());
+                "ReqTxReceiptHandler req-tx-receipts decode-error, unable to decode bodies from {}, len: {}, reason: {}",
+                displayId, msg.length, ex.getMessage());
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("req-tx-receipts dump: {}", ByteUtil.toHexString(msg));
             }
             return;
         }
-        LOGGER.debug("ReqTxReceiptHandler receive start, request size " + reqTxReceipts.getTxHashes().size());
+        LOGGER.debug(
+            "ReqTxReceiptHandler receive start, request size " + reqTxReceipts.getTxHashes()
+                .size());
 
         List<AionTxInfo> receipts = new LinkedList<>();
-        for(byte[] txHash : reqTxReceipts.getTxHashes()) {
+        for (byte[] txHash : reqTxReceipts.getTxHashes()) {
             AionTxInfo txInfo = bc.getTransactionInfo(txHash);
-            if(txInfo != null) {
+            if (txInfo != null) {
                 receipts.add(txInfo);
             }
             LOGGER.trace("Requested receipt with txHash '%s' not found; ignoring it");
         }
 
-        LOGGER.debug(String.format("ReqTxReceiptHandler received receipt request of size %d; sending back %d receipts",
+        LOGGER.debug(String.format(
+            "ReqTxReceiptHandler received receipt request of size %d; sending back %d receipts",
             reqTxReceipts.getTxHashes().size(), receipts.size()));
         this.p2pMgr.send(id, displayId, new ResTxReceipts(receipts));
     }
