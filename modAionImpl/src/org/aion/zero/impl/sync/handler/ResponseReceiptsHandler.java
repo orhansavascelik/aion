@@ -17,23 +17,18 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-/**
- * Handle transaction receipts response
- */
+/** Handle transaction receipts response */
 public class ResponseReceiptsHandler extends Handler {
 
-    protected final TransactionStore<
-        AionTransaction, AionTxReceipt, AionTxInfo> txStore;
+    protected final TransactionStore<AionTransaction, AionTxReceipt, AionTxInfo> txStore;
     private final AionBlockStore blockStore;
 
     private static final Logger LOGGER = AionLoggerFactory.getLogger(LogEnum.SYNC.name());
 
-    /**
-     * Constructor
-     */
+    /** Constructor */
     public ResponseReceiptsHandler(
-        TransactionStore<AionTransaction, AionTxReceipt, AionTxInfo> txStore,
-        AionBlockStore blockStore) {
+            TransactionStore<AionTransaction, AionTxReceipt, AionTxInfo> txStore,
+            AionBlockStore blockStore) {
         super(Ver.V0, Ctrl.SYNC, Act.RESPONSE_RECEIPTS);
         this.txStore = txStore;
         this.blockStore = blockStore;
@@ -47,8 +42,10 @@ public class ResponseReceiptsHandler extends Handler {
             responseReceipts = new ResponseReceipts(msg);
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.error(
-                "ResTxReceiptHandler decode-error, unable to Msg body from {}, length: {}, reason: {}",
-                displayId, msg.length, ex.getMessage());
+                    "ResTxReceiptHandler decode-error, unable to Msg body from {}, length: {}, reason: {}",
+                    displayId,
+                    msg.length,
+                    ex.getMessage());
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("res-tx-receipts dump: {}", ByteUtil.toHexString(msg));
             }
@@ -56,14 +53,14 @@ public class ResponseReceiptsHandler extends Handler {
         }
 
         for (AionTxInfo atr : responseReceipts.getTxInfo()) {
-            List<AionTransaction> txs = blockStore.getBlockByHash(atr.getBlockHash())
-                .getTransactionsList();
+            List<AionTransaction> txs =
+                    blockStore.getBlockByHash(atr.getBlockHash()).getTransactionsList();
             AionTransaction tx = txs.get(atr.getIndex());
             atr.setTransaction(tx);
         }
 
-        LOGGER
-            .debug("ResTxReceiptHandler persisting {} receipts", responseReceipts.getTxInfo().size());
+        LOGGER.debug(
+                "ResTxReceiptHandler persisting {} receipts", responseReceipts.getTxInfo().size());
         if (!responseReceipts.getTxInfo().isEmpty()) {
             persist(responseReceipts.getTxInfo());
         }

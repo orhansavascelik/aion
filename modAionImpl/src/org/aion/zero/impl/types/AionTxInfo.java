@@ -18,9 +18,7 @@ public class AionTxInfo extends AbstractTxInfo<AionTxReceipt, AionTransaction> {
         this.index = index;
     }
 
-    /**
-     * Creates a pending tx info
-     */
+    /** Creates a pending tx info */
     public AionTxInfo(AionTxReceipt receipt) {
         this.receipt = receipt;
     }
@@ -104,10 +102,13 @@ public class AionTxInfo extends AbstractTxInfo<AionTxReceipt, AionTransaction> {
 
     @Override
     public String toString() {
-        return "AionTxInfo{" +
-            ", blockHash=" + blockHash +
-            ", index=" + index +
-            "receipt=" + receipt +
-            '}';
+        return "AionTxInfo{"
+                + ", blockHash="
+                + blockHash
+                + ", index="
+                + index
+                + "receipt="
+                + receipt
+                + '}';
     }
 }

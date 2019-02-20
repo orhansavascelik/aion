@@ -38,57 +38,62 @@ public class ResponseReceiptsHandlerIntegTest {
         when(block.getTransactionsList()).thenReturn(transactionsList);
         AionTransaction fakeTransaction = mock(AionTransaction.class);
         transactionsList.add(fakeTransaction);
-        when(fakeTransaction.getTransactionHash()).thenReturn(
-            ByteUtil.hexStringToBytes(
-                "7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7")
-        );
+        when(fakeTransaction.getTransactionHash())
+                .thenReturn(
+                        ByteUtil.hexStringToBytes(
+                                "7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7"));
 
-        ResponseReceiptsHandler handler = new ResponseReceiptsHandler(repo.getTransactionStore(),
-            fakeBlockstore);
+        ResponseReceiptsHandler handler =
+                new ResponseReceiptsHandler(repo.getTransactionStore(), fakeBlockstore);
 
         // sanity check the test -- transaction store does not have the requested transaction
         assertNull(
-            repo.getTransactionStore().get(ByteUtil.hexStringToBytes(
-                "7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7"))
-        );
+                repo.getTransactionStore()
+                        .get(
+                                ByteUtil.hexStringToBytes(
+                                        "7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7")));
 
         // receive the receipts
-        byte[] msg = ByteUtil.hexStringToBytes(
-            "f90152f9014ff9012aa052e5c9cb4a615eae3963cbbc57a39ccea3ec9f47c1c742c6b3e276584710069bb9010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c08082520c80a03d62a9bd04d960329264248576d89cb00da7648819d2502a483a4002fc96299380");
+        byte[] msg =
+                ByteUtil.hexStringToBytes(
+                        "f90152f9014ff9012aa052e5c9cb4a615eae3963cbbc57a39ccea3ec9f47c1c742c6b3e276584710069bb9010000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000c08082520c80a03d62a9bd04d960329264248576d89cb00da7648819d2502a483a4002fc96299380");
         handler.receive(717142562, "33de43", msg);
 
         // now the transaction store should have the trnansaction
-        List<AionTxInfo> result = repo.getTransactionStore().get(ByteUtil
-            .hexStringToBytes("7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7"));
+        List<AionTxInfo> result =
+                repo.getTransactionStore()
+                        .get(
+                                ByteUtil.hexStringToBytes(
+                                        "7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7"));
         assertThat(result.size(), is(1));
-        assertThat(org.aion.util.bytes.ByteUtil.toHexString(result.get(0).getBlockHash()),
-            is("3d62a9bd04d960329264248576d89cb00da7648819d2502a483a4002fc962993"));
-
+        assertThat(
+                org.aion.util.bytes.ByteUtil.toHexString(result.get(0).getBlockHash()),
+                is("3d62a9bd04d960329264248576d89cb00da7648819d2502a483a4002fc962993"));
     }
 
     private IRepositoryConfig repoConfig =
-        new IRepositoryConfig() {
-            @Override
-            public String getDbPath() {
-                return "/tmp/integ";
-            }
+            new IRepositoryConfig() {
+                @Override
+                public String getDbPath() {
+                    return "/tmp/integ";
+                }
 
-            @Override
-            public IPruneConfig getPruneConfig() {
-                return new CfgPrune(false);
-            }
+                @Override
+                public IPruneConfig getPruneConfig() {
+                    return new CfgPrune(false);
+                }
 
-            @Override
-            public IContractDetails contractDetailsImpl() {
-                return ContractDetailsAion.createForTesting(0, 1000000).getDetails();
-            }
+                @Override
+                public IContractDetails contractDetailsImpl() {
+                    return ContractDetailsAion.createForTesting(0, 1000000).getDetails();
+                }
 
-            @Override
-            public Properties getDatabaseConfig(String db_name) {
-                Properties props = new Properties();
-                props.setProperty(DatabaseFactory.Props.DB_TYPE, DBVendor.MOCKDB.toValue());
-                props.setProperty(DatabaseFactory.Props.ENABLE_HEAP_CACHE, "false");
-                return props;
-            }
-        };
+                @Override
+                public Properties getDatabaseConfig(String db_name) {
+                    Properties props = new Properties();
+                    props.setProperty(DatabaseFactory.Props.DB_TYPE, DBVendor.MOCKDB.toValue());
+                    props.setProperty(DatabaseFactory.Props.ENABLE_HEAP_CACHE, "false");
+                    return props;
+                }
+            };
 }

@@ -17,14 +17,13 @@ import org.slf4j.Logger;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Handle requests for transaction receipts
- */
+/** Handle requests for transaction receipts */
 public class RequestReceiptsHandler extends Handler {
     // Impl notes:
     // - Consider having a cache, like ReqBlocksBodiesHandler does
     // - Consider having an upper bound on number of receipts we're willing to send
-    // - Parameterize with generics for non-Aion blockchains (i.e. classes under IBlockchain but not IAionBlockchain)?
+    // - Parameterize with generics for non-Aion blockchains (i.e. classes under IBlockchain but not
+    // IAionBlockchain)?
 
     private final IP2pMgr p2pMgr;
     private final IAionBlockchain bc;
@@ -37,8 +36,7 @@ public class RequestReceiptsHandler extends Handler {
      * @param p2pMgr p2p manager
      * @param bc blockchain
      */
-    public RequestReceiptsHandler(IP2pMgr p2pMgr,
-        IAionBlockchain bc) {
+    public RequestReceiptsHandler(IP2pMgr p2pMgr, IAionBlockchain bc) {
         super(Ver.V0, Ctrl.SYNC, Act.REQUEST_RECEIPTS);
         this.p2pMgr = p2pMgr;
         this.bc = bc;
@@ -51,16 +49,18 @@ public class RequestReceiptsHandler extends Handler {
             requestReceipts = new RequestReceipts(msg);
         } catch (NullPointerException | IllegalArgumentException ex) {
             LOGGER.error(
-                "ReqTxReceiptHandler req-tx-receipts decode-error, unable to decode bodies from {}, len: {}, reason: {}",
-                displayId, msg.length, ex.getMessage());
+                    "ReqTxReceiptHandler req-tx-receipts decode-error, unable to decode bodies from {}, len: {}, reason: {}",
+                    displayId,
+                    msg.length,
+                    ex.getMessage());
             if (LOGGER.isTraceEnabled()) {
                 LOGGER.trace("req-tx-receipts dump: {}", ByteUtil.toHexString(msg));
             }
             return;
         }
         LOGGER.debug(
-            "ReqTxReceiptHandler receive start, request size " + requestReceipts.getTxHashes()
-                .size());
+                "ReqTxReceiptHandler receive start, request size "
+                        + requestReceipts.getTxHashes().size());
 
         List<AionTxInfo> receipts = new LinkedList<>();
         for (byte[] txHash : requestReceipts.getTxHashes()) {
@@ -71,9 +71,10 @@ public class RequestReceiptsHandler extends Handler {
             LOGGER.trace("Requested receipt with txHash '%s' not found; ignoring it");
         }
 
-        LOGGER.debug(String.format(
-            "ReqTxReceiptHandler received receipt request of size %d; sending back %d receipts",
-            requestReceipts.getTxHashes().size(), receipts.size()));
+        LOGGER.debug(
+                String.format(
+                        "ReqTxReceiptHandler received receipt request of size %d; sending back %d receipts",
+                        requestReceipts.getTxHashes().size(), receipts.size()));
         this.p2pMgr.send(id, displayId, new ResponseReceipts(receipts));
     }
 }

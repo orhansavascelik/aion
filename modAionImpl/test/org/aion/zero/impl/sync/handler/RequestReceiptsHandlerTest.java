@@ -36,16 +36,20 @@ public class RequestReceiptsHandlerTest {
         int id = 54321;
         String displayId = "321";
 
-        byte[] b1 = ByteUtil.hexStringToBytes("" +
-            "01020304050a0b0c" +
-            "05040302010a0b0c" +
-            "00000000000d0e0f" +
-            "05040302010a0b0c"); // 32 bytes
-        byte[] b2 = ByteUtil.hexStringToBytes("" +
-            "01000000000f0f0f" +
-            "02000000000a0b0c" +
-            "03000000000d0e0f" +
-            "04000000000a0b0c"); // 32 bytes
+        byte[] b1 =
+                ByteUtil.hexStringToBytes(
+                        ""
+                                + "01020304050a0b0c"
+                                + "05040302010a0b0c"
+                                + "00000000000d0e0f"
+                                + "05040302010a0b0c"); // 32 bytes
+        byte[] b2 =
+                ByteUtil.hexStringToBytes(
+                        ""
+                                + "01000000000f0f0f"
+                                + "02000000000a0b0c"
+                                + "03000000000d0e0f"
+                                + "04000000000a0b0c"); // 32 bytes
         byte[] request = ByteBuffer.allocate(64).put(b1).put(b2).array();
 
         AionTxInfo txInfo1 = mock(AionTxInfo.class);
@@ -72,7 +76,7 @@ public class RequestReceiptsHandlerTest {
     public void testReceiveWhenDecodingError() {
         int id = 54321;
         String displayId = "321";
-        byte[] badRequest = new byte[]{(byte) 0xc0, (byte) 0xff, (byte) 0xee};
+        byte[] badRequest = new byte[] {(byte) 0xc0, (byte) 0xff, (byte) 0xee};
 
         RequestReceiptsHandler unit = new RequestReceiptsHandler(p2pMgr, bc);
         unit.receive(id, displayId, badRequest);

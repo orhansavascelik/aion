@@ -18,11 +18,11 @@ import java.util.Properties;
 import static org.aion.mcf.db.DatabaseUtils.connectAndOpen;
 
 /**
- * Like {@link ResponseReceiptsHandler} but instead of writing to actual Transaction Store, write
- * it to an alternate Transaction Store used only for verification/testing purposes, and then
- * perform verification on the result by {@link ReceiptsRetrievalVerifier}.
+ * Like {@link ResponseReceiptsHandler} but instead of writing to actual Transaction Store, write it
+ * to an alternate Transaction Store used only for verification/testing purposes, and then perform
+ * verification on the result by {@link ReceiptsRetrievalVerifier}.
  *
- * Unlike the normal ResTxReceiptHandler,
+ * <p>Unlike the normal ResTxReceiptHandler,
  */
 public class InstrumentedResponseReceiptsHandler extends ResponseReceiptsHandler {
 
@@ -35,13 +35,9 @@ public class InstrumentedResponseReceiptsHandler extends ResponseReceiptsHandler
         super.txStore.close();
     }
 
-    /**
-     * Constructor
-     */
+    /** Constructor */
     public InstrumentedResponseReceiptsHandler(
-        AionBlockStore blockStore,
-        ReceiptsRetrievalVerifier rrv,
-        String altDbPath) {
+            AionBlockStore blockStore, ReceiptsRetrievalVerifier rrv, String altDbPath) {
         super(createAlternateTxStore(altDbPath), blockStore);
         this.rrv = rrv;
     }
@@ -60,7 +56,7 @@ public class InstrumentedResponseReceiptsHandler extends ResponseReceiptsHandler
         }
 
         return new TransactionStore<>(
-            transactionDatabase, AionTransactionStoreSerializer.serializer);
+                transactionDatabase, AionTransactionStoreSerializer.serializer);
     }
 
     @Override
@@ -72,11 +68,11 @@ public class InstrumentedResponseReceiptsHandler extends ResponseReceiptsHandler
             rrv.validateDatabases(txi, txStore);
         }
 
-        LOGGER.info(String.format(
-            "InstrumentedResTxReceiptHandler persisted batch of AionTxInfo [block0=%s, blockN=%s].  Outstanding hashes after:",
-            ByteUtil.toHexString(txInfo.get(0).getBlockHash()),
-            ByteUtil.toHexString(txInfo.get(txInfo.size() - 1).getBlockHash())
-        ));
+        LOGGER.info(
+                String.format(
+                        "InstrumentedResTxReceiptHandler persisted batch of AionTxInfo [block0=%s, blockN=%s].  Outstanding hashes after:",
+                        ByteUtil.toHexString(txInfo.get(0).getBlockHash()),
+                        ByteUtil.toHexString(txInfo.get(txInfo.size() - 1).getBlockHash())));
         rrv.displayOutstandingRequests();
     }
 }

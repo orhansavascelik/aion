@@ -26,9 +26,7 @@ public class ResponseReceiptsTest {
         AionTxInfo r3 = mock(AionTxInfo.class);
         ResponseReceipts unit = new ResponseReceipts(List.of(r1, r2, r3));
         assertThat(unit.getTxInfo().size(), is(3));
-        assertThat(unit.getTxInfo().containsAll(
-                List.of(r1, r2, r3)
-        ), is(true));
+        assertThat(unit.getTxInfo().containsAll(List.of(r1, r2, r3)), is(true));
         assertThat(unit.getHeader().getAction(), is(Act.RESPONSE_RECEIPTS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
@@ -48,9 +46,7 @@ public class ResponseReceiptsTest {
         byte[] encodedRequest = new ResponseReceipts(List.of(inf1, inf2)).encode();
         ResponseReceipts unit = new ResponseReceipts(encodedRequest);
         assertThat(unit.getTxInfo().size(), is(2));
-        assertThat(unit.getTxInfo().containsAll(
-                List.of(inf1, inf2)
-        ), is(true));
+        assertThat(unit.getTxInfo().containsAll(List.of(inf1, inf2)), is(true));
         assertThat(unit.getHeader().getAction(), is(Act.RESPONSE_RECEIPTS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
