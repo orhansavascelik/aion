@@ -1,10 +1,6 @@
 package org.aion.zero.impl.sync.msg;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -29,7 +25,7 @@ public class ReqTxReceipts extends Msg {
      * @param txHashes hashes of the transaction receipts requested
      */
     public ReqTxReceipts(List<byte[]> txHashes) {
-        super(Ver.V0, Ctrl.SYNC, Act.REQ_TX_RECEIPT_HEADERS);
+        super(Ver.V0, Ctrl.SYNC, Act.REQUEST_TX_RECEIPT_HEADERS);
         this.txHashes = new LinkedList<>(txHashes);
     }
 

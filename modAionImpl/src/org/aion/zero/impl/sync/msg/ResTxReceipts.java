@@ -28,7 +28,7 @@ public class ResTxReceipts extends Msg {
      * @param txInfo list of transaction receipts
      */
     public ResTxReceipts(List<AionTxInfo> txInfo) {
-        super(Ver.V0, Ctrl.SYNC, Act.RES_TX_RECEIPT_HEADERS);
+        super(Ver.V0, Ctrl.SYNC, Act.RESPONSE_TX_RECEIPT_HEADERS);
         this.txInfo = new LinkedList<>(txInfo);
     }
 

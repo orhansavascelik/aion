@@ -23,7 +23,7 @@ public class ReqTxReceiptsTest {
 
         assertThat(unit.getTxHashes().size(), is(2));
         assertThat(unit.getTxHashes().containsAll(receipts), is(true));
-        assertThat(unit.getHeader().getAction(), is(Act.REQ_TX_RECEIPT_HEADERS));
+        assertThat(unit.getHeader().getAction(), is(Act.REQUEST_TX_RECEIPT_HEADERS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
     }
@@ -47,7 +47,7 @@ public class ReqTxReceiptsTest {
         assertThat(unit.getTxHashes().size(), is(2));
         assertThat(unit.getTxHashes().get(0), is(b1));
         assertThat(unit.getTxHashes().get(1), is(b2));
-        assertThat(unit.getHeader().getAction(), is(Act.REQ_TX_RECEIPT_HEADERS));
+        assertThat(unit.getHeader().getAction(), is(Act.REQUEST_TX_RECEIPT_HEADERS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
     }

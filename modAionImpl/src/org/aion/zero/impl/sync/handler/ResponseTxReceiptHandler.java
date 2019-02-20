@@ -34,7 +34,7 @@ public class ResponseTxReceiptHandler extends Handler {
     public ResponseTxReceiptHandler(
         TransactionStore<AionTransaction, AionTxReceipt, AionTxInfo> txStore,
         AionBlockStore blockStore) {
-        super(Ver.V0, Ctrl.SYNC, Act.RES_TX_RECEIPT_HEADERS);
+        super(Ver.V0, Ctrl.SYNC, Act.RESPONSE_TX_RECEIPT_HEADERS);
         this.txStore = txStore;
         this.blockStore = blockStore;
     }

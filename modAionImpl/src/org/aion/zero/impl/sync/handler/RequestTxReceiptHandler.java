@@ -39,7 +39,7 @@ public class RequestTxReceiptHandler extends Handler {
      */
     public RequestTxReceiptHandler(IP2pMgr p2pMgr,
         IAionBlockchain bc) {
-        super(Ver.V0, Ctrl.SYNC, Act.REQ_TX_RECEIPT_HEADERS);
+        super(Ver.V0, Ctrl.SYNC, Act.REQUEST_TX_RECEIPT_HEADERS);
         this.p2pMgr = p2pMgr;
         this.bc = bc;
     }

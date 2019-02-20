@@ -29,7 +29,7 @@ public class ResTxReceiptsTest {
         assertThat(unit.getTxInfo().containsAll(
                 List.of(r1, r2, r3)
         ), is(true));
-        assertThat(unit.getHeader().getAction(), is(Act.RES_TX_RECEIPT_HEADERS));
+        assertThat(unit.getHeader().getAction(), is(Act.RESPONSE_TX_RECEIPT_HEADERS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
     }
@@ -51,7 +51,7 @@ public class ResTxReceiptsTest {
         assertThat(unit.getTxInfo().containsAll(
                 List.of(inf1, inf2)
         ), is(true));
-        assertThat(unit.getHeader().getAction(), is(Act.RES_TX_RECEIPT_HEADERS));
+        assertThat(unit.getHeader().getAction(), is(Act.RESPONSE_TX_RECEIPT_HEADERS));
         assertThat(unit.getHeader().getCtrl(), is(Ctrl.SYNC));
         assertThat(unit.getHeader().getVer(), is(Ver.V0));
     }
