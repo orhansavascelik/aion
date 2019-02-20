@@ -20,7 +20,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
-public class ReqTxReceiptHandlerTest {
+public class RequestTxReceiptHandlerTest {
     private IP2pMgr p2pMgr;
     private IAionBlockchain bc;
 
@@ -56,7 +56,7 @@ public class ReqTxReceiptHandlerTest {
         when(bc.getTransactionInfo(b2)).thenReturn(txInfo2);
         when(txInfo2.getReceipt()).thenReturn(txr2);
 
-        ReqTxReceiptHandler unit = new ReqTxReceiptHandler(p2pMgr, bc);
+        RequestTxReceiptHandler unit = new RequestTxReceiptHandler(p2pMgr, bc);
         unit.receive(id, displayId, request);
 
         ArgumentCaptor<ResTxReceipts> receipts = ArgumentCaptor.forClass(ResTxReceipts.class);
@@ -73,7 +73,7 @@ public class ReqTxReceiptHandlerTest {
         String displayId = "321";
         byte[] badRequest = new byte[] { (byte) 0xc0, (byte) 0xff, (byte) 0xee } ;
 
-        ReqTxReceiptHandler unit = new ReqTxReceiptHandler(p2pMgr, bc);
+        RequestTxReceiptHandler unit = new RequestTxReceiptHandler(p2pMgr, bc);
         unit.receive(id, displayId, badRequest);
 
         verifyZeroInteractions(p2pMgr);

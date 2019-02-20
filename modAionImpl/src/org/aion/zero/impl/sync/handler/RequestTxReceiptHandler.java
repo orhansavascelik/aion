@@ -18,7 +18,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /** Handle requests for transaction receipts */
-public class ReqTxReceiptHandler extends Handler {
+public class RequestTxReceiptHandler extends Handler {
     // Impl notes:
     // - Consider having a cache, like ReqBlocksBodiesHandler does
     // - Consider having an upper bound on number of receipts we're willing to send
@@ -34,7 +34,7 @@ public class ReqTxReceiptHandler extends Handler {
      * @param p2pMgr
      * @param bc
      */
-    public ReqTxReceiptHandler(IP2pMgr p2pMgr,
+    public RequestTxReceiptHandler(IP2pMgr p2pMgr,
                                IAionBlockchain bc) {
         super(Ver.V0, Ctrl.SYNC, Act.REQ_TX_RECEIPT_HEADERS);
         this.p2pMgr = p2pMgr;

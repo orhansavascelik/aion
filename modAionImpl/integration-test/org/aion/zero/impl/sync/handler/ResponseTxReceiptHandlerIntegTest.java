@@ -25,7 +25,7 @@ import org.aion.zero.types.AionTransaction;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class ResTxReceiptHandlerIntegTest {
+public class ResponseTxReceiptHandlerIntegTest {
     @Test
     public void test() {
         AionRepositoryImpl repo = AionRepositoryImpl.createForTesting(repoConfig);
@@ -41,7 +41,7 @@ public class ResTxReceiptHandlerIntegTest {
                 ByteUtil.hexStringToBytes("7e21ba25b690afcb4e76adbb44b3147b30cd20969dffb9c252992fdcdaef9bc7")
         );
 
-        ResTxReceiptHandler handler = new ResTxReceiptHandler(repo.getTransactionStore(), fakeBlockstore);
+        ResponseTxReceiptHandler handler = new ResponseTxReceiptHandler(repo.getTransactionStore(), fakeBlockstore);
 
         // sanity check the test -- transaction store does not have the requested transaction
         assertNull(

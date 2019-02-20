@@ -18,7 +18,7 @@ import org.slf4j.Logger;
 import java.util.List;
 
 /** Handle transaction receipts response */
-public class ResTxReceiptHandler extends Handler {
+public class ResponseTxReceiptHandler extends Handler {
     protected final TransactionStore<
             AionTransaction, AionTxReceipt, AionTxInfo> txStore;
     private final AionBlockStore blockStore;
@@ -28,7 +28,7 @@ public class ResTxReceiptHandler extends Handler {
     /**
      * Constructor
      */
-    public ResTxReceiptHandler(
+    public ResponseTxReceiptHandler(
             TransactionStore<AionTransaction, AionTxReceipt, AionTxInfo> txStore,
             AionBlockStore blockStore) {
         super(Ver.V0, Ctrl.SYNC, Act.RES_TX_RECEIPT_HEADERS);

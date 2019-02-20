@@ -37,15 +37,14 @@ import org.aion.zero.impl.sync.SyncMgr;
 import org.aion.zero.impl.sync.handler.BlockPropagationHandler;
 import org.aion.zero.impl.sync.handler.BroadcastNewBlockHandler;
 import org.aion.zero.impl.sync.handler.BroadcastTxHandler;
-import org.aion.zero.impl.sync.handler.InstrumentedResTxReceiptHandler;
+import org.aion.zero.impl.sync.handler.InstrumentedResponseTxReceiptHandler;
 import org.aion.zero.impl.sync.handler.ReqBlocksBodiesHandler;
 import org.aion.zero.impl.sync.handler.ReqBlocksHeadersHandler;
 import org.aion.zero.impl.sync.handler.ReqStatusHandler;
-import org.aion.zero.impl.sync.handler.ReqTxReceiptHandler;
+import org.aion.zero.impl.sync.handler.RequestTxReceiptHandler;
 import org.aion.zero.impl.sync.handler.ResBlocksBodiesHandler;
 import org.aion.zero.impl.sync.handler.ResBlocksHeadersHandler;
 import org.aion.zero.impl.sync.handler.ResStatusHandler;
-import org.aion.zero.impl.sync.handler.ResTxReceiptHandler;
 import org.aion.zero.impl.types.AionBlock;
 import org.aion.zero.types.A0BlockHeader;
 import org.aion.zero.types.AionTransaction;
@@ -219,11 +218,11 @@ public class AionHub {
         initializeHub(_cfgAion, _blockchain, _repository, forTest);
     }
 
-    private InstrumentedResTxReceiptHandler instrumentedResTxReceiptHandler;
+    private InstrumentedResponseTxReceiptHandler instrumentedResTxReceiptHandler;
 
     private void registerCallback() {
 
-        instrumentedResTxReceiptHandler = new InstrumentedResTxReceiptHandler((AionBlockStore) getBlockStore(), receiptsRetrievalVerifier, this.cfg.getDatabasePath());
+        instrumentedResTxReceiptHandler = new InstrumentedResponseTxReceiptHandler((AionBlockStore) getBlockStore(), receiptsRetrievalVerifier, this.cfg.getDatabasePath());
 
         List<Handler> cbs = new ArrayList<>();
         cbs.add(new ReqStatusHandler(syncLOG, blockchain, p2pMgr, cfg.getGenesis().getHash()));
@@ -237,7 +236,7 @@ public class AionHub {
         cbs.add(new BroadcastNewBlockHandler(syncLOG, propHandler, p2pMgr));
 //        cbs.add(new ResTxReceiptHandler(repository.getTransactionStore(), (AionBlockStore) getBlockStore()));
         cbs.add(instrumentedResTxReceiptHandler);
-        cbs.add(new ReqTxReceiptHandler(p2pMgr, blockchain));
+        cbs.add(new RequestTxReceiptHandler(p2pMgr, blockchain));
         this.p2pMgr.register(cbs);
     }
 

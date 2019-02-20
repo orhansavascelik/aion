@@ -32,7 +32,7 @@ import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.spongycastle.pqc.math.linearalgebra.ByteUtils;
 
-public class ReqTxReceiptHandlerIntegTest {
+public class RequestTxReceiptHandlerIntegTest {
 
     /**
      * Transaction hash that we'll request receipt for.  This particular tx is the first tx on the mastery network at block 213091:
@@ -102,8 +102,8 @@ public class ReqTxReceiptHandlerIntegTest {
         List<Handler> cbs = new ArrayList<>();
         cbs.add(new ReqStatusHandler(syncLOG, blockchain, p2p, genesis));
         cbs.add(new ResStatusHandler(syncLOG, p2p, syncMgr));
-        cbs.add(new ResTxReceiptHandler(transactionStore, blockStore));
-        cbs.add(new ReqTxReceiptHandler(p2p, blockchain));
+        cbs.add(new ResponseTxReceiptHandler(transactionStore, blockStore));
+        cbs.add(new RequestTxReceiptHandler(p2p, blockchain));
         p2p.register(cbs);
 
         p2p.run();
