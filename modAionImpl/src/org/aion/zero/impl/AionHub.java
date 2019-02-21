@@ -178,9 +178,7 @@ public class AionHub {
                 cfg.getSync().getCompactEnabled()
                         ? cfg.getSync().getSlowImportTime()
                         : 0, // set to 0 when disabled
-                cfg.getSync().getCompactFrequency(),
-                false, /* request receipts not yet enabled - replace with cfg.getSync().isRequestReceipts() when ready*/
-                receiptsRetrievalVerifier);
+                cfg.getSync().getCompactFrequency());
 
         ChainConfiguration chainConfig = new ChainConfiguration();
         this.propHandler =
