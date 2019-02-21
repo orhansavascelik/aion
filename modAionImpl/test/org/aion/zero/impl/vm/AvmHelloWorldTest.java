@@ -14,7 +14,6 @@ import org.aion.interfaces.vm.VirtualMachineSpecs;
 import org.aion.crypto.ECKey;
 import org.aion.mcf.core.ImportResult;
 import org.aion.vm.VirtualMachineProvider;
-import org.aion.types.Address;
 import org.aion.zero.impl.StandaloneBlockchain;
 import org.aion.zero.impl.vm.contracts.AvmHelloWorld;
 import org.aion.zero.impl.types.AionBlock;

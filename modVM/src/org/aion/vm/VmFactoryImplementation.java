@@ -66,7 +66,7 @@ public final class VmFactoryImplementation implements VirtualMachineManager {
         }
 
         // initialize the Avm. This buildAvmInstance method already calls start() for us.
-        this.aionVirtualMachine = CommonAvmFactory.buildAvmInstance(null);
+        this.aionVirtualMachine = CommonAvmFactory.buildAvmInstance();
         this.state = MachineState.ALL_MACHINES_LIVE;
     }
 
